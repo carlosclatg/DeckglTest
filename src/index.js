@@ -2,11 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import MovieItem from './MovieItem'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App namesss="cazzada"/>
+    <MovieItem/>
   </React.StrictMode>,
   document.getElementById('root')
 );
