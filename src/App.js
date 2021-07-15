@@ -1,6 +1,7 @@
 import './App.css';
 import DeckGL from '@deck.gl/react';
 import {LineLayer, GeoJsonLayer} from '@deck.gl/layers';
+import { SelectionLayer } from '@nebula.gl/layers';
 import React, { useEffect, useState, useRef } from 'react';
 import { EditableGeoJsonLayer, DrawPolygonMode, ViewMode } from 'nebula.gl';
 import ReactDOM from 'react-dom';
@@ -30,6 +31,17 @@ const App = ({namesss}) =>{
   const data3 = [
     {sourcePosition: [-122.41669, 35], targetPosition: [-122.41669, 46]}
   ];
+
+  const selectionLayer = new SelectionLayer({
+    id: 'selection',
+    selectionType: 'rectangle',
+    layerIds: ['geojson-layer', 'line-layer-init2'], //This attribute is compulsory
+    onSelect: ({ pickingInfos }) => console.log(pickingInfos),
+    getTentativeFillColor: () => [255, 0, 255, 100],
+    getTentativeLineColor: () => [0, 0, 255, 255],
+    getTentativeLineDashArray: () => [0, 0],
+    lineWidthMinPixels: 1,
+  })
 
   const geojsonLayer = new GeoJsonLayer({
     id: 'geojson-layer',
@@ -109,7 +121,7 @@ const App = ({namesss}) =>{
 
   //STATE
   const [count, setCount] = useState(0);
-  const [layerList, setLayerList] = useState(new Array(tilelayer, new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
+  const [layerList, setLayerList] = useState(new Array(tilelayer, selectionLayer, new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
   const [viewport, setViewport] = useState({
     width: "100%",
     height: "100%",
@@ -135,12 +147,9 @@ const App = ({namesss}) =>{
 
   //HOOKS
   useEffect(()=>{
-    console.log(layerList)
   }, [layerList])
   
   useEffect(()=>{
-    console.log("initial load")
-    console.log(ReactDOM.findDOMNode(myRef.current))
     document.addEventListener('nv-event', handleNVEvent);
   })
   
@@ -149,7 +158,6 @@ const App = ({namesss}) =>{
   //EVENT HANDLING
   const handleNVEvent = ({detail}) => {
     console.log("component handling event")
-    console.log(detail)
   }
 
   const onDeckClick = (info) => {
@@ -160,13 +168,11 @@ const App = ({namesss}) =>{
   const addLayer = () => { 
     setLayerList(new Array(...layerList ,geojsonLayer,new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true})))
     setCount(count + 1)
-    setTimeout(()=>{console.log(123)}, 1000)
   }
 
 
   const zoomControl = (viewState) => {
     setViewport(viewState)
-    console.log(viewState)
     const event = new CustomEvent("zoom-changed",  { bubbles: true, detail: Math.round(viewState.zoom)});
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
   }
@@ -178,8 +184,9 @@ const App = ({namesss}) =>{
   }
 
 
+
+
   const zoomIn = () => {
-    console.log(viewport.zoom)
     setViewport({
       width: "100%",
       height: "100%",
