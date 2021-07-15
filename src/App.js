@@ -1,6 +1,6 @@
 import './App.css';
 import DeckGL from '@deck.gl/react';
-import {LineLayer, ArcLayer} from '@deck.gl/layers';
+import {LineLayer, GeoJsonLayer} from '@deck.gl/layers';
 import React, { useEffect, useState, useRef } from 'react';
 import { EditableGeoJsonLayer, DrawPolygonMode, ViewMode } from 'nebula.gl';
 import ReactDOM from 'react-dom';
@@ -31,6 +31,60 @@ const App = ({namesss}) =>{
     {sourcePosition: [-122.41669, 35], targetPosition: [-122.41669, 46]}
   ];
 
+  const geojsonLayer = new GeoJsonLayer({
+    id: 'geojson-layer',
+    data: {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  -56.25,
+                  26.115985925333536
+                ],
+                [
+                  -8.7890625,
+                  -21.616579336740593
+                ],
+                [
+                  22.148437499999996,
+                  -13.581920900545844
+                ],
+                [
+                  52.03125,
+                  38.54816542304656
+                ],
+                [
+                  -3.8671874999999996,
+                  62.2679226294176
+                ],
+                [
+                  -56.25,
+                  26.115985925333536
+                ]
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    pickable: true,
+    stroked: false,
+    filled: true,
+    extruded: true,
+    lineWidthScale: 20,
+    lineWidthMinPixels: 2,
+    getFillColor: [160, 160, 180, 200],
+    getRadius: 100,
+    getLineWidth: 1,
+    getElevation: 30
+  });
+
 
   const tilelayer = new TileLayer({
     data: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -55,7 +109,7 @@ const App = ({namesss}) =>{
 
   //STATE
   const [count, setCount] = useState(0);
-  const [layerList, setLayerList] = useState(new Array(tilelayer,new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
+  const [layerList, setLayerList] = useState(new Array(tilelayer, new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
   const [viewport, setViewport] = useState({
     width: "100%",
     height: "100%",
@@ -104,7 +158,7 @@ const App = ({namesss}) =>{
 
 
   const addLayer = () => { 
-    setLayerList(new Array(...layerList ,new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true})))
+    setLayerList(new Array(...layerList ,geojsonLayer,new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true})))
     setCount(count + 1)
     setTimeout(()=>{console.log(123)}, 1000)
   }
@@ -123,17 +177,6 @@ const App = ({namesss}) =>{
     setDrawingMode(!drawMode)
   }
 
-  let drawedLayer = new EditableGeoJsonLayer({
-    id: 'geojson-layer',
-    data: drawedData,
-    mode: drawMode ? DrawPolygonMode : ViewMode,
-    pickable: true,
-    opacity: 1,
-    selectedFeatureIndexes: [],
-    onEdit: ({ updatedData }) => {
-      setDrawedData(updatedData)
-    }
-  });
 
   const zoomIn = () => {
     console.log(viewport.zoom)
@@ -145,6 +188,18 @@ const App = ({namesss}) =>{
       zoom: viewport.zoom+1 < MAXZOOM ? viewport.zoom + 1: viewport.zoom,
     }) 
   }
+
+  let drawedLayer = new EditableGeoJsonLayer({
+    id: 'geojson-layer',
+    data: drawedData,
+    mode: drawMode ? DrawPolygonMode : ViewMode,
+    pickable: true,
+    opacity: 1,
+    selectedFeatureIndexes: [],
+    onEdit: ({ updatedData }) => {
+      setDrawedData(updatedData)
+    }
+  });
   
 
   return (
@@ -177,7 +232,7 @@ const App = ({namesss}) =>{
         initialViewState={viewport}
         controller={true}
         onViewStateChange={({ viewState }) => zoomControl(viewState)}
-        layers={[layerList, drawedLayer ]} 
+        layers={[layerList ]} 
         pickable={true}
         onClick={onDeckClick}
         canvas={canvas}>
