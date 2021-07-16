@@ -8,6 +8,8 @@ import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
 import {BitmapLayer} from '@deck.gl/layers';
 import {TileLayer} from '@deck.gl/geo-layers';
+import ControlPanel from './controlPanel'
+import getSelectionLayer from './selectionLayer/selectionLayer'
 
 
 //PROPS AND COMPONENT
@@ -15,6 +17,7 @@ const App = ({namesss}) =>{
 
   //MOCK DATA
   const MAXZOOM = 19
+  const MINZOOM=1
   const data = [
     {sourcePosition: [-122.41669, 37.7853], targetPosition: [-70, 45]}
   ];
@@ -32,16 +35,8 @@ const App = ({namesss}) =>{
     {sourcePosition: [-122.41669, 35], targetPosition: [-122.41669, 46]}
   ];
 
-  const selectionLayer = new SelectionLayer({
-    id: 'selection',
-    selectionType: 'rectangle',
-    layerIds: ['geojson-layer', 'line-layer-init2'], //This attribute is compulsory
-    onSelect: ({ pickingInfos }) => console.log(pickingInfos),
-    getTentativeFillColor: () => [255, 0, 255, 100],
-    getTentativeLineColor: () => [0, 0, 255, 255],
-    getTentativeLineDashArray: () => [0, 0],
-    lineWidthMinPixels: 1,
-  })
+  
+
 
   const geojsonLayer = new GeoJsonLayer({
     id: 'geojson-layer',
@@ -121,7 +116,7 @@ const App = ({namesss}) =>{
 
   //STATE
   const [count, setCount] = useState(0);
-  const [layerList, setLayerList] = useState(new Array(tilelayer, selectionLayer, new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
+  const [layerList, setLayerList] = useState(new Array(tilelayer, new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
   const [viewport, setViewport] = useState({
     width: "100%",
     height: "100%",
@@ -129,14 +124,7 @@ const App = ({namesss}) =>{
     longitude: 9,
     zoom: 4,
   })
-  const [drawMode, setDrawingMode] = useState(false)
-  const [drawedData, setDrawedData] = useState({
-    type: 'FeatureClayerListollection',
-    features: [
-      /* insert features here */
-    ]
-  })
-
+  const [isdrawMode, setdrawMode] = useState(false)
 
   //REFS TO DOM
   const myRef = useRef();
@@ -146,7 +134,7 @@ const App = ({namesss}) =>{
 
 
   //HOOKS
-  useEffect(()=>{
+  useEffect(()=>{ // in case a new layer is added, it should be available for selection. See how because no useState inside useEffect
   }, [layerList])
   
   useEffect(()=>{
@@ -161,12 +149,12 @@ const App = ({namesss}) =>{
   }
 
   const onDeckClick = (info) => {
-    console.log(deckRef.current.pickObject({x: info.x, y: info.y, radius: 1000 }))
+    console.log(deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 }))
   }
 
 
   const addLayer = () => { 
-    setLayerList(new Array(...layerList ,geojsonLayer,new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true})))
+    setLayerList(new Array(...layerList ,new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true})))
     setCount(count + 1)
   }
 
@@ -177,10 +165,15 @@ const App = ({namesss}) =>{
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
   }
 
-  const selectedFeatureIntilelayerdexes = [];
-
-  const toogleDrawingMode = () => {
-    setDrawingMode(!drawMode)
+  const toogleDrawingMode = (ischecked) => {
+    let layer = layerList.filter(e => e.id != "selection")
+    console.log(layer)
+    if(!ischecked){
+      setLayerList(new Array(...layer))
+    } else {
+      setLayerList(new Array(...layer, getSelectionLayer(layer)))
+    }
+    setdrawMode(ischecked)
   }
 
 
@@ -196,44 +189,20 @@ const App = ({namesss}) =>{
     }) 
   }
 
-  let drawedLayer = new EditableGeoJsonLayer({
-    id: 'geojson-layer',
-    data: drawedData,
-    mode: drawMode ? DrawPolygonMode : ViewMode,
-    pickable: true,
-    opacity: 1,
-    selectedFeatureIndexes: [],
-    onEdit: ({ updatedData }) => {
-      setDrawedData(updatedData)
-    }
-  });
+  const zoomOut = () => {
+    setViewport({
+      width: "100%",
+      height: "100%",
+      latitude: viewport.latitude,
+      longitude: viewport.longitude,
+      zoom: viewport.zoom-1 > MINZOOM ? viewport.zoom - 1: viewport.zoom,
+    }) 
+  }
   
 
   return (
     <div className="App" ref={myRef}>
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blconstank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        
-      </header>
-      <div>ADD LAYER {namesss}
-        <button onClick={addLayer} >ADD LAYER</button>
-      </div>
-      <div>ADD DRAWING MODE {count}
-        <button onClick={toogleDrawingMode}>DRAW MODE</button>
-      </div>
-      <div>ZOOM IN {count}
-        <button onClick={zoomIn}>ZOOM IN</button>
-      </div>
+      <ControlPanel toogleDraw={toogleDrawingMode} emitevent={()=>console.log(123)} zoommin={zoomIn} zoomout={zoomOut} addLayer={addLayer}/>
       <DeckGL
         ref={deckRef}
         initialViewState={viewport}
@@ -245,7 +214,7 @@ const App = ({namesss}) =>{
         canvas={canvas}>
           <LineLayer id="line-layer-xx" data={data2} pickable={true} visible={true} opacity= {1}/>
       </DeckGL>
-    </div>
+      </div>
   );
 }
 
@@ -264,14 +233,19 @@ from the folder that contains App.js (the component itself):
 parcel build App.js
 
 See the output in dist/App.js --> import it by using tag script
+
+example WMS:
+https://github.com/visgl/deck.gl/issues/5058
+
+example of control panel:
+https://github.com/visgl/deck.gl/blob/6.4-release/showcases/wind/src/control-panel.js
 **/
 
 
 //Proxies for type checking: https://medium.com/@SylvainPV/type-safety-in-javascript-using-es6-proxies-eee8fbbbd600
+// validate geojson https://www.npmjs.com/package/geojson-validation
 
 
 
+//MISSING
 
-//MISSING:
-
-//
