@@ -39,8 +39,8 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <!-- <my-map namesss="cazzada"></my-map>
-    <div id="abc">ABC<button id="1234567">EVENT EMITTER</button></div> -->
+    <!-- <my-map namesss="cazzada"></my-map> -->
+    <div id="abc">ABC<button id="1234567">EVENT EMITTER</button></div> 
   </body>
    <!-- <script src="../src/dist/App.js"></script> -->
   <script>
@@ -59,7 +59,7 @@
     var app = document.getElementById('App');
     var divlisten = document.getElementById('root');
 
-    divlisten.addEventListener("nv-enter", () => console.log("root captured"))
-    divlisten.addEventListener("zoom-changed", (data) => console.log(data.detail))
+    divlisten.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
+    //divlisten.addEventListener("zoom-changed", (data) => console.log(data.detail))
   </script>
 </html>

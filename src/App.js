@@ -6,10 +6,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import { EditableGeoJsonLayer, DrawPolygonMode, ViewMode } from 'nebula.gl';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
-import {BitmapLayer} from '@deck.gl/layers';
-import {TileLayer} from '@deck.gl/geo-layers';
 import ControlPanel from './controlPanel'
-import getSelectionLayer from './selectionLayer/selectionLayer'
+import getSelectionLayer from './layers/selectionLayer'
+import getTileMapLayer from './layers/tileMapLayer'
+import eventBuilder from './events/eventBuilder'
+import gjv from 'geojson-validation'
+import {WebMercatorViewport} from '@deck.gl/core';
+
 
 
 //PROPS AND COMPONENT
@@ -35,51 +38,51 @@ const App = ({namesss}) =>{
     {sourcePosition: [-122.41669, 35], targetPosition: [-122.41669, 46]}
   ];
 
-  
+  const geojson_data = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -56.25,
+                26.115985925333536
+              ],
+              [
+                -8.7890625,
+                -21.616579336740593
+              ],
+              [
+                22.148437499999996,
+                -13.581920900545844
+              ],
+              [
+                52.03125,
+                38.54816542304656
+              ],
+              [
+                -3.8671874999999996,
+                62.2679226294176
+              ],
+              [
+                -56.25,
+                26.115985925333536
+              ]
+            ]
+          ]
+        }
+      }
+    ]
+  }
 
 
   const geojsonLayer = new GeoJsonLayer({
     id: 'geojson-layer',
-    data: {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  -56.25,
-                  26.115985925333536
-                ],
-                [
-                  -8.7890625,
-                  -21.616579336740593
-                ],
-                [
-                  22.148437499999996,
-                  -13.581920900545844
-                ],
-                [
-                  52.03125,
-                  38.54816542304656
-                ],
-                [
-                  -3.8671874999999996,
-                  62.2679226294176
-                ],
-                [
-                  -56.25,
-                  26.115985925333536
-                ]
-              ]
-            ]
-          }
-        }
-      ]
-    },
+    data: geojson_data ,
     pickable: true,
     stroked: false,
     filled: true,
@@ -93,30 +96,11 @@ const App = ({namesss}) =>{
   });
 
 
-  const tilelayer = new TileLayer({
-    data: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
-
-    minZoom: 0,
-    maxZoom: 19,
-    tileSize: 256,
-
-    renderSubLayers: props => {
-      const {
-        bbox: {west, south, east, north}
-      } = props.tile;
-
-      return new BitmapLayer(props, {
-        data: null,
-        image: props.data,
-        bounds: [west, south, east, north]
-      });
-    }
-  });
-
 
   //STATE
   const [count, setCount] = useState(0);
-  const [layerList, setLayerList] = useState(new Array(tilelayer, new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
+  const [previousZoom, setPreviousZoom] = useState(0)
+  const [layerList, setLayerList] = useState(new Array(getTileMapLayer('https://c.tile.openstreetmap.org/{z}/{x}/{y}.png', 1, 19), new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
   const [viewport, setViewport] = useState({
     width: "100%",
     height: "100%",
@@ -134,12 +118,18 @@ const App = ({namesss}) =>{
 
 
   //HOOKS
-  useEffect(()=>{ // in case a new layer is added, it should be available for selection. See how because no useState inside useEffect
-  }, [layerList])
-  
   useEffect(()=>{
+    console.log(123)
+    console.log(gjv.valid(geojson_data)) //Expect true
+    console.log(gjv.valid({myapp: 1})) //expect false
     document.addEventListener('nv-event', handleNVEvent);
-  })
+  }, [])
+
+  useEffect(()=>{
+    if(viewport.zoom != previousZoom){
+      console.log("Emitting zoom changed")
+    }
+  }, [viewport])
   
 
 
@@ -149,20 +139,39 @@ const App = ({namesss}) =>{
   }
 
   const onDeckClick = (info) => {
+    const event = eventBuilder()
+    ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
     console.log(deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 }))
   }
 
 
   const addLayer = () => { 
-    setLayerList(new Array(...layerList ,new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true})))
+    if(isdrawMode){ // in that case the layer will be avaialble for selection.
+
+      let layers = layerList
+      layers.push(new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true}))
+      console.log(layers)
+      let layersWithoutSelectionLayer = layers.filter(e => e.id != "selection")
+      setLayerList(new Array(...layersWithoutSelectionLayer, getSelectionLayer(layersWithoutSelectionLayer)))
+    } else {
+      setLayerList(new Array(...layerList, new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true})))
+
+    }
     setCount(count + 1)
   }
 
 
   const zoomControl = (viewState) => {
-    setViewport(viewState)
-    const event = new CustomEvent("zoom-changed",  { bubbles: true, detail: Math.round(viewState.zoom)});
-    ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
+    setPreviousZoom(viewport.zoom)
+    if(viewState.zoom != viewport.zoom){
+      const proj = new WebMercatorViewport(viewState)
+      const [west, north] = proj.unproject([0,0])
+      const [east, south] = proj.unproject([viewState.width, viewState.height])
+      const event = new CustomEvent("zoom-changed",  { bubbles: true, detail:{zoom: Math.round(viewState.zoom), west, north, east, south }});
+      ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
+      setViewport(viewState)
+    }
+   
   }
 
   const toogleDrawingMode = (ischecked) => {
@@ -186,7 +195,7 @@ const App = ({namesss}) =>{
       latitude: viewport.latitude,
       longitude: viewport.longitude,
       zoom: viewport.zoom+1 < MAXZOOM ? viewport.zoom + 1: viewport.zoom,
-    }) 
+    })
   }
 
   const zoomOut = () => {
@@ -196,7 +205,7 @@ const App = ({namesss}) =>{
       latitude: viewport.latitude,
       longitude: viewport.longitude,
       zoom: viewport.zoom-1 > MINZOOM ? viewport.zoom - 1: viewport.zoom,
-    }) 
+    })
   }
   
 
@@ -212,7 +221,9 @@ const App = ({namesss}) =>{
         pickable={true}
         onClick={onDeckClick}
         canvas={canvas}>
-          <LineLayer id="line-layer-xx" data={data2} pickable={true} visible={true} opacity= {1}/>
+          <LineLayer id="line-layer-xx" data={data2} pickable={true} visible={true} opacity= {1} 
+          autoHighlight= {true} 
+          />
       </DeckGL>
       </div>
   );
@@ -245,7 +256,8 @@ https://github.com/visgl/deck.gl/blob/6.4-release/showcases/wind/src/control-pan
 //Proxies for type checking: https://medium.com/@SylvainPV/type-safety-in-javascript-using-es6-proxies-eee8fbbbd600
 // validate geojson https://www.npmjs.com/package/geojson-validation
 
-
+//Highlight
+//https://stackoverflow.com/questions/60734315/change-colour-of-clicked-item-in-deck-gl
 
 //MISSING
 
