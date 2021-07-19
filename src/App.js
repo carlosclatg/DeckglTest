@@ -14,6 +14,10 @@ import generateGeoJsonLayer from './layers/geojsonLayer'
 import gjv from 'geojson-validation'
 import eventMapReadyBuilder from './events/eventMapReadyBuilder'
 import { GEOJSON_LAYER, WMS_LAYER } from './constants';
+import addGisDomainTileLayerByStandardApi from './layers/addGisDomainTileLayerByStandardApi';
+import addGisDomainLayerByStandardApi from './layers/addGisDomainLayerByStandardApi'
+import { WMSTileLayer } from './deckgl-custom'
+
 
 
 
@@ -164,7 +168,7 @@ const App = ({namesss}) =>{
   }
 
 
-  const addLayer = ({detail}) => { 
+  const addLayer = async ({detail}) => { 
     console.log("handling layer")
     console.log(detail)
     let newLayer = null
@@ -173,11 +177,24 @@ const App = ({namesss}) =>{
     if(layerList.some(e => detail.id === e.id)) return;
     //case layer geojson
     if(detail.type === GEOJSON_LAYER){
-      if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing
-        newLayer = generateGeoJsonLayer(detail)
+      if(detail.layer instanceof Object){
+        if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing
+          newLayer = generateGeoJsonLayer(detail)
+        } else return
+      } else {
+        if(detail.tiled){
+          newLayer = addGisDomainTileLayerByStandardApi(detail)
+        } else {
+          let extent = null
+          newLayer = await addGisDomainLayerByStandardApi(detail, extent)
+        }
       }
     } else if(detail.type === WMS_LAYER){ //case layer WMS
-
+      if(detail.layer instanceof Object){
+        console.log("WMS does not support layer object")
+        return
+      }
+      newLayer = await new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: null}) //arrives as prop
     }
 
 
@@ -192,6 +209,13 @@ const App = ({namesss}) =>{
     }
   }
 
+
+  // const viewportToExtension = () => {
+  //   const proj = new WebMercatorViewport(viewport);
+  //   const [west, north] = proj.unproject([0, 0]);
+  //   const [east, south] = proj.unproject([viewport.width, viewport.height]);
+  //   return { west, south, east, north };
+  // }
 
   const zoomControl = (viewState) => {
     setPreviousZoom(viewport.zoom)
@@ -230,9 +254,14 @@ const App = ({namesss}) =>{
   }
   
 
+  const removeLayer = () => {
+    let layer = layerList.filter(e => e.id != "wms")
+    setLayerList(new Array(...layer ))
+  }
+
   return (
     <div className="App" ref={myRef} style={{ height: '50vh', width: '50vw', position: 'relative' }}>
-      <ControlPanel toogleDraw={toogleDrawingMode} emitevent={()=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={addLayer}/>
+      <ControlPanel removeLayer={removeLayer} toogleDraw={toogleDrawingMode} emitevent={()=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={addLayer}/>
       <DeckGL
         ref={deckRef}
         initialViewState={viewport}

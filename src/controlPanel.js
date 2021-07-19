@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const ControlPanel = ({toogleDraw, emitevent, zoommin, zoomout, addLayer}) =>{
+const ControlPanel = ({toogleDraw, emitevent, zoommin, zoomout, addLayer, removeLayer}) =>{
 
 
   const renderInput = (key, displayName, action) => {
@@ -24,6 +24,7 @@ const ControlPanel = ({toogleDraw, emitevent, zoommin, zoomout, addLayer}) =>{
         <button onClick={zoommin}>+</button>
         <button onClick={zoomout}>-</button>
         <button onClick={addLayer}>ADD</button>
+        <button onClick={removeLayer}>REMOVE WMS</button>
       </div>
     )
 }

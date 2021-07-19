@@ -48,26 +48,33 @@
     myLink.onclick = () =>{
       console.log(myLink)
       console.log("inside simulate click")
-      const event = new CustomEvent('topogisevt_add_layer', { detail: 
-        {
-          id:"new_geojson_layer",
-          type: "geojson",
-          layer:{
-            "type": "Feature",
-            "properties": {
-                "name": "Coors Field",
-                "amenity": "Baseball Stadium",
-                "popupContent": "This is where the Rockies play!"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [-104.99404, 39.75621]
-            }
-          }
-        } 
-      
-      
-      });
+      // const event = new CustomEvent('topogisevt_add_layer', { detail: 
+      //   {
+      //     id:"new_geojson_layer",
+      //     type: "geojson",
+      //     layer:{
+      //       "type": "Feature",
+      //       "properties": {
+      //           "name": "Coors Field",
+      //           "amenity": "Baseball Stadium",
+      //           "popupContent": "This is where the Rockies play!"
+      //       },
+      //       "geometry": {
+      //           "type": "Point",
+      //           "coordinates": [-104.99404, 39.75621]
+      //       }
+      //     }
+      //   } 
+      // });
+
+      const event = new CustomEvent('topogisevt_add_layer', 
+        {detail: 
+          {id:'wms', 
+          type:'wms', 
+          layer:'http://w133.bcn.cat/WMSURBANISME/service.svc/get'
+        }
+      })
+
       //event.initEvent("nv-event", true, true)
             //.dispatchEvent(event, true, true)
       document.dispatchEvent(event, true, false)
