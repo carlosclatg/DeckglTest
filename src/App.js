@@ -1,6 +1,6 @@
 import './App.css';
 import DeckGL from '@deck.gl/react';
-import {LineLayer, GeoJsonLayer} from '@deck.gl/layers';
+import {LineLayer, GeoJsonLayer, IconLayer} from '@deck.gl/layers';
 import { SelectionLayer } from '@nebula.gl/layers';
 import React, { useEffect, useState, useRef } from 'react';
 import { EditableGeoJsonLayer, DrawPolygonMode, ViewMode } from 'nebula.gl';
@@ -9,9 +9,11 @@ import reactToWebComponent from "react-to-webcomponent";
 import ControlPanel from './controlPanel'
 import getSelectionLayer from './layers/selectionLayer'
 import getTileMapLayer from './layers/tileMapLayer'
-import eventBuilder from './events/eventBuilder'
+import eventObjectSelectedBuilder from './events/eventObjectSelectedBuilder'
+import generateGeoJsonLayer from './layers/geojsonLayer'
 import gjv from 'geojson-validation'
-import {WebMercatorViewport} from '@deck.gl/core';
+import eventMapReadyBuilder from './events/eventMapReadyBuilder'
+import { GEOJSON_LAYER, WMS_LAYER } from './constants';
 
 
 
@@ -43,7 +45,11 @@ const App = ({namesss}) =>{
     "features": [
       {
         "type": "Feature",
-        "properties": {},
+        "properties": {
+          "domain_code":"domain",
+          "space_code": "space",
+          "layer_id": "layer_id_xxxx"
+        },
         "geometry": {
           "type": "Polygon",
           "coordinates": [
@@ -98,12 +104,11 @@ const App = ({namesss}) =>{
 
 
   //STATE
-  const [count, setCount] = useState(0);
-  const [previousZoom, setPreviousZoom] = useState(0)
+  const [previousZoom, setPreviousZoom] = useState(4)
   const [layerList, setLayerList] = useState(new Array(getTileMapLayer('https://c.tile.openstreetmap.org/{z}/{x}/{y}.png', 1, 19), new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
   const [viewport, setViewport] = useState({
-    width: "100%",
-    height: "100%",
+    width: "50%",
+    height: "50%",
     latitude: 45,
     longitude: 9,
     zoom: 4,
@@ -119,69 +124,81 @@ const App = ({namesss}) =>{
 
   //HOOKS
   useEffect(()=>{
-    console.log(123)
-    console.log(gjv.valid(geojson_data)) //Expect true
-    console.log(gjv.valid({myapp: 1})) //expect false
-    document.addEventListener('nv-event', handleNVEvent);
+    document.addEventListener('topogisevt_add_layer', addLayer);
+    const event = eventMapReadyBuilder();
+    ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
   }, [])
 
   useEffect(()=>{
-    if(viewport.zoom != previousZoom){
-      console.log("Emitting zoom changed")
+    if(viewport.zoom !== previousZoom){
+      const event = new CustomEvent("zoom-changed",  { bubbles: true, detail:{zoom: Math.round(viewport.zoom), west: 0, north: 1, east: 2, south:4 }});
+      ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
     }
   }, [viewport])
+
+
+  useEffect(()=>{
+    let layer = layerList.filter(e => e.id != "selection")
+    console.log(layer.map(e=>e.id))
+    if(!isdrawMode){
+      setLayerList(new Array(...layer))
+    } else {
+      setLayerList(new Array(...layer, getSelectionLayer(layer)))
+    }
+  },[isdrawMode])
+
   
-
-
-  //EVENT HANDLING
-  const handleNVEvent = ({detail}) => {
-    console.log("component handling event")
-  }
+  useEffect(()=>{
+    console.log(layerList)
+  },[layerList])
 
   const onDeckClick = (info) => {
-    const event = eventBuilder()
-    ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
-    console.log(deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 }))
+
+    let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
+    // if(objectSelected){
+    const event = eventObjectSelectedBuilder(objectSelected)
+    //   ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
+    // }
+
+    
   }
 
 
-  const addLayer = () => { 
-    if(isdrawMode){ // in that case the layer will be avaialble for selection.
+  const addLayer = ({detail}) => { 
+    console.log("handling layer")
+    console.log(detail)
+    let newLayer = null
 
-      let layers = layerList
-      layers.push(new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true}))
-      console.log(layers)
-      let layersWithoutSelectionLayer = layers.filter(e => e.id != "selection")
-      setLayerList(new Array(...layersWithoutSelectionLayer, getSelectionLayer(layersWithoutSelectionLayer)))
-    } else {
-      setLayerList(new Array(...layerList, new LineLayer({id: 'line-layer-' + count, data, visible: true, pickable: true})))
+    //check if a layer has already the new id
+    if(layerList.some(e => detail.id === e.id)) return;
+    //case layer geojson
+    if(detail.type === GEOJSON_LAYER){
+      if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing
+        newLayer = generateGeoJsonLayer(detail)
+      }
+    } else if(detail.type === WMS_LAYER){ //case layer WMS
 
     }
-    setCount(count + 1)
+
+
+    //Force update over selectable layers
+    let layer = layerList.filter(e => e.id != "selection")
+    layer.push(newLayer)
+    //miss add the new layer to the selectable layer
+    if(!isdrawMode){
+      setLayerList(new Array(...layer ))
+    } else {
+      setLayerList(new Array(...layer,getSelectionLayer(layer)))
+    }
   }
 
 
   const zoomControl = (viewState) => {
     setPreviousZoom(viewport.zoom)
-    if(viewState.zoom != viewport.zoom){
-      const proj = new WebMercatorViewport(viewState)
-      const [west, north] = proj.unproject([0,0])
-      const [east, south] = proj.unproject([viewState.width, viewState.height])
-      const event = new CustomEvent("zoom-changed",  { bubbles: true, detail:{zoom: Math.round(viewState.zoom), west, north, east, south }});
-      ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
-      setViewport(viewState)
-    }
-   
+    setViewport(viewState)
   }
 
   const toogleDrawingMode = (ischecked) => {
-    let layer = layerList.filter(e => e.id != "selection")
-    console.log(layer)
-    if(!ischecked){
-      setLayerList(new Array(...layer))
-    } else {
-      setLayerList(new Array(...layer, getSelectionLayer(layer)))
-    }
     setdrawMode(ischecked)
   }
 
@@ -189,29 +206,33 @@ const App = ({namesss}) =>{
 
 
   const zoomIn = () => {
+    let previousZoom = viewport.zoom
+    setPreviousZoom(previousZoom)
     setViewport({
       width: "100%",
       height: "100%",
       latitude: viewport.latitude,
       longitude: viewport.longitude,
-      zoom: viewport.zoom+1 < MAXZOOM ? viewport.zoom + 1: viewport.zoom,
+      zoom: previousZoom+1 < MAXZOOM ? previousZoom + 1: previousZoom,
     })
   }
 
   const zoomOut = () => {
+    let previousZoom = viewport.zoom
+    setPreviousZoom(previousZoom)
     setViewport({
       width: "100%",
       height: "100%",
       latitude: viewport.latitude,
       longitude: viewport.longitude,
-      zoom: viewport.zoom-1 > MINZOOM ? viewport.zoom - 1: viewport.zoom,
+      zoom: previousZoom-1 > MINZOOM ? previousZoom - 1: previousZoom,
     })
   }
   
 
   return (
-    <div className="App" ref={myRef}>
-      <ControlPanel toogleDraw={toogleDrawingMode} emitevent={()=>console.log(123)} zoommin={zoomIn} zoomout={zoomOut} addLayer={addLayer}/>
+    <div className="App" ref={myRef} style={{ height: '50vh', width: '50vw', position: 'relative' }}>
+      <ControlPanel toogleDraw={toogleDrawingMode} emitevent={()=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={addLayer}/>
       <DeckGL
         ref={deckRef}
         initialViewState={viewport}
@@ -254,7 +275,11 @@ https://github.com/visgl/deck.gl/blob/6.4-release/showcases/wind/src/control-pan
 
 
 //Proxies for type checking: https://medium.com/@SylvainPV/type-safety-in-javascript-using-es6-proxies-eee8fbbbd600
-// validate geojson https://www.npmjs.com/package/geojson-validation
+// validate geojson https://www.npmjs.com/package/geojson-validation 
+
+//console.log(gjv.valid(geojson_data)) //Expect true
+//console.log(gjv.valid({myapp: 1})) //expect false
+
 
 //Highlight
 //https://stackoverflow.com/questions/60734315/change-colour-of-clicked-item-in-deck-gl
