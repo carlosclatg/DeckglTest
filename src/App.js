@@ -18,6 +18,7 @@ import addGisDomainTileLayerByStandardApi from './layers/addGisDomainTileLayerBy
 import addGisDomainLayerByStandardApi from './layers/addGisDomainLayerByStandardApi'
 import { WMSTileLayer } from './deckgl-custom'
 import {getBoundingBox, viewportToExtension} from './utilities/index'
+import { MapStyleUtility } from './styles';
 
 
 
