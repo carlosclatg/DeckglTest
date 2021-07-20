@@ -1,9 +1,9 @@
 import './App.css';
 import DeckGL from '@deck.gl/react';
 import {LineLayer, GeoJsonLayer, IconLayer} from '@deck.gl/layers';
+import {WebMercatorViewport} from '@deck.gl/core';
 import { SelectionLayer } from '@nebula.gl/layers';
 import React, { useEffect, useState, useRef } from 'react';
-import { EditableGeoJsonLayer, DrawPolygonMode, ViewMode } from 'nebula.gl';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
 import ControlPanel from './controlPanel'
@@ -17,12 +17,13 @@ import { GEOJSON_LAYER, WMS_LAYER } from './constants';
 import addGisDomainTileLayerByStandardApi from './layers/addGisDomainTileLayerByStandardApi';
 import addGisDomainLayerByStandardApi from './layers/addGisDomainLayerByStandardApi'
 import { WMSTileLayer } from './deckgl-custom'
+import {getBoundingBox, viewportToExtension} from './utilities/index'
 
 
 
 
-//PROPS AND COMPONENT
-const App = ({namesss}) =>{
+//PROPS AND COMPONENT-
+const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png", zoom=true, enable_select_object=true , map_style= null, remoteuser= null  }) =>{
 
   //MOCK DATA
   const MAXZOOM = 19
@@ -109,10 +110,10 @@ const App = ({namesss}) =>{
 
   //STATE
   const [previousZoom, setPreviousZoom] = useState(4)
-  const [layerList, setLayerList] = useState(new Array(getTileMapLayer('https://c.tile.openstreetmap.org/{z}/{x}/{y}.png', 1, 19), new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
+  const [layerList, setLayerList] = useState(new Array(getTileMapLayer(backgroud_tile_url, 1, 19), new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
   const [viewport, setViewport] = useState({
-    width: "50%",
-    height: "50%",
+    width: 1,
+    height: 1,
     latitude: 45,
     longitude: 9,
     zoom: 4,
@@ -128,14 +129,17 @@ const App = ({namesss}) =>{
 
   //HOOKS
   useEffect(()=>{
-    document.addEventListener('topogisevt_add_layer', addLayer);
+    document.addEventListener('topogisevt_add_layer', handleAddLayer);
+    document.addEventListener('topogisevt_remove_layer', handleRemoveLayer);
+    document.addEventListener('topogisevt_center_on_object', handleCenterOnObject);
     const event = eventMapReadyBuilder();
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
   }, [])
 
   useEffect(()=>{
-    if(viewport.zoom !== previousZoom){
-      const event = new CustomEvent("zoom-changed",  { bubbles: true, detail:{zoom: Math.round(viewport.zoom), west: 0, north: 1, east: 2, south:4 }});
+    if(Math.round(viewport.zoom) !== Math.round(previousZoom)){
+      const { west, south, east, north } = viewportToExtension(viewport)
+      const event = new CustomEvent("topogisevt_map_zoom_changed",  { bubbles: true, detail:{zoom: Math.round(viewport.zoom), west, south, east, north  }});
       ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
     }
   }, [viewport])
@@ -147,28 +151,74 @@ const App = ({namesss}) =>{
     if(!isdrawMode){
       setLayerList(new Array(...layer))
     } else {
-      setLayerList(new Array(...layer, getSelectionLayer(layer)))
+      setLayerList(new Array(...layer, getSelectionLayer(layer, handleSelectedObjects)))
     }
   },[isdrawMode])
 
   
   useEffect(()=>{
-    console.log(layerList)
+    console.log('updated layer list')
   },[layerList])
 
   const onDeckClick = (info) => {
+    if(enable_select_object){
+      let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
+      if(objectSelected){
+        handleSelectedObjects(objectSelected)
+      }
+    }
+  }
 
-    let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
-    // if(objectSelected){
-    const event = eventObjectSelectedBuilder(objectSelected)
-    //   ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
-    // }
+  const handleRemoveLayer = ({detail}) => {
+    if(detail){
+      let layer = layerList.filter(e => e.id !== detail)
+      if(isdrawMode){
+        setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
+      } else {
+        setLayerList(new Array(...layer))
+      }
+    }
+  }
 
-    
+  const handleCenterOnObject = ({detail}) => {
+    if(detail){
+        let options = {}
+        if (remoteuser !== null && remoteuser.trim().length) {
+            options = { headers: { 'REMOTE_USER': remoteuser } }
+        }
+          fetch(detail, options)
+              .then((response) => {
+                  response.json().then(json => {
+                      console.log(json)
+                      const extent = getBoundingBox(json);
+                      const geojsonLayer = generateGeoJsonLayerfromJSON(json)
+                      const viewportWebMercator = new WebMercatorViewport(viewport);
+                      console.log(viewportWebMercator)
+                      //const {longitude, latitude, zoom} = viewportWebMercator.fitBounds([[extent.xMin, 10], [10, 20]]); this line fails
+                      let layer = layerList.filter(e => e.id != "selection")
+                      layer.push(geojsonLayer)
+                      //miss add the new layer to the selectable layer
+                      if(!isdrawMode){
+                        setLayerList(new Array(...layer ))
+                      } else {
+                        setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
+                      }
+                      setViewport({
+                        width: "100%",
+                        height: "100%",
+                        latitude: extent.xMin,
+                        longitude: extent.yMax,
+                        zoom: 2,
+                      })
+                  });
+              })
+              .catch(() => { });
+      
+    }
   }
 
 
-  const addLayer = async ({detail}) => { 
+  const handleAddLayer = async ({detail}) => { 
     console.log("handling layer")
     console.log(detail)
     let newLayer = null
@@ -197,7 +247,6 @@ const App = ({namesss}) =>{
       newLayer = await new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: null}) //arrives as prop
     }
 
-
     //Force update over selectable layers
     let layer = layerList.filter(e => e.id != "selection")
     layer.push(newLayer)
@@ -205,17 +254,9 @@ const App = ({namesss}) =>{
     if(!isdrawMode){
       setLayerList(new Array(...layer ))
     } else {
-      setLayerList(new Array(...layer,getSelectionLayer(layer)))
+      setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
     }
   }
-
-
-  // const viewportToExtension = () => {
-  //   const proj = new WebMercatorViewport(viewport);
-  //   const [west, north] = proj.unproject([0, 0]);
-  //   const [east, south] = proj.unproject([viewport.width, viewport.height]);
-  //   return { west, south, east, north };
-  // }
 
   const zoomControl = (viewState) => {
     setPreviousZoom(viewport.zoom)
@@ -227,30 +268,57 @@ const App = ({namesss}) =>{
   }
 
 
+  const handleSelectedObjects = (selectedObjects) => {
+    if(!selectedObjects) return //case nothing
+    if(Array.isArray(selectedObjects) && !selectedObjects.length) return
+    if(!selectedObjects instanceof Object && !Array.isArray(selectedObjects))return //safety type-check single or multiple selection
+    if(selectedObjects instanceof Object) {
+      if(!Array.isArray(selectedObjects)){
+        selectedObjects = new Array(selectedObjects) //case single selection.
+      }
+    }    
+    const detail = selectedObjects.map(elem => {
+      let obj = new Object();
+      obj.domain_code = elem.layer.props.domain_code
+      obj.space_code = elem.layer.props.space_code
+      obj.id = elem.layer.id
+      obj.object_id = elem.layer.props.object_id
+      obj.object = elem.object
+      obj.position = {
+        lat: 12,
+        lng: 15
+      }
+      return obj
+    })   
+    const ev = eventObjectSelectedBuilder(detail)
+    ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
+  }
+
+
 
 
   const zoomIn = () => {
     let previousZoom = viewport.zoom
-    setPreviousZoom(previousZoom)
     setViewport({
-      width: "100%",
-      height: "100%",
+      width: viewport.width,
+      height: viewport.height,
       latitude: viewport.latitude,
       longitude: viewport.longitude,
       zoom: previousZoom+1 < MAXZOOM ? previousZoom + 1: previousZoom,
     })
+    setPreviousZoom(previousZoom)
   }
 
   const zoomOut = () => {
     let previousZoom = viewport.zoom
-    setPreviousZoom(previousZoom)
     setViewport({
-      width: "100%",
-      height: "100%",
+      width: viewport.width,
+      height: viewport.height,
       latitude: viewport.latitude,
       longitude: viewport.longitude,
       zoom: previousZoom-1 > MINZOOM ? previousZoom - 1: previousZoom,
     })
+    setPreviousZoom(previousZoom)
   }
   
 
@@ -259,9 +327,27 @@ const App = ({namesss}) =>{
     setLayerList(new Array(...layer ))
   }
 
+
+  const generateGeoJsonLayerfromJSON = (data) => {
+    return new GeoJsonLayer({
+        id: 'data.id',
+        data: data,
+        autoHighLight: true,
+        highlightColor: [255, 255, 0],
+        pickable: true,
+        filled: true,
+        extruded: false,
+        stroke: true,
+        lineWidthUnits: 'pixels',
+        getFillColor: [0, 255, 255],
+        getRadius: 3,
+        pointRadiusUnits: 'pixels',
+    });
+}
+
   return (
     <div className="App" ref={myRef} style={{ height: '50vh', width: '50vw', position: 'relative' }}>
-      <ControlPanel removeLayer={removeLayer} toogleDraw={toogleDrawingMode} emitevent={()=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={addLayer}/>
+      <ControlPanel removeLayer={removeLayer} toogleDraw={toogleDrawingMode} emitevent={()=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={handleAddLayer}/>
       <DeckGL
         ref={deckRef}
         initialViewState={viewport}

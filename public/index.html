@@ -67,13 +67,18 @@
       //   } 
       // });
 
-      const event = new CustomEvent('topogisevt_add_layer', 
-        {detail: 
-          {id:'wms', 
-          type:'wms', 
-          layer:'http://w133.bcn.cat/WMSURBANISME/service.svc/get'
-        }
-      })
+      // const event = new CustomEvent('topogisevt_add_layer', 
+      //   {detail: 
+      //     {id:'wms', 
+      //     type:'wms', 
+      //     layer:'https://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?version=1.3.0&request=GetCapabilities&service=WMS'
+      //   }
+      // })
+
+      const event = new CustomEvent('topogisevt_center_on_object', 
+        {detail: 'http://localhost:8080'
+          
+        })
 
       //event.initEvent("nv-event", true, true)
             //.dispatchEvent(event, true, true)
@@ -82,8 +87,8 @@
 
     var divlisten = document.getElementById('root');
 
-    divlisten.addEventListener("topogisevt_map_object_selected", (data) => console.log('Data detail is' + data.detail))
-    divlisten.addEventListener("zoom-changed", (data) => console.log(data.detail))
-    divlisten.addEventListener("topogisevt_map_ready", (data) => console.log(data.detail))
+    divlisten.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
+    divlisten.addEventListener("topogisevt_map_zoom_changed", (data) => console.log(data.detail))
+    divlisten.addEventListener("topogisevt_map_ready", d => console.log(d.detail))
   </script>
 </html>

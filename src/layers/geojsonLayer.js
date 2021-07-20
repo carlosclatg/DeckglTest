@@ -1,7 +1,6 @@
 import { GeoJsonLayer} from '@deck.gl/layers';
 
 export default function generateGeoJsonLayer(data){
-    console.log(data)
     return new GeoJsonLayer({
         id: data.id,
         data: data.layer,
@@ -17,3 +16,5 @@ export default function generateGeoJsonLayer(data){
         pointRadiusUnits: 'pixels',
     });
 }
+
+
