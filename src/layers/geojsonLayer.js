@@ -14,7 +14,7 @@ export default function generateGeoJsonLayer(data){
         getFillColor: [0, 255, 255],
         getRadius: 3,
         pointRadiusUnits: 'pixels',
-    });
+    }); //geojsonlayer does not accept min and max zoom
 }
 
 

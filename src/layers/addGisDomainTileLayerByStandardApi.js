@@ -1,6 +1,5 @@
 import {TileLayer} from '@deck.gl/geo-layers';
-import {BitmapLayer} from '@deck.gl/layers';
-
+import { BitmapLayer, IconLayer } from '@deck.gl/layers';
 
 export default function addGisDomainTileLayerByStandardApi(layer) {
     let url = layer.layer + "/tile/{z}/{x}/{y}?props=code,unique_id,_id,domain,space,internal_id,type"
@@ -20,7 +19,7 @@ export default function addGisDomainTileLayerByStandardApi(layer) {
         tileSize: 512,
         getFillColor: [0, 255, 255],
         getRadius: 25,
-        pointRadiusUnits: 'pixels'
+        pointRadiusUnits: 'pixels',
         // _subLayerProps: {
         //     points: {
         //         type: IconLayer,
@@ -32,12 +31,12 @@ export default function addGisDomainTileLayerByStandardApi(layer) {
         //         }
         //     }
         // },
-        // getLineColor: () => {
-        //     return [0, 0, 0];
-        // },
-        // getLineWidth: () => {
-        //     return 1;
-        // }
+        getLineColor: () => {
+            return [0, 0, 0];
+        },
+        getLineWidth: () => {
+            return 1;
+        }
     })
     // this.layers.push(new ()({
     //     id: layer.id,

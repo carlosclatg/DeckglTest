@@ -1,4 +1,4 @@
-import {WebMercatorViewport} from '@deck.gl/core';
+import {Viewport} from '@deck.gl/core';
 
 
 const getBoundingBox = (data) => {
@@ -47,8 +47,7 @@ const getBoundingBox = (data) => {
 
 
 const viewportToExtension = (viewport) => {
-  console.log(viewport)
-  const proj = new WebMercatorViewport(viewport);
+  const proj = new Viewport(viewport);
   const [west, north] = proj.unproject([0, 0]);
   const [east, south] = proj.unproject([viewport.width, viewport.height]);
   return { west, south, east, north };

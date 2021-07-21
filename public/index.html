@@ -48,37 +48,35 @@
     myLink.onclick = () =>{
       console.log(myLink)
       console.log("inside simulate click")
-      // const event = new CustomEvent('topogisevt_add_layer', { detail: 
-      //   {
-      //     id:"new_geojson_layer",
-      //     type: "geojson",
-      //     layer:{
-      //       "type": "Feature",
-      //       "properties": {
-      //           "name": "Coors Field",
-      //           "amenity": "Baseball Stadium",
-      //           "popupContent": "This is where the Rockies play!"
-      //       },
-      //       "geometry": {
-      //           "type": "Point",
-      //           "coordinates": [-104.99404, 39.75621]
-      //       }
-      //     }
-      //   } 
-      // });
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id:"new_geojson_layer",
+          type: "geojson",
+          layer:{
+            "type": "Feature",
+            "properties": {
+                "domain_code": "Coors Field",
+                "space_code": "Baseball Stadium",
+                "cazzo": "This is where the Rockies play!"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [-104.99404, 39.75621]
+            }
+          },
+        }
+      });
 
       // const event = new CustomEvent('topogisevt_add_layer', 
       //   {detail: 
       //     {id:'wms', 
       //     type:'wms', 
-      //     layer:'https://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?version=1.3.0&request=GetCapabilities&service=WMS'
+      //     layer:'http://serviziogc.regione.fvg.it/geoserver/STRAT_PR/wms?version=1.1.1&request=GetMap&layers=DBPRIOR_0205_LAGUNA_GM&TRANSPARENT=true&'
       //   }
       // })
 
-      const event = new CustomEvent('topogisevt_center_on_object', 
-        {detail: 'http://localhost:8080'
-          
-        })
+      // const event = new CustomEvent('topogisevt_center_on_object', 
+      //   {detail: 'http://localhost:8080'})
 
       //event.initEvent("nv-event", true, true)
             //.dispatchEvent(event, true, true)

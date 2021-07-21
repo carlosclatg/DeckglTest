@@ -1,7 +1,7 @@
 import './App.css';
 import DeckGL from '@deck.gl/react';
 import {LineLayer, GeoJsonLayer, IconLayer} from '@deck.gl/layers';
-import {WebMercatorViewport} from '@deck.gl/core';
+import {Viewport, MapView} from '@deck.gl/core';
 import { SelectionLayer } from '@nebula.gl/layers';
 import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
@@ -19,6 +19,9 @@ import addGisDomainLayerByStandardApi from './layers/addGisDomainLayerByStandard
 import { WMSTileLayer } from './deckgl-custom'
 import {getBoundingBox, viewportToExtension} from './utilities/index'
 import { MapStyleUtility } from './styles';
+import {WebMercatorViewport} from '@deck.gl/core';
+
+
 
 
 
@@ -138,8 +141,10 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
   }, [])
 
   useEffect(()=>{
+    console.log(viewport)
     if(Math.round(viewport.zoom) !== Math.round(previousZoom)){
       const { west, south, east, north } = viewportToExtension(viewport)
+      console.log(viewport)
       const event = new CustomEvent("topogisevt_map_zoom_changed",  { bubbles: true, detail:{zoom: Math.round(viewport.zoom), west, south, east, north  }});
       ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
     }
@@ -187,33 +192,27 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
         if (remoteuser !== null && remoteuser.trim().length) {
             options = { headers: { 'REMOTE_USER': remoteuser } }
         }
-          fetch(detail, options)
-              .then((response) => {
-                  response.json().then(json => {
-                      console.log(json)
-                      const extent = getBoundingBox(json);
-                      const geojsonLayer = generateGeoJsonLayerfromJSON(json)
-                      const viewportWebMercator = new WebMercatorViewport(viewport);
-                      console.log(viewportWebMercator)
-                      //const {longitude, latitude, zoom} = viewportWebMercator.fitBounds([[extent.xMin, 10], [10, 20]]); this line fails
-                      let layer = layerList.filter(e => e.id != "selection")
-                      layer.push(geojsonLayer)
-                      //miss add the new layer to the selectable layer
-                      if(!isdrawMode){
-                        setLayerList(new Array(...layer ))
-                      } else {
-                        setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
-                      }
-                      setViewport({
-                        width: "100%",
-                        height: "100%",
-                        latitude: extent.xMin,
-                        longitude: extent.yMax,
-                        zoom: 2,
-                      })
-                  });
-              })
-              .catch(() => { });
+        fetch(detail, options)
+            .then((response) => {
+                response.json().then(json => {
+                    if(!gjv.isGeoJSONObject(json)) return
+                    console.log(json)
+                    const extent = getBoundingBox(json);
+                    const geojsonLayer = generateGeoJsonLayerfromJSON(json)
+                    const newviewport = new WebMercatorViewport(viewport);
+                    let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
+                    if(zoom < 0) zoom = Math.abs(zoom + 1)
+                    let layer = layerList.filter(e => e.id != "selection")
+                    layer.push(geojsonLayer)
+                    if(!isdrawMode){
+                      setLayerList(new Array(...layer ))
+                    } else {
+                      setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
+                    }
+                    setViewport({width: viewport.width,height: viewport.height,latitude: latitude,longitude: longitude,zoom: zoom})
+                });
+            })
+            .catch((err) => console.log('An error ocurred while fetching or transforming the layer from the URL'));
       
     }
   }
@@ -246,6 +245,8 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
         return
       }
       newLayer = await new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: null}) //arrives as prop
+    } else {
+      
     }
 
     //Force update over selectable layers
@@ -270,6 +271,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
 
   const handleSelectedObjects = (selectedObjects) => {
+    // console.log(selectedObjects)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
     if(!selectedObjects instanceof Object && !Array.isArray(selectedObjects))return //safety type-check single or multiple selection
@@ -278,19 +280,28 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
         selectedObjects = new Array(selectedObjects) //case single selection.
       }
     }    
-    const detail = selectedObjects.map(elem => {
+    const detail = selectedObjects.map(sel => {
       let obj = new Object();
-      obj.domain_code = elem.layer.props.domain_code
-      obj.space_code = elem.layer.props.space_code
-      obj.id = elem.layer.id
-      obj.object_id = elem.layer.props.object_id
-      obj.object = elem.object
-      obj.position = {
-        lat: 12,
-        lng: 15
-      }
+      obj.domain_code = sel.object.properties && sel.object.properties.domain_code || undefined
+      obj.space_code = sel.object.properties && sel.object.properties.space_code || undefined
+      obj.id = sel.layer.id
+      obj.object_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
+      obj.object = sel.object
+
+      if(sel.coordinate){ //case picked
+        obj.position = {
+          lat: sel.coordinate[1],
+          lng: sel.coordinate[0]
+        }
+      } else {//case selected
+        obj.position = {
+          lat: null,
+          lng: null
+        }
+      } 
+
       return obj
-    })   
+    })
     const ev = eventObjectSelectedBuilder(detail)
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
   }
@@ -347,7 +358,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 }
 
   return (
-    <div className="App" ref={myRef} style={{ height: '50vh', width: '50vw', position: 'relative' }}>
+    <div className="App" ref={myRef} style={{ height: '70vh', width: '70vw', position: 'relative' }}>
       <ControlPanel removeLayer={removeLayer} toogleDraw={toogleDrawingMode} emitevent={()=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={handleAddLayer}/>
       <DeckGL
         ref={deckRef}
