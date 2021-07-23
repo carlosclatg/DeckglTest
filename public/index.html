@@ -27,7 +27,10 @@
     <title>React App</title>
   </head>
   <body>
-    <div id="abc">ABC<button id="1234567">EVENT EMITTER</button></div> 
+    <div id="abc">ABC<button id="geojson-point-line">ADD GEOJSON LAYER POINT + LINE</button></div> 
+    <div id="abc">ABC<button id="geojson-point">ADD GEOJSON POINT</button></div> 
+    <div id="abc">ABC<button id="wms-button">WMS/button</div> 
+      <div id="abc">ABC<button id="wms-button2">WMS/button</div>
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -44,13 +47,110 @@
   </body>
    <!-- <script src="../src/dist/App.js"></script> -->
   <script>
-    var myLink = document.getElementById('1234567');
-    myLink.onclick = () =>{
-      console.log(myLink)
-      console.log("inside simulate click")
+    var a1 = document.getElementById('geojson-point-line');
+    a1.onclick = () =>{
+      console.log(1234)
+      const event = new CustomEvent('topogisevt_add_layer', { detail: {
+        id: 'layer-geojson-point-line',
+        type: 'geojson',
+        layer: {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "id": "obj1",
+              "properties": {
+                "type": "issue-level-1",
+                "space":"gam-issue",
+                "domain":"grid-act-maintenance",
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "type": "issue-level-2",
+                "space":"gam-issue",
+                "domain":"grid-act-maintenance",
+              },
+              "id": "obj2",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.178344726562498,
+                  42.18375873465217
+                ]
+              }
+            },
+            {
+              "type": "Feature",
+              "id": "obj3",
+              "properties": {
+                "type": "issue-level-3",
+                "space":"gam-issue",
+                "domain":"grid-act-maintenance",
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  11.618041992187498,
+                  43.113014204188914
+                ]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {},
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      }
+      });
+
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a2 = document.getElementById('geojson-point');
+    a2.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
       const event = new CustomEvent('topogisevt_add_layer', { detail: 
         {
-          id:"new_geojson_layer",
+          id:"layer-geojson-point",
           type: "geojson",
           layer:{
             "type": "Feature",
@@ -66,14 +166,36 @@
           },
         }
       });
+      document.dispatchEvent(event, true, false)
+    }
 
-      // const event = new CustomEvent('topogisevt_add_layer', 
-      //   {detail: 
-      //     {id:'wms', 
-      //     type:'wms', 
-      //     layer:'http://serviziogc.regione.fvg.it/geoserver/STRAT_PR/wms?version=1.1.1&request=GetMap&layers=DBPRIOR_0205_LAGUNA_GM&TRANSPARENT=true&'
-      //   }
-      // })
+    var a3 = document.getElementById('wms-button');
+    a3.onclick = () =>{
+      const event = new CustomEvent('topogisevt_add_layer', 
+        {detail: 
+          {id:'wms', 
+          type:'wms', 
+          layer:'http://serviziogc.regione.fvg.it/geoserver/STRAT_PR/wms?version=1.1.1&request=GetMap&layers=DBPRIOR_0205_LAGUNA_GM&TRANSPARENT=true&'
+        }
+      })
+
+      // const event = new CustomEvent('topogisevt_center_on_object', 
+      //   {detail: 'http://localhost:8080'})
+
+      //event.initEvent("nv-event", true, true)
+            //.dispatchEvent(event, true, true)
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a4 = document.getElementById('wms-button2');
+    a4.onclick = () =>{
+      const event = new CustomEvent('topogisevt_add_layer', 
+        {detail: 
+          {id:'wms-1', 
+          type:'wms', 
+          layer:'http://serviziogc.regione.fvg.it/geoserver/STRAT_PR/wms?version=1.1.1&request=GetMap&layers=DBPRIOR_0205_LAGUNA_GM&TRANSPARENT=true&'
+        }
+      })
 
       // const event = new CustomEvent('topogisevt_center_on_object', 
       //   {detail: 'http://localhost:8080'})
@@ -85,8 +207,12 @@
 
     var divlisten = document.getElementById('root');
 
-    divlisten.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
-    divlisten.addEventListener("topogisevt_map_zoom_changed", (data) => console.log(data.detail))
-    divlisten.addEventListener("topogisevt_map_ready", d => console.log(d.detail))
+    // divlisten.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
+    // divlisten.addEventListener("topogisevt_map_zoom_changed", (data) => console.log(data.detail))
+    // divlisten.addEventListener("topogisevt_map_ready", d => console.log(d.detail))
   </script>
 </html>
+
+
+
+

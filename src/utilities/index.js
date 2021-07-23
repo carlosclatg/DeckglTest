@@ -54,4 +54,16 @@ const viewportToExtension = (viewport) => {
 }
 
 
-export { getBoundingBox, viewportToExtension }
+const typecheck = (obj, definition) =>{
+  return new Proxy(obj, {
+     set (obj, key, value) {
+        if(key in definition && typeof value !== definition[key])
+           throw new TypeError("Invalid type")
+
+        return Reflect.set(obj, key, value)
+     }
+  })
+}
+
+
+export { getBoundingBox, viewportToExtension, typecheck }

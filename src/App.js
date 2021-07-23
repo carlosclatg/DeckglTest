@@ -1,9 +1,11 @@
 import './App.css';
 import DeckGL from '@deck.gl/react';
+import _ from 'lodash';
 import {LineLayer, GeoJsonLayer, IconLayer} from '@deck.gl/layers';
 import {Viewport, MapView} from '@deck.gl/core';
 import { SelectionLayer } from '@nebula.gl/layers';
-import React, { useEffect, useState, useRef } from 'react';
+import EventEmitter from 'events'
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
 import ControlPanel from './controlPanel'
@@ -18,7 +20,7 @@ import addGisDomainTileLayerByStandardApi from './layers/addGisDomainTileLayerBy
 import addGisDomainLayerByStandardApi from './layers/addGisDomainLayerByStandardApi'
 import { WMSTileLayer } from './deckgl-custom'
 import {getBoundingBox, viewportToExtension} from './utilities/index'
-import { MapStyleUtility } from './styles';
+import MapStyle from './styles';
 import {WebMercatorViewport} from '@deck.gl/core';
 
 
@@ -27,124 +29,59 @@ import {WebMercatorViewport} from '@deck.gl/core';
 
 
 //PROPS AND COMPONENT-
-const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png", zoom=true, enable_select_object=true , map_style= null, remoteuser= null  }) =>{
+const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png", width=600, height=600, center={ lat: 41.8788383, lng: 12.3594608 }, zoom=4, enable_select_object=true , map_style= null, remoteuser= null  }) =>{
 
   //MOCK DATA
   const MAXZOOM = 19
   const MINZOOM=1
-  const data = [
-    {sourcePosition: [-122.41669, 37.7853], targetPosition: [-70, 45]}
-  ];
   const data2 = [
     {sourcePosition: [-122.41669, 37.7853], targetPosition: [-60, 38]}
   ];
+
+
+
   const INITIAL_VIEW_STATE = {
-    longitude: -122.41669,
-    latitude: 37.7853,
-    zoom: 13,
-    pitch: 0,
-    bearing: 0
-  };
-  const data3 = [
-    {sourcePosition: [-122.41669, 35], targetPosition: [-122.41669, 46]}
-  ];
-
-  const geojson_data = {
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "properties": {
-          "domain_code":"domain",
-          "space_code": "space",
-          "layer_id": "layer_id_xxxx"
-        },
-        "geometry": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [
-                -56.25,
-                26.115985925333536
-              ],
-              [
-                -8.7890625,
-                -21.616579336740593
-              ],
-              [
-                22.148437499999996,
-                -13.581920900545844
-              ],
-              [
-                52.03125,
-                38.54816542304656
-              ],
-              [
-                -3.8671874999999996,
-                62.2679226294176
-              ],
-              [
-                -56.25,
-                26.115985925333536
-              ]
-            ]
-          ]
-        }
-      }
-    ]
-  }
-
-
-  const geojsonLayer = new GeoJsonLayer({
-    id: 'geojson-layer',
-    data: geojson_data ,
-    pickable: true,
-    stroked: false,
-    filled: true,
-    extruded: true,
-    lineWidthScale: 20,
-    lineWidthMinPixels: 2,
-    getFillColor: [160, 160, 180, 200],
-    getRadius: 100,
-    getLineWidth: 1,
-    getElevation: 30
-  });
-
-
-
-  //STATE
-  const [previousZoom, setPreviousZoom] = useState(4)
-  const [layerList, setLayerList] = useState(new Array(getTileMapLayer(backgroud_tile_url, 1, 19), new LineLayer({id: 'line-layer-init2', data: data2, pickable: true, visible: true})))
-  const [viewport, setViewport] = useState({
     width: 1,
     height: 1,
-    latitude: 45,
-    longitude: 9,
-    zoom: 4,
-  })
-  const [isdrawMode, setdrawMode] = useState(false)
+    latitude: center.lat,
+    longitude: center.lng,
+    zoom: zoom,
+  };
 
+  //STATE
+  const [previousZoom, setPreviousZoom] = useState(INITIAL_VIEW_STATE.zoom)
+  const [viewport, setViewport] = useState(INITIAL_VIEW_STATE)
+  const [isdrawMode, setdrawMode] = useState(false)
+  const [mapStyle, setMapStyle] = useState(new MapStyle(null))
+  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(backgroud_tile_url, MINZOOM, MAXZOOM)])
+  
   //REFS TO DOM
   const myRef = useRef();
   const deckRef = useRef();
-  const canvas = useRef()
-
-
+  const canvas = useRef();
 
   //HOOKS
   useEffect(()=>{
-    document.addEventListener('topogisevt_add_layer', handleAddLayer);
-    document.addEventListener('topogisevt_remove_layer', handleRemoveLayer);
-    document.addEventListener('topogisevt_center_on_object', handleCenterOnObject);
+    if(map_style){
+      fetch(map_style)
+        .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
+        .catch(e => console.log(e));
+    }
     const event = eventMapReadyBuilder();
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
-  }, [])
+  },[])
 
   useEffect(()=>{
-    console.log(viewport)
+    console.log("Inside use effect of layerList")
+    console.log(layerList)
+    document.addEventListener('topogisevt_add_layer', handleAddLayer); //update layerList listener otherwise take initial state
+    document.addEventListener('topogisevt_remove_layer', handleRemoveLayer); //update layerList listener otherwise take initial state
+    document.addEventListener('topogisevt_center_on_object', handleCenterOnObject); //update layerList listener otherwise take initial state
+  }, [layerList])
+
+  useEffect(()=>{
     if(Math.round(viewport.zoom) !== Math.round(previousZoom)){
       const { west, south, east, north } = viewportToExtension(viewport)
-      console.log(viewport)
       const event = new CustomEvent("topogisevt_map_zoom_changed",  { bubbles: true, detail:{zoom: Math.round(viewport.zoom), west, south, east, north  }});
       ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
     }
@@ -152,22 +89,16 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
 
   useEffect(()=>{
-    let layer = layerList.filter(e => e.id != "selection")
-    console.log(layer.map(e=>e.id))
-    if(!isdrawMode){
-      setLayerList(new Array(...layer))
-    } else {
-      setLayerList(new Array(...layer, getSelectionLayer(layer, handleSelectedObjects)))
-    }
+    // if(isdrawMode){
+    //   setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects)))
+    // } else {
+    //   setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
+    // }
   },[isdrawMode])
 
-  
-  useEffect(()=>{
-    console.log('updated layer list')
-  },[layerList])
 
   const onDeckClick = (info) => {
-    if(enable_select_object){
+    if(enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
       let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
       if(objectSelected){
         handleSelectedObjects(objectSelected)
@@ -176,7 +107,9 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
   }
 
   const handleRemoveLayer = ({detail}) => {
+    console.log(detail)
     if(detail){
+      console.log(layerList)
       let layer = layerList.filter(e => e.id !== detail)
       if(isdrawMode){
         setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
@@ -213,30 +146,29 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
                 });
             })
             .catch((err) => console.log('An error ocurred while fetching or transforming the layer from the URL'));
-      
     }
   }
 
-
-  const handleAddLayer = async ({detail}) => { 
-    console.log("handling layer")
-    console.log(detail)
+  const handleAddLayer = ({detail})=> { 
     let newLayer = null
-
-    //check if a layer has already the new id
-    if(layerList.some(e => detail.id === e.id)) return;
+    console.log(layerList)
+    if(layerList.some(e=>{
+      return e.id == detail.id
+    })) return
+    console.log("Not to reach")
+    
     //case layer geojson
     if(detail.type === GEOJSON_LAYER){
       if(detail.layer instanceof Object){
         if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing
-          newLayer = generateGeoJsonLayer(detail)
+          newLayer = generateGeoJsonLayer(detail, mapStyle)
         } else return
       } else {
         if(detail.tiled){
-          newLayer = addGisDomainTileLayerByStandardApi(detail)
+          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, remoteuser)
         } else {
-          let extent = null
-          newLayer = await addGisDomainLayerByStandardApi(detail, extent)
+          let extent = viewportToExtension(viewport)
+          newLayer = addGisDomainLayerByStandardApi(detail, extent,remoteuser)
         }
       }
     } else if(detail.type === WMS_LAYER){ //case layer WMS
@@ -244,21 +176,23 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
         console.log("WMS does not support layer object")
         return
       }
-      newLayer = await new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: null}) //arrives as prop
+      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: null})
     } else {
-      
+
     }
 
-    //Force update over selectable layers
-    let layer = layerList.filter(e => e.id != "selection")
-    layer.push(newLayer)
-    //miss add the new layer to the selectable layer
-    if(!isdrawMode){
-      setLayerList(new Array(...layer ))
-    } else {
-      setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
+    if(newLayer){
+      //miss add the new layer to the selectable layer
+      //https://github.com/visgl/deck.gl/discussions/5593
+      document.removeEventListener("topogisevt_add_layer", this)
+      //Diferencia entre:
+      setLayerList((layerList)=>[...layerList, newLayer])
+      //setLayerList(new Array(...layerList, newLayer))
+      
     }
   }
+
+
 
   const zoomControl = (viewState) => {
     setPreviousZoom(viewport.zoom)
@@ -269,7 +203,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
     setdrawMode(ischecked)
   }
 
-
+  //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
     // console.log(selectedObjects)
     if(!selectedObjects) return //case nothing
@@ -306,9 +240,6 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
   }
 
-
-
-
   const zoomIn = () => {
     let previousZoom = viewport.zoom
     setViewport({
@@ -322,6 +253,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
   }
 
   const zoomOut = () => {
+    console.log(layerList)
     let previousZoom = viewport.zoom
     setViewport({
       width: viewport.width,
@@ -331,14 +263,29 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
       zoom: previousZoom-1 > MINZOOM ? previousZoom - 1: previousZoom,
     })
     setPreviousZoom(previousZoom)
-  }
-  
+  } 
 
+  //That does not work as it does not prevent triggering other events like getFillColor...
+  const _layerFilter =({layer, renderPass})=>{
+    if(layer.id == 'layer-geojson-point'){
+      console.log("returning false")
+      return false
+    } else {
+      console.log("-----------returning true-----------------")
+      return true
+    }
+  }
+
+  //At this moment, what it will do is simply filter in the display, not removing from memory the layer itself.
   const removeLayer = () => {
-    let layer = layerList.filter(e => e.id != "wms")
-    setLayerList(new Array(...layer ))
+    setLayerList((layerList)=>layerList
+      .filter(e => {
+        if(!e) return false
+        if(e.id === 'layer-geojson-point') return false
+        return true
+      })
+    )
   }
-
 
   const generateGeoJsonLayerfromJSON = (data) => {
     return new GeoJsonLayer({
@@ -355,23 +302,23 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
         getRadius: 3,
         pointRadiusUnits: 'pixels',
     });
-}
+  }
 
   return (
-    <div className="App" ref={myRef} style={{ height: '70vh', width: '70vw', position: 'relative' }}>
-      <ControlPanel removeLayer={removeLayer} toogleDraw={toogleDrawingMode} emitevent={()=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={handleAddLayer}/>
+    <div className="App" ref={myRef} style={{ height, width, position: 'relative' }}>
+      <ControlPanel removeLayer={removeLayer} drawMode={isdrawMode} toogleDraw={toogleDrawingMode} emitevent={(checked)=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={handleAddLayer}/>
       <DeckGL
         ref={deckRef}
         initialViewState={viewport}
         controller={true}
         onViewStateChange={({ viewState }) => zoomControl(viewState)}
-        layers={[layerList ]} 
+        layers={layerList} 
         pickable={true}
         onClick={onDeckClick}
         canvas={canvas}>
-          <LineLayer id="line-layer-xx" data={data2} pickable={true} visible={true} opacity= {1} 
-          autoHighlight= {true} 
-          />
+          {/* <LineLayer id="line-layer-xx" data={data2} pickable={true} visible={true} opacity= {1} 
+          autoHighlight= {true} getColor={[200, 140, 0]} getWidth= {50}
+          /> */}
       </DeckGL>
       </div>
   );
@@ -412,4 +359,15 @@ https://github.com/visgl/deck.gl/blob/6.4-release/showcases/wind/src/control-pan
 //https://stackoverflow.com/questions/60734315/change-colour-of-clicked-item-in-deck-gl
 
 //MISSING
+
+
+
+/*
+
+KNOWN ERRORS:
+
+1. ADD WMS, remove WMS, ADD again WMS (it is not displayed) and then add a new layer --> WMS is seen again but with trace errors
+
+
+*/
 

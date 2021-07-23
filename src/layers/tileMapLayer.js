@@ -8,6 +8,7 @@ export default function getTileMapLayer(mapURL, minZoom, maxZoom){
     minZoom,
     maxZoom,
     tileSize: 256,
+    id:"main-map-tile-layer",
 
     renderSubLayers: props => {
       const {
