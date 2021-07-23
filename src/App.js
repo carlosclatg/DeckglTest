@@ -22,6 +22,8 @@ import { WMSTileLayer } from './deckgl-custom'
 import {getBoundingBox, viewportToExtension} from './utilities/index'
 import MapStyle from './styles';
 import {WebMercatorViewport} from '@deck.gl/core';
+import { fromEvent } from 'rxjs';
+
 
 
 
@@ -69,14 +71,13 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
     }
     const event = eventMapReadyBuilder();
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
+    fromEvent(document, "topogisevt_add_layer").subscribe(event=>handleAddLayer(event)) //BE very careful... handleAddLayer is inmunatable after initial load. 
+    fromEvent(document, "topogisevt_remove_layer").subscribe(event=>handleRemoveLayer(event))
+    fromEvent(document, "topogisevt_center_on_object").subscribe(event=>handleCenterOnObject(event))
   },[])
 
   useEffect(()=>{
-    console.log("Inside use effect of layerList")
     console.log(layerList)
-    document.addEventListener('topogisevt_add_layer', handleAddLayer); //update layerList listener otherwise take initial state
-    document.addEventListener('topogisevt_remove_layer', handleRemoveLayer); //update layerList listener otherwise take initial state
-    document.addEventListener('topogisevt_center_on_object', handleCenterOnObject); //update layerList listener otherwise take initial state
   }, [layerList])
 
   useEffect(()=>{
@@ -89,11 +90,11 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
 
   useEffect(()=>{
-    // if(isdrawMode){
-    //   setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects)))
-    // } else {
-    //   setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
-    // }
+    if(isdrawMode){
+      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects)))
+    } else {
+      setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
+    }
   },[isdrawMode])
 
 
@@ -151,8 +152,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
   const handleAddLayer = ({detail})=> { 
     let newLayer = null
-    console.log(layerList)
-    if(layerList.some(e=>{
+    if(deckRef.current.props.layers.some(e=>{ //reference to DOM!!!!!
       return e.id == detail.id
     })) return
     console.log("Not to reach")
@@ -182,12 +182,9 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
     }
 
     if(newLayer){
-      //miss add the new layer to the selectable layer
       //https://github.com/visgl/deck.gl/discussions/5593
-      document.removeEventListener("topogisevt_add_layer", this)
       //Diferencia entre:
       setLayerList((layerList)=>[...layerList, newLayer])
-      //setLayerList(new Array(...layerList, newLayer))
       
     }
   }
@@ -367,7 +364,7 @@ https://github.com/visgl/deck.gl/blob/6.4-release/showcases/wind/src/control-pan
 KNOWN ERRORS:
 
 1. ADD WMS, remove WMS, ADD again WMS (it is not displayed) and then add a new layer --> WMS is seen again but with trace errors
-
+https://rxjs.dev/api/index/function/fromEvent#overloads
 
 */
 

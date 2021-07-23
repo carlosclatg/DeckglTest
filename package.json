@@ -16,6 +16,7 @@
     "react-map-gl": "~6.1.16",
     "react-scripts": "4.0.3",
     "react-to-webcomponent": "^1.5.1",
+    "rxjs": "^7.2.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
