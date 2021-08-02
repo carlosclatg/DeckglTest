@@ -55,7 +55,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE)
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
-  const [layerList, _setLayerList] = useState(()=>[getTileMapLayer(backgroud_tile_url, MINZOOM, MAXZOOM)])
+  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(backgroud_tile_url, MINZOOM, MAXZOOM)])
   
   //REFS TO DOM
   const myRef = useRef();
@@ -91,9 +91,9 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
   useEffect(()=>{
     if(isdrawMode){
-      _setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects)))
+      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects)))
     } else {
-      _setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
+      setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
     }
   },[isdrawMode])
 
@@ -113,9 +113,9 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
       console.log(deckRef.current.props.layers)
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
-        _setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
+        setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
       } else {
-        _setLayerList(new Array(...layer))
+        setLayerList(new Array(...layer))
       }
     }
   }
@@ -139,9 +139,9 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
                     let layer = layerList.filter(e => e.id != "selection")
                     layer.push(geojsonLayer)
                     if(!isdrawMode){
-                      _setLayerList(new Array(...layer ))
+                      setLayerList(new Array(...layer ))
                     } else {
-                      _setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
+                      setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
                     }
                     setViewport({width: viewport.width,height: viewport.height,latitude: latitude,longitude: longitude,zoom: zoom})
                 });
@@ -168,7 +168,12 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
           newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, remoteuser)
         } else {
           let extent = viewportToExtension(viewport)
-          newLayer = addGisDomainLayerByStandardApi(detail, extent,remoteuser)
+          console.log(1234)
+          return addGisDomainLayerByStandardApi(detail, extent,remoteuser).then(layer=>{
+            console.log(layer)
+            if(layer) setLayerList((layerList)=>[...layerList, layer])
+            return
+          })
         }
       }
     } else if(detail.type === WMS_LAYER){ //case layer WMS
@@ -181,10 +186,11 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
     }
 
+    console.log("hereeeeeeeeeeeeeeeee")
     if(newLayer){
       //https://github.com/visgl/deck.gl/discussions/5593
       //Diferencia entre:
-      _setLayerList((layerList)=>[...layerList, newLayer])
+      setLayerList((layerList)=>[...layerList, newLayer])
       
     }
   }
@@ -275,7 +281,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
   //At this moment, what it will do is simply filter in the display, not removing from memory the layer itself.
   const removeLayer = () => {
-    _setLayerList((layerList)=>layerList
+    setLayerList((layerList)=>layerList
       .filter(e => {
         if(!e) return false
         if(e.id === 'layer-geojson-point') return false

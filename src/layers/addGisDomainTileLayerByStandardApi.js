@@ -19,24 +19,13 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
         loadOptions: loadOptions,
         tileSize: 512,
         getFillColor: [0, 255, 255],
-        getRadius: 25,
+        getRadius: 4,
         pointRadiusUnits: 'pixels',
-        _subLayerProps: {
-            points: {
-                type: IconLayer,
-                getIcon: (d)=>mapStyle.getIcon(d),
-                getColor: [255, 200, 0],
-                getSize: (d)=>mapStyle.getIconSize(d),
-                updateTriggers: {
-                    getIcon: null
-                }
-            }
-        },
-        getLineColor: () => {
-            return [0, 0, 0];
-        },
-        getLineWidth: () => {
-            return 1;
-        }
+        getIcon: d => 'marker',
+        sizeScale: 1,
+        getPosition: d => d.coordinates,
+        getSize: d => 5,
+        getColor: d => [Math.sqrt(d.exits), 140, 0]
+
     })
 }

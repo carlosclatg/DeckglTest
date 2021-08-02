@@ -12,9 +12,7 @@ export default function generateGeoJsonLayer(data, mapStyle){
         filled: true,
         extruded: false,
         stroke: true,
-        getFilterValue: ()=> false,
         lineWidthUnits: 'pixels',
-        getFillColor: d=>mapStyle.getFillColor(d),
         getRadius: 3,
         pointRadiusUnits: 'pixels',
         
