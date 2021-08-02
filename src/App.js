@@ -28,7 +28,7 @@ import { fromEvent } from 'rxjs';
 
 
 
-
+//interesant: https://medium.com/geographit/accessing-react-state-in-event-listeners-with-usestate-and-useref-hooks-8cceee73c559
 
 //PROPS AND COMPONENT-
 const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png", width=600, height=600, center={ lat: 41.8788383, lng: 12.3594608 }, zoom=4, enable_select_object=true , map_style= null, remoteuser= null  }) =>{
@@ -55,7 +55,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE)
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
-  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(backgroud_tile_url, MINZOOM, MAXZOOM)])
+  const [layerList, _setLayerList] = useState(()=>[getTileMapLayer(backgroud_tile_url, MINZOOM, MAXZOOM)])
   
   //REFS TO DOM
   const myRef = useRef();
@@ -91,9 +91,9 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
   useEffect(()=>{
     if(isdrawMode){
-      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects)))
+      _setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects)))
     } else {
-      setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
+      _setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
     }
   },[isdrawMode])
 
@@ -110,12 +110,12 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
   const handleRemoveLayer = ({detail}) => {
     console.log(detail)
     if(detail){
-      console.log(layerList)
-      let layer = layerList.filter(e => e.id !== detail)
+      console.log(deckRef.current.props.layers)
+      let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
-        setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
+        _setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
       } else {
-        setLayerList(new Array(...layer))
+        _setLayerList(new Array(...layer))
       }
     }
   }
@@ -139,9 +139,9 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
                     let layer = layerList.filter(e => e.id != "selection")
                     layer.push(geojsonLayer)
                     if(!isdrawMode){
-                      setLayerList(new Array(...layer ))
+                      _setLayerList(new Array(...layer ))
                     } else {
-                      setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
+                      _setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
                     }
                     setViewport({width: viewport.width,height: viewport.height,latitude: latitude,longitude: longitude,zoom: zoom})
                 });
@@ -184,7 +184,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
     if(newLayer){
       //https://github.com/visgl/deck.gl/discussions/5593
       //Diferencia entre:
-      setLayerList((layerList)=>[...layerList, newLayer])
+      _setLayerList((layerList)=>[...layerList, newLayer])
       
     }
   }
@@ -275,7 +275,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
   //At this moment, what it will do is simply filter in the display, not removing from memory the layer itself.
   const removeLayer = () => {
-    setLayerList((layerList)=>layerList
+    _setLayerList((layerList)=>layerList
       .filter(e => {
         if(!e) return false
         if(e.id === 'layer-geojson-point') return false
@@ -303,7 +303,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
   return (
     <div className="App" ref={myRef} style={{ height, width, position: 'relative' }}>
-      <ControlPanel removeLayer={removeLayer} drawMode={isdrawMode} toogleDraw={toogleDrawingMode} emitevent={(checked)=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} addLayer={handleAddLayer}/>
+      <ControlPanel removeLayer={removeLayer} drawMode={isdrawMode} toogleDraw={toogleDrawingMode} emitevent={(checked)=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} />
       <DeckGL
         ref={deckRef}
         initialViewState={viewport}

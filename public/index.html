@@ -29,8 +29,11 @@
   <body>
     <div id="abc">ABC<button id="geojson-point-line">ADD GEOJSON LAYER POINT + LINE</button></div> 
     <div id="abc">ABC<button id="geojson-point">ADD GEOJSON POINT</button></div> 
+    <div id="abc">ABC<button id="geojson-point-remove-invented">REMOVE GEOJSON POINT NON EXISTING</button></div> 
+    <div id="abc">ABC<button id="geojson-point-remove-ok">REMOVE GEOJSON POINT </button></div> 
+    <div id="abc">ABC<button id="tiled-layer-add">ADD TILED LAYER</button></div> 
     <div id="abc">ABC<button id="wms-button">WMS/button</div> 
-      <div id="abc">ABC<button id="wms-button2">WMS/button</div>
+    <div id="abc">ABC<button id="wms-button2">WMS/button</div>
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -205,9 +208,41 @@
       document.dispatchEvent(event, true, false)
     }
 
+
+    var a5 = document.getElementById('geojson-point-remove-invented');
+    a5.onclick = () =>{
+      const event = new CustomEvent('topogisevt_remove_layer', 
+        {detail: "an-invented-id"})
+      document.dispatchEvent(event, true, false)
+    }
+
+    //layer-geojson-point
+    var a6 = document.getElementById('geojson-point-remove-ok');
+    a6.onclick = () =>{
+      const event = new CustomEvent('topogisevt_remove_layer', 
+        {detail: "layer-geojson-point"})
+      document.dispatchEvent(event, true, false)
+    }
+
+
+    //tiled-layer-add
+    var a7 = document.getElementById('tiled-layer-add');
+    a7.onclick = () =>{
+      const event = new CustomEvent('topogisevt_add_layer', {
+        detail: {
+          id: '2-m',
+          type: 'geojson',
+          layer: 'http://localhost:8080/tiled',
+          tiled: true,
+          minZoom: 8, maxZoom: 10
+        }
+      });
+      document.dispatchEvent(event, true, false)
+    }
+
     var divlisten = document.getElementById('root');
 
-    // divlisten.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
+     divlisten.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
     // divlisten.addEventListener("topogisevt_map_zoom_changed", (data) => console.log(data.detail))
     // divlisten.addEventListener("topogisevt_map_ready", d => console.log(d.detail))
   </script>
