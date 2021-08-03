@@ -1,19 +1,4 @@
-
-.App {
-  text-align: center;
-}
-
-body{
-  display: block
-}
-
-.root{
-  max-width: 1000px;
-  max-height: 1000px;
-}
-
-
-:host {
+/* :host {
   display: block;
   width:100%;
   height: 100%;
@@ -22,8 +7,8 @@ body{
 
 :host > div {
   z-index: 1000;
-}
-
+} */
+/* 
 #top-right {
   position:absolute;
   top: 10px;
@@ -34,20 +19,20 @@ body{
   border-radius: 8px;
   border: 1px solid darkgray;
   z-index: 1000;
-}
+} */
 
-#top-right > div {
+/* #top-right > div {
   margin: 4px;
   text-align: center;
   cursor: pointer;
-}
+} */
 
-::slotted([slot=top-left]) {
+/* ::slotted([slot=top-left]) {
   position:absolute;
   top: 10px;
   left: 10px;
   z-index: 1000;
-}
+} */
 
 ::slotted([slot=bottom-left]) {
   position:absolute;

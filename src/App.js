@@ -28,6 +28,7 @@ import ZoomIn from './icons/zoom_in-24px.svg'
 import ZoomOut from './icons/zoom_out-24px.svg'
 import SelectionIcon from './icons/selection.png'
 import UnSelectionIcon from './icons/unselection.png'
+import { COORDINATE_SYSTEM } from 'deck.gl';
 
 
 
@@ -42,9 +43,6 @@ const App = (props) =>{
   //MOCK DATA
   const MAXZOOM = 19
   const MINZOOM=1
-  const data2 = [
-    {sourcePosition: [-122.41669, 37.7853], targetPosition: [-60, 38]}
-  ];
 
   const backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
   const width = 500 
@@ -97,7 +95,7 @@ const App = (props) =>{
   useEffect(()=>{
     if(Math.round(viewport.zoom) !== Math.round(previousZoom)){
       const { west, south, east, north } = viewportToExtension(viewport)
-      const event = new CustomEvent("topogisevt_map_zoom_changed",  { bubbles: true, detail:{zoom: Math.round(viewport.zoom), west, south, east, north  }});
+      const event = new CustomEvent("topogisevt_map_zoom_changed",  { bubbles: true, cancelable: true, composed: true, detail:{zoom: Math.round(viewport.zoom), west, south, east, north  }});
       ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
     }
   }, [viewport])
@@ -225,7 +223,7 @@ const App = (props) =>{
 
   //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
-    setdrawMode(false)
+    console.log(selectedObjects)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
     if(!selectedObjects instanceof Object && !Array.isArray(selectedObjects))return //safety type-check single or multiple selection
@@ -257,7 +255,9 @@ const App = (props) =>{
       return obj
     })
     const ev = eventObjectSelectedBuilder(detail)
+    console.log(ev)
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
+    setdrawMode(false)
   }
 
   const zoomIn = () => {
@@ -303,15 +303,15 @@ const App = (props) =>{
 
   return (
     <div className="App" ref={myRef} style={{ height, width, position: 'relative' }}>
-      <slot name="top-left" style={TodoComponent}> topleft </slot>
-        <div style={{ zIndex:"1000" }} id="top-right">
-            <div onClick={zoomIn}><img src={ZoomIn} alt="Zoom in" /></div>
-            <div onClick={zoomOut}><img src={ZoomOut} alt="Zoom out" /></div>
-            <div>{Math.round(viewport.zoom)}</div>
-            <div onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={isdrawMode? UnSelectionIcon : SelectionIcon} alt="Selection" /></div>
+      <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
+        <div style={{...divInsideHost, ...topRight}} id="top-right">
+            <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://w7.pngwing.com/pngs/618/94/png-transparent-computer-icons-zooming-user-interface-zoom-lens-sign-share-icon-zooming-user-interface.png" alt="Zoom in" /></div>
+            <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://img1.freepng.es/20180320/fdq/kisspng-computer-icons-macintosh-iconfinder-zoom-out-save-icon-format-5ab09cc9ca9ed1.4091764015215239138299.jpg" alt="Zoom out" /></div>
+            <div style={divInsideTopRight}>{Math.round(viewport.zoom)}</div>
+            <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFEoc-j7y2Vq3-VZ9VkGRF0v__zUr7k408BA&usqp=CAU" : "https://img.icons8.com/ios/452/unchecked-checkbox.png"} alt="Selection" /></div>
         </div>
-        <slot name="bottom-left" />
-        <slot name="bottom-right" />
+      <slot style={{...hostStyle, ...slotBottomLeft}} name="bottom-left" />
+      <slot style={{...hostStyle, ...slotBottomRight}} name="bottom-right" />
       <DeckGL
         ref={deckRef}
         initialViewState={viewport}
@@ -326,11 +326,64 @@ const App = (props) =>{
   );
 }
 
-
-const TodoComponent = {
-  backgroundColor: "#44014C",
-  color: "#FF0000",
+//:host
+const hostStyle = {
+  display: "block",
+  position: "relative"
 }
+
+//:host > div:host > div
+const divInsideHost ={
+  zIndex: 1000
+}
+
+//#top-right
+const topRight= {
+  position:"absolute",
+  top:"10px",
+  right:"10px",
+  width:"30px",
+  minHeight:"50px",
+  backgroundColor:"#f2f2f2",
+  borderRadius:"8px",
+  border:"1px solid darkgray",
+  zIndex:"1000"
+}
+
+//#top-right > div 
+const divInsideTopRight = {
+  margin: "4px",
+  textAlign: "center",
+  cursor: "pointer"
+}
+
+//::slotted([slot=top-left])
+const slotTopLeft = {
+  position:"absolute",
+  top: "10px",
+  left: "10px",
+  zIndex: 1000,
+}
+
+
+//::slotted([slot=bottom-left])
+const slotBottomLeft = {
+  position:"absolute",
+  bottom: "10px",
+  left: "10px",
+  zIndex: 1000,
+}
+
+//::slotted([slot=bottom-right])
+const slotBottomRight = {
+  position:"absolute",
+  bottom: "10px",
+  right: "10px",
+  zIndex: 1000,
+}
+
+
+
 
 export default App;
 
