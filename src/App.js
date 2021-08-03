@@ -22,7 +22,13 @@ import { WMSTileLayer } from './deckgl-custom'
 import {getBoundingBox, viewportToExtension} from './utilities/index'
 import MapStyle from './styles';
 import {WebMercatorViewport} from '@deck.gl/core';
-import { fromEvent } from 'rxjs';
+import { fromEvent, reduce } from 'rxjs';
+import PropTypes from 'prop-types';
+import ZoomIn from './icons/zoom_in-24px.svg'
+import ZoomOut from './icons/zoom_out-24px.svg'
+import SelectionIcon from './icons/selection.png'
+import UnSelectionIcon from './icons/unselection.png'
+
 
 
 
@@ -31,7 +37,7 @@ import { fromEvent } from 'rxjs';
 //interesant: https://medium.com/geographit/accessing-react-state-in-event-listeners-with-usestate-and-useref-hooks-8cceee73c559
 
 //PROPS AND COMPONENT-
-const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png", width=600, height=600, center={ lat: 41.8788383, lng: 12.3594608 }, zoom=4, enable_select_object=true , map_style= null, remoteuser= null  }) =>{
+const App = (props) =>{
 
   //MOCK DATA
   const MAXZOOM = 19
@@ -40,7 +46,14 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
     {sourcePosition: [-122.41669, 37.7853], targetPosition: [-60, 38]}
   ];
 
-
+  const backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  const width = 500 
+  const height = 500 
+  const center={ lat: 41.8788383, lng: 12.3594608 } 
+  const zoom=4 
+  const enable_select_object=true  
+  const map_style= null 
+  const remoteuser= null  
 
   const INITIAL_VIEW_STATE = {
     width: 1,
@@ -64,6 +77,7 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
   //HOOKS
   useEffect(()=>{
+    console.log(props)
     if(map_style){
       fetch(map_style)
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
@@ -108,7 +122,6 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
   }
 
   const handleRemoveLayer = ({detail}) => {
-    console.log(detail)
     if(detail){
       console.log(deckRef.current.props.layers)
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
@@ -186,7 +199,6 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
     }
 
-    console.log("hereeeeeeeeeeeeeeeee")
     if(newLayer){
       //https://github.com/visgl/deck.gl/discussions/5593
       //Diferencia entre:
@@ -202,13 +214,18 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
     setViewport(viewState)
   }
 
-  const toogleDrawingMode = (ischecked) => {
-    setdrawMode(ischecked)
+  const toogleDrawingMode = () => {
+    if(isdrawMode){
+      setdrawMode(!isdrawMode)
+    } else {
+      setdrawMode(true)
+    }
+
   }
 
   //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
-    // console.log(selectedObjects)
+    setdrawMode(false)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
     if(!selectedObjects instanceof Object && !Array.isArray(selectedObjects))return //safety type-check single or multiple selection
@@ -256,7 +273,6 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
   }
 
   const zoomOut = () => {
-    console.log(layerList)
     let previousZoom = viewport.zoom
     setViewport({
       width: viewport.width,
@@ -267,28 +283,6 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
     })
     setPreviousZoom(previousZoom)
   } 
-
-  //That does not work as it does not prevent triggering other events like getFillColor...
-  const _layerFilter =({layer, renderPass})=>{
-    if(layer.id == 'layer-geojson-point'){
-      console.log("returning false")
-      return false
-    } else {
-      console.log("-----------returning true-----------------")
-      return true
-    }
-  }
-
-  //At this moment, what it will do is simply filter in the display, not removing from memory the layer itself.
-  const removeLayer = () => {
-    setLayerList((layerList)=>layerList
-      .filter(e => {
-        if(!e) return false
-        if(e.id === 'layer-geojson-point') return false
-        return true
-      })
-    )
-  }
 
   const generateGeoJsonLayerfromJSON = (data) => {
     return new GeoJsonLayer({
@@ -309,7 +303,15 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
 
   return (
     <div className="App" ref={myRef} style={{ height, width, position: 'relative' }}>
-      <ControlPanel removeLayer={removeLayer} drawMode={isdrawMode} toogleDraw={toogleDrawingMode} emitevent={(checked)=>console.log(layerList)} zoommin={zoomIn} zoomout={zoomOut} />
+      <slot name="top-left" style={TodoComponent}> topleft </slot>
+        <div style={{ zIndex:"1000" }} id="top-right">
+            <div onClick={zoomIn}><img src={ZoomIn} alt="Zoom in" /></div>
+            <div onClick={zoomOut}><img src={ZoomOut} alt="Zoom out" /></div>
+            <div>{Math.round(viewport.zoom)}</div>
+            <div onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={isdrawMode? UnSelectionIcon : SelectionIcon} alt="Selection" /></div>
+        </div>
+        <slot name="bottom-left" />
+        <slot name="bottom-right" />
       <DeckGL
         ref={deckRef}
         initialViewState={viewport}
@@ -319,17 +321,41 @@ const App = ({backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.p
         pickable={true}
         onClick={onDeckClick}
         canvas={canvas}>
-          {/* <LineLayer id="line-layer-xx" data={data2} pickable={true} visible={true} opacity= {1} 
-          autoHighlight= {true} getColor={[200, 140, 0]} getWidth= {50}
-          /> */}
       </DeckGL>
-      </div>
+    </div>
   );
+}
+
+
+const TodoComponent = {
+  backgroundColor: "#44014C",
+  color: "#FF0000",
 }
 
 export default App;
 
+App.defaultProps = {
+  backgroud_tile_url: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  width :  600,
+  height: 600,
+  center: {lat: 45, lng: 45},
+  zoom: 4,
+  enable_select_object: true,
+};
 
+App.propTypes = {
+  backgroud_tile_url: PropTypes.string,
+  width :  PropTypes.number,
+  height: PropTypes.number,
+  center: PropTypes.object,
+  zoom: PropTypes.number,
+  enable_select_object: PropTypes.bool,
+  map_style:   PropTypes.string, 
+  remoteuser:   PropTypes.string
+};
+
+const WebApp = reactToWebComponent(App, React, ReactDOM, {shadow: true});
+customElements.define("my-map", WebApp);
 
 
 

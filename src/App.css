@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 }
@@ -6,35 +7,71 @@ body{
   display: block
 }
 
-.abc{
-  z-index: 12000;
-}
-
 .root{
   max-width: 1000px;
   max-height: 1000px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+:host {
+  display: block;
+  width:100%;
+  height: 100%;
+  position: relative;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+:host > div {
+  z-index: 1000;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#top-right {
+  position:absolute;
+  top: 10px;
+  right: 10px;
+  width:30px;
+  min-height: 50px;
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  border: 1px solid darkgray;
+  z-index: 1000;
+}
+
+#top-right > div {
+  margin: 4px;
+  text-align: center;
+  cursor: pointer;
+}
+
+::slotted([slot=top-left]) {
+  position:absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+}
+
+::slotted([slot=bottom-left]) {
+  position:absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 1000;
+}
+
+::slotted([slot=bottom-right]) {
+  position:absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+::slotted([slot=bottom]) {
+  position:absolute;
+  bottom: 10px;
+  margin:auto;
+  z-index: 1000;
+}
+
+.item-selected {
+  background-color: #ff0000;  
 }
 
 

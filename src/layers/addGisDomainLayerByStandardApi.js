@@ -7,10 +7,10 @@ export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser
     url += `&xmax=${Math.min(180, roundDegree(extent.east))}`
     url += `&ymax=${Math.min(90, roundDegree(extent.north))}`
     url += `&props=code,unique_id,_id,domain,space,internal_id,type`
-    if (layer.filter !== null) url += ("&" + layer.filter)
+    if (layer.filter) url += ("&" + layer.filter)
     if (url.indexOf('status') == -1) url += "&status=AP"
     let options = {}
-    if (remoteUser !== null && remoteUser.trim().length) {
+    if (remoteUser && remoteUser.trim().length) {
         options = { headers: { 'REMOTE_USER': remoteUser } }
     }
     console.log(url)

@@ -15,6 +15,8 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="stylesheet" href="../src/App.css" type="text/css">
+
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -48,10 +50,10 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <!-- <my-map namesss="cazzada"></my-map> -->
+    <my-map zoom="4"></my-map>
     
   </body>
-   <!-- <script src="../src/dist/App.js"></script> -->
+   <script src="../src/dist/App.js"></script>
   <script>
     var a1 = document.getElementById('geojson-point-line');
     a1.onclick = () =>{
@@ -274,9 +276,9 @@
 
     var divlisten = document.getElementById('root');
 
-     divlisten.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
-    // divlisten.addEventListener("topogisevt_map_zoom_changed", (data) => console.log(data.detail))
-    // divlisten.addEventListener("topogisevt_map_ready", d => console.log(d.detail))
+    document.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
+    document.addEventListener("topogisevt_map_zoom_changed", (data) => console.log(data.detail))
+    document.addEventListener("topogisevt_map_ready", d => console.log(d.detail))
   </script>
 </html>
 
