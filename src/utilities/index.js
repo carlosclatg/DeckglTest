@@ -4,17 +4,16 @@ import {Viewport} from '@deck.gl/core';
 const getBoundingBox = (data) => {
   var bounds = {}, coordinates, point, latitude, longitude;
 
+
   // Loop through each "feature"
   for (var i = 0; i < data.features.length; i++) {
     coordinates = data.features[i].geometry.coordinates;
-
     if(coordinates.length === 1){
       // It's only a single Polygon
       // For each individual coordinate in this feature's coordinates...
       for (var j = 0; j < coordinates[0].length; j++) {
         longitude = coordinates[0][j][0];
         latitude  = coordinates[0][j][1];
-
         // Update the bounds recursively by comparing the current xMin/xMax and yMin/yMax with the current coordinate
         bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
         bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
@@ -29,7 +28,6 @@ const getBoundingBox = (data) => {
         for (var k = 0; k < coordinates[j][0].length; k++) {
           longitude = coordinates[j][0][k][0];
           latitude  = coordinates[j][0][k][1];
-
           // Update the bounds recursively by comparing the current xMin/xMax and yMin/yMax with the current coordinate
           bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
           bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
@@ -39,7 +37,6 @@ const getBoundingBox = (data) => {
       }
     }
   }
-
   // Returns an object that contains the bounds of this GeoJSON data.
   // The keys describe a box formed by the northwest (xMin, yMin) and southeast (xMax, yMax) coordinates.
   return bounds;

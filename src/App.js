@@ -65,12 +65,13 @@ const App = (props) =>{
 
   //zoom paramter changed
   useEffect(()=>{
+    console.log(props)
     setViewport({
       width: viewport.width,
       height: viewport.height,
       latitude: viewport.latitude,
       longitude: viewport.longitude,
-      zoom: parseInt(props.zoom),
+      zoom: parseInt(props.zoom.value),
     })
   }, [props.zoom])
 
@@ -81,10 +82,11 @@ const App = (props) =>{
       height: viewport.height,
       latitude: props.center.lat,
       longitude: props.center.lng,
-      zoom: parseInt(props.zoom),
+      zoom: viewport.zoom,
     })
   }, [props.center])
 
+  //zoom changed in current viewport
   useEffect(()=>{
     if(Math.round(viewport.zoom) !== Math.round(previousZoom)){
       const { west, south, east, north } = viewportToExtension(viewport)
@@ -135,18 +137,17 @@ const App = (props) =>{
                     if(!gjv.isGeoJSONObject(json)) return
                     console.log(json)
                     const extent = getBoundingBox(json);
-                    const geojsonLayer = generateGeoJsonLayerfromJSON(json)
+                    const newLayer = generateGeoJsonLayerfromJSON(json)
                     const newviewport = new WebMercatorViewport(viewport);
-                    let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
-                    if(zoom < 0) zoom = Math.abs(zoom + 1)
-                    let layer = layerList.filter(e => e.id != "selection")
-                    layer.push(geojsonLayer)
-                    if(!isdrawMode){
-                      setLayerList(new Array(...layer ))
+                    if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
+                      //Polygon not provided --> Nothing to do in the viewport
+                      console.log('not inside')
                     } else {
-                      setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects)))
+                      console.log('inside')
+                      let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
+                      if(zoom < 0) zoom = Math.abs(zoom + 1)
+                      setViewport({width: viewport.width,height: viewport.height,latitude: latitude,longitude: longitude,zoom: props.zoom})
                     }
-                    setViewport({width: viewport.width,height: viewport.height,latitude: latitude,longitude: longitude,zoom: zoom})
                 });
             })
             .catch((err) => console.log('An error ocurred while fetching or transforming the layer from the URL'));
@@ -384,7 +385,7 @@ App.propTypes = {
   width :  PropTypes.number,
   height: PropTypes.number,
   center: PropTypes.any,
-  zoom: PropTypes.number,
+  zoom: PropTypes.any, 
   enable_select_object: PropTypes.bool,
   map_style:   PropTypes.string, 
   remoteuser:   PropTypes.string
@@ -431,8 +432,8 @@ https://github.com/visgl/deck.gl/blob/6.4-release/showcases/wind/src/control-pan
 
 KNOWN ERRORS:
 
-1. ADD WMS, remove WMS, ADD again WMS (it is not displayed) and then add a new layer --> WMS is seen again but with trace errors
-https://rxjs.dev/api/index/function/fromEvent#overloads
+
+//New value of zoom, should be passed as an object, otherwise no change is detected.
 
 */
 
