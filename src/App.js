@@ -41,7 +41,7 @@ import { COORDINATE_SYSTEM } from 'deck.gl';
 const App = (props) =>{
 
   //MOCK DATA
-  const MAXZOOM = 19
+  const MAXZOOM = 20
   const MINZOOM=1
 
   const backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -223,6 +223,7 @@ const App = (props) =>{
 
   //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
+    setdrawMode(false)
     console.log(selectedObjects)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
@@ -257,7 +258,7 @@ const App = (props) =>{
     const ev = eventObjectSelectedBuilder(detail)
     console.log(ev)
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
-    setdrawMode(false)
+
   }
 
   const zoomIn = () => {
@@ -302,7 +303,7 @@ const App = (props) =>{
   }
 
   return (
-    <div className="App" ref={myRef} style={{ height, width, position: 'relative' }}>
+    <div className="App" ref={myRef} style={{ height: props.height + "px", width: props.width + "px", position: 'relative' }}>
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
         <div style={{...divInsideHost, ...topRight}} id="top-right">
             <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://w7.pngwing.com/pngs/618/94/png-transparent-computer-icons-zooming-user-interface-zoom-lens-sign-share-icon-zooming-user-interface.png" alt="Zoom in" /></div>
@@ -381,8 +382,6 @@ const slotBottomRight = {
   right: "10px",
   zIndex: 1000,
 }
-
-
 
 
 export default App;
