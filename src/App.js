@@ -393,6 +393,7 @@ App.defaultProps = {
   center: {lat: 45, lng: 45},
   zoom: 4,
   enable_select_object: true,
+  
 };
 
 App.propTypes = {
