@@ -1,11 +1,7 @@
 import './App.css';
 import DeckGL from '@deck.gl/react';
-import _ from 'lodash';
-import {LineLayer, GeoJsonLayer, IconLayer} from '@deck.gl/layers';
-import {Viewport, MapView} from '@deck.gl/core';
-import { SelectionLayer } from '@nebula.gl/layers';
-import EventEmitter from 'events'
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { GeoJsonLayer} from '@deck.gl/layers';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
 import ControlPanel from './controlPanel'
@@ -22,13 +18,8 @@ import { WMSTileLayer } from './deckgl-custom'
 import {getBoundingBox, viewportToExtension} from './utilities/index'
 import MapStyle from './styles';
 import {WebMercatorViewport} from '@deck.gl/core';
-import { fromEvent, reduce } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import PropTypes from 'prop-types';
-import ZoomIn from './icons/zoom_in-24px.svg'
-import ZoomOut from './icons/zoom_out-24px.svg'
-import SelectionIcon from './icons/selection.png'
-import UnSelectionIcon from './icons/unselection.png'
-import { COORDINATE_SYSTEM } from 'deck.gl';
 
 
 
@@ -44,29 +35,19 @@ const App = (props) =>{
   const MAXZOOM = 20
   const MINZOOM=1
 
-  const backgroud_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
-  const width = 500 
-  const height = 500 
-  const center={ lat: 41.8788383, lng: 12.3594608 } 
-  const zoom=4 
-  const enable_select_object=true  
-  const map_style= null 
-  const remoteuser= null  
-
-  const INITIAL_VIEW_STATE = {
-    width: 1,
-    height: 1,
-    latitude: center.lat,
-    longitude: center.lng,
-    zoom: zoom,
-  };
 
   //STATE
-  const [previousZoom, setPreviousZoom] = useState(INITIAL_VIEW_STATE.zoom)
-  const [viewport, setViewport] = useState(INITIAL_VIEW_STATE)
+  const [previousZoom, setPreviousZoom] = useState(parseInt(props.zoom))
+  const [viewport, setViewport] = useState({
+    width: 1,
+    height: 1,
+    latitude: props.center.lat,
+    longitude: props.center.lng,
+    zoom: parseInt(props.zoom),
+  })
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
-  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(backgroud_tile_url, MINZOOM, MAXZOOM)])
+  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.backgroud_tile_url, MINZOOM, MAXZOOM)])
   
   //REFS TO DOM
   const myRef = useRef();
@@ -76,8 +57,8 @@ const App = (props) =>{
   //HOOKS
   useEffect(()=>{
     console.log(props)
-    if(map_style){
-      fetch(map_style)
+    if(props.map_style){
+      fetch(props.map_style)
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
         .catch(e => console.log(e));
     }
@@ -111,7 +92,7 @@ const App = (props) =>{
 
 
   const onDeckClick = (info) => {
-    if(enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
+    if(props.enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
       let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
       if(objectSelected){
         handleSelectedObjects(objectSelected)
@@ -134,8 +115,8 @@ const App = (props) =>{
   const handleCenterOnObject = ({detail}) => {
     if(detail){
         let options = {}
-        if (remoteuser !== null && remoteuser.trim().length) {
-            options = { headers: { 'REMOTE_USER': remoteuser } }
+        if (props.remoteuser && props.remoteuser.trim().length) {
+            options = { headers: { 'REMOTE_USER': props.remoteuser } }
         }
         fetch(detail, options)
             .then((response) => {
@@ -176,11 +157,11 @@ const App = (props) =>{
         } else return
       } else {
         if(detail.tiled){
-          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, remoteuser)
+          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remoteuser)
         } else {
           let extent = viewportToExtension(viewport)
           console.log(1234)
-          return addGisDomainLayerByStandardApi(detail, extent,remoteuser).then(layer=>{
+          return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser).then(layer=>{
             console.log(layer)
             if(layer) setLayerList((layerList)=>[...layerList, layer])
             return
@@ -192,7 +173,7 @@ const App = (props) =>{
         console.log("WMS does not support layer object")
         return
       }
-      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: null})
+      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: props.remoteuser})
     } else {
 
     }
@@ -390,10 +371,11 @@ App.defaultProps = {
   backgroud_tile_url: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
   width :  600,
   height: 600,
-  center: {lat: 45, lng: 45},
+  center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 4,
-  enable_select_object: true,
-  
+  enable_select_object: true, 
+  map_style: null,
+  remoteuser: null
 };
 
 App.propTypes = {

@@ -15,7 +15,6 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="stylesheet" href="../src/App.css" type="text/css">
 
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -51,10 +50,10 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <my-map 
-      zoom="4"
+      zoom="5"
       height="600"
       width="600"
-      enable_select_object="false"
+      enable_select_object=true
     >
       <div slot="top-left">Slot TL from outside</div>
       <div slot="bottom-left">Slot BL from outside</div>
