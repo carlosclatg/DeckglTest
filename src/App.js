@@ -73,6 +73,29 @@ const App = (props) =>{
     console.log(layerList)
   }, [layerList])
 
+
+  //zoom paramter changed
+  useEffect(()=>{
+    setViewport({
+      width: viewport.width,
+      height: viewport.height,
+      latitude: viewport.latitude,
+      longitude: viewport.longitude,
+      zoom: parseInt(props.zoom),
+    })
+  }, [props.zoom])
+
+  //center parameter changed
+  useEffect(()=>{
+    setViewport({
+      width: viewport.width,
+      height: viewport.height,
+      latitude: props.center.lat,
+      longitude: props.center.lng,
+      zoom: parseInt(props.zoom),
+    })
+  }, [props.center])
+
   useEffect(()=>{
     if(Math.round(viewport.zoom) !== Math.round(previousZoom)){
       const { west, south, east, north } = viewportToExtension(viewport)
@@ -194,12 +217,7 @@ const App = (props) =>{
   }
 
   const toogleDrawingMode = () => {
-    if(isdrawMode){
-      setdrawMode(!isdrawMode)
-    } else {
-      setdrawMode(true)
-    }
-
+    setdrawMode(isdrawMode ? !isdrawMode : true)
   }
 
   //Valorar si podemos enviar el polygono de seleccion.
@@ -382,7 +400,7 @@ App.propTypes = {
   backgroud_tile_url: PropTypes.string,
   width :  PropTypes.number,
   height: PropTypes.number,
-  center: PropTypes.object,
+  center: PropTypes.any,
   zoom: PropTypes.number,
   enable_select_object: PropTypes.bool,
   map_style:   PropTypes.string, 
