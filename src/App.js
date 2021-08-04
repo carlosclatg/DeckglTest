@@ -1,10 +1,8 @@
-import './App.css';
 import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer} from '@deck.gl/layers';
 import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
-import ControlPanel from './controlPanel'
 import getSelectionLayer from './layers/selectionLayer'
 import getTileMapLayer from './layers/tileMapLayer'
 import eventObjectSelectedBuilder from './events/eventObjectSelectedBuilder'
@@ -21,20 +19,12 @@ import {WebMercatorViewport} from '@deck.gl/core';
 import { fromEvent } from 'rxjs';
 import PropTypes from 'prop-types';
 
-
-
-
-
-
-//interesant: https://medium.com/geographit/accessing-react-state-in-event-listeners-with-usestate-and-useref-hooks-8cceee73c559
-
 //PROPS AND COMPONENT-
 const App = (props) =>{
 
   //MOCK DATA
   const MAXZOOM = 20
   const MINZOOM=1
-
 
   //STATE
   const [previousZoom, setPreviousZoom] = useState(parseInt(props.zoom))
@@ -70,7 +60,6 @@ const App = (props) =>{
   },[])
 
   useEffect(()=>{
-    console.log(layerList)
   }, [layerList])
 
 
@@ -125,7 +114,6 @@ const App = (props) =>{
 
   const handleRemoveLayer = ({detail}) => {
     if(detail){
-      console.log(deckRef.current.props.layers)
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
         setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
@@ -170,7 +158,6 @@ const App = (props) =>{
     if(deckRef.current.props.layers.some(e=>{ //reference to DOM!!!!!
       return e.id == detail.id
     })) return
-    console.log("Not to reach")
     
     //case layer geojson
     if(detail.type === GEOJSON_LAYER){
@@ -183,9 +170,7 @@ const App = (props) =>{
           newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remoteuser)
         } else {
           let extent = viewportToExtension(viewport)
-          console.log(1234)
           return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser).then(layer=>{
-            console.log(layer)
             if(layer) setLayerList((layerList)=>[...layerList, layer])
             return
           })
@@ -223,7 +208,6 @@ const App = (props) =>{
   //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
     setdrawMode(false)
-    console.log(selectedObjects)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
     if(!selectedObjects instanceof Object && !Array.isArray(selectedObjects))return //safety type-check single or multiple selection
@@ -255,7 +239,6 @@ const App = (props) =>{
       return obj
     })
     const ev = eventObjectSelectedBuilder(detail)
-    console.log(ev)
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
 
   }
