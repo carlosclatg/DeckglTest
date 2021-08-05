@@ -113,6 +113,7 @@ const App = (props) =>{
 
 
   const onDeckClick = (info) => {
+    console.log(info)
     if(props.enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
       let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
       if(objectSelected){
@@ -216,6 +217,7 @@ const App = (props) =>{
 
   //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
+    console.log(selectedObjects)
     setdrawMode(false)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
@@ -249,7 +251,7 @@ const App = (props) =>{
     })
     const ev = eventObjectSelectedBuilder(detail)
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
-
+    if(!isdrawMode)setLayerList((layerList) => [layerList]) //re-initialize layers in order to get the selected items. 
   }
 
   const zoomIn = () => {
@@ -371,7 +373,7 @@ App.defaultProps = {
   height: 600,
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 4,
-  enable_select_object: false, 
+  enable_select_object: true, 
   map_style: null,
   remoteuser: null
 };

@@ -1,7 +1,6 @@
 
 //https://github.com/visgl/deck.gl/blob/8.4-release/examples/website/highway/app.js
 
-import {typecheck} from './../utilities'
 import { GeoJsonLayer} from '@deck.gl/layers';
 import {TileLayer} from '@deck.gl/geo-layers';
 import { Parser } from 'expr-eval';
@@ -137,7 +136,3 @@ export default class MapStyle {
 //  interface MapStyle {
 //     layers: Array<MapStyleLayer>
 // }
-
-class Layer{
-
-}

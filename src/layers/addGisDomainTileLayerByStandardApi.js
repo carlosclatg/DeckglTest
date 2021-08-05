@@ -1,5 +1,4 @@
 import {TileLayer} from '@deck.gl/geo-layers';
-import { BitmapLayer, IconLayer } from '@deck.gl/layers';
 
 export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remoteUser) {
     const DEFAULT_IMAGE_PUSHPIN_SIZE = 24
@@ -18,7 +17,14 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
         pickable: true,
         loadOptions: loadOptions,
         tileSize: 512,
-        getFillColor: [0, 255, 255],
+        getFillColor: f =>
+            {
+                debugger
+                if(f.properties.unique_id === 'topology-1-h-A400.1.384710'){ //lake up rome
+                    return  [150, 250, 100];
+                } else return  [200, 100, 150];
+
+            },
         getRadius: 4,
         pointRadiusUnits: 'pixels',
         getIcon: d => 'marker',

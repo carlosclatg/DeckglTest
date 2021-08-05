@@ -1,6 +1,4 @@
 import { GeoJsonLayer} from '@deck.gl/layers';
-import MapStyle from '../styles';
-import { BitmapLayer, IconLayer } from '@deck.gl/layers';
 
 export default function generateGeoJsonLayer(data, mapStyle){
     return new GeoJsonLayer({
@@ -15,12 +13,21 @@ export default function generateGeoJsonLayer(data, mapStyle){
         lineWidthUnits: 'pixels',
         getRadius: 3,
         pointRadiusUnits: 'pixels',
+        autoHighlight: true,
+        highlightColor: [255, 0, 0, 128],
+        getFillColor: f =>
+            {
+                if(f.id === 'obj1'){
+                    return  [200, 200, 100];
+                } else return  [200, 100, 150];
+
+            },
         
         getLineColor: () => {
             return [0, 0, 0];
         },
         getLineWidth: () => {
-            return 1;
+            return 2;
         } 
     }); //geojsonlayer does not accept min and max zoom
 }
