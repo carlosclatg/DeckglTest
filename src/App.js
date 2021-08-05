@@ -18,6 +18,7 @@ import MapStyle from './styles';
 import {WebMercatorViewport} from '@deck.gl/core';
 import { fromEvent } from 'rxjs';
 import PropTypes from 'prop-types';
+import { defaultStyle } from './styles/custom-style';
 
 //PROPS AND COMPONENT-
 const App = (props) =>{
@@ -50,7 +51,12 @@ const App = (props) =>{
     if(props.map_style){
       fetch(props.map_style)
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
-        .catch(e => console.log(e));
+        .catch(e => {
+          console.log(e)
+          setMapStyle(new MapStyle(defaultStyle))
+        });
+    } else {
+      setMapStyle(new MapStyle(defaultStyle))
     }
     const event = eventMapReadyBuilder();
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
@@ -60,6 +66,7 @@ const App = (props) =>{
   },[])
 
   useEffect(()=>{
+    console.log(layerList)
   }, [layerList])
 
 
@@ -137,7 +144,6 @@ const App = (props) =>{
                     if(!gjv.isGeoJSONObject(json)) return
                     console.log(json)
                     const extent = getBoundingBox(json);
-                    const newLayer = generateGeoJsonLayerfromJSON(json)
                     const newviewport = new WebMercatorViewport(viewport);
                     if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
                       //Polygon not provided --> Nothing to do in the viewport
@@ -145,8 +151,10 @@ const App = (props) =>{
                     } else {
                       console.log('inside')
                       let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
-                      if(zoom < 0) zoom = Math.abs(zoom + 1)
-                      setViewport({width: viewport.width,height: viewport.height,latitude: latitude,longitude: longitude,zoom: props.zoom})
+                      console.log(zoom)
+                      if(zoom < 0) zoom = Math.abs(zoom) +1
+                      console.log(zoom)
+                      setViewport({width: viewport.width,height: viewport.height,latitude,longitude,zoom})
                     }
                 });
             })
@@ -268,22 +276,6 @@ const App = (props) =>{
     setPreviousZoom(previousZoom)
   } 
 
-  const generateGeoJsonLayerfromJSON = (data) => {
-    return new GeoJsonLayer({
-        id: 'data.id',
-        data: data,
-        autoHighLight: true,
-        highlightColor: [255, 255, 0],
-        pickable: true,
-        filled: true,
-        extruded: false,
-        stroke: true,
-        lineWidthUnits: 'pixels',
-        getFillColor: [0, 255, 255],
-        getRadius: 3,
-        pointRadiusUnits: 'pixels',
-    });
-  }
 
   return (
     <div className="App" ref={myRef} style={{ height: props.height + "px", width: props.width + "px", position: 'relative' }}>
@@ -292,8 +284,12 @@ const App = (props) =>{
             <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://w7.pngwing.com/pngs/618/94/png-transparent-computer-icons-zooming-user-interface-zoom-lens-sign-share-icon-zooming-user-interface.png" alt="Zoom in" /></div>
             <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://img1.freepng.es/20180320/fdq/kisspng-computer-icons-macintosh-iconfinder-zoom-out-save-icon-format-5ab09cc9ca9ed1.4091764015215239138299.jpg" alt="Zoom out" /></div>
             <div style={divInsideTopRight}>{Math.round(viewport.zoom)}</div>
-            <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFEoc-j7y2Vq3-VZ9VkGRF0v__zUr7k408BA&usqp=CAU" : "https://img.icons8.com/ios/452/unchecked-checkbox.png"} alt="Selection" /></div>
-        </div>
+            { props.enable_select_object ?
+              <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFEoc-j7y2Vq3-VZ9VkGRF0v__zUr7k408BA&usqp=CAU" : "https://img.icons8.com/ios/452/unchecked-checkbox.png"} alt="Selection" /></div>
+              : 
+              null
+            }
+            </div>
       <slot style={{...hostStyle, ...slotBottomLeft}} name="bottom-left" />
       <slot style={{...hostStyle, ...slotBottomRight}} name="bottom-right" />
       <DeckGL
@@ -375,7 +371,7 @@ App.defaultProps = {
   height: 600,
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 4,
-  enable_select_object: true, 
+  enable_select_object: false, 
   map_style: null,
   remoteuser: null
 };

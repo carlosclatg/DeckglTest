@@ -11,6 +11,7 @@ export default class MapStyle {
 
     constructor(l){
 
+        if(!l) return
         //check layers is an array
         if(Array.isArray(l)){
             this.layers = l.map(e=>e)
