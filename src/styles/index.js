@@ -4,19 +4,18 @@
 import { GeoJsonLayer} from '@deck.gl/layers';
 import {TileLayer} from '@deck.gl/geo-layers';
 import { Parser } from 'expr-eval';
+import { defaultStyle } from './custom-style';
+
 
 export default class MapStyle {
 
-
     constructor(l){
+        
 
-        if(!l) return
-        //check layers is an array
-        if(Array.isArray(l)){
-            this.layers = l.map(e=>e)
-        }else {
-            this.layers = l
-        }
+
+        this.layers = defaultStyle.layers
+    
+        
         
 
         /*
@@ -46,50 +45,70 @@ export default class MapStyle {
     DEFAULT_IMAGE_PUSHPIN_SIZE = 24
 
 
-    getLineWidth =(layer)=>{
-        return this.DEFAULT_LINE_WIDTH
+    getLineWidth =(d)=>{
+        let layout = this.getStyleLayoutLine(d)
+        if(!layout && !layout.width) return this.DEFAULT_LINE_COLOR
+        return layout.width
     }
 
-    getLineColor =(layer)=>{
+    getLineColor =(d)=>{
+        let layout = this.getStyleLayoutLine(d)
+        debugger
+        if(!layout && !layout.color) return this.DEFAULT_LINE_COLOR
+        return layout.color
+    }
+
+
+    getPolygonLineColor =(d)=>{
+        let layout = this.getStyleLayoutPolygon(d)
+        if(!layout && !layout.lineColor) return this.DEFAULT_LINE_COLOR
+        return layout.lineColor
+    }
+
+    getPolygonFillColor =(d)=>{
+        let layout = this.getStyleLayoutPolygon(d)
+        if(!layout && !layout.fillColor) return this.DEFAULT_LINE_COLOR
+        return layout.fillColor
+    }
+
+
+
+    getFillColor =(d)=>{
+        let layout = this.getStyleLayoutPolygon(d)
+        if(!layout && !layout.fillColor) return layout.fillColor
         return this.DEFAULT_LINE_COLOR
-    }
-
-    getFillColor =(layer, data)=>{
-        console.log(123456789)
-        console.log(layer, data)
-        return this.DEFAULT_OUTLINE_FILL_COLOR
     }
 
     getFillOutlineColor =(layer)=> {
         return this.DEFAULT_OUTLINE_FILL_COLOR
     }
     
-    getStyleLayout (d) {
-        if (this.layers === null)
+    getStyleLayoutIcon (d) {
+        if (!this.layers)
             return null;
         if (!(d.__source && d.__source.object && d.__source.object.properties)) 
             return null;
         const props = d.__source.object.properties;
         let layout = null;
-        if (d.__source.parent instanceof GeoJsonLayer && d.__source.parent.parent != null && d.__source.parent.parent instanceof TileLayer) 
-            layout = this.getLajyout(`${d.__source.parent.parent.id}`, props);
-        if (layout === null) 
+        if (d.__source.parent instanceof GeoJsonLayer && d.__source.parent.parent && d.__source.parent.parent instanceof TileLayer) 
+            layout = this.getLayout(`${d.__source.parent.parent.id}`, props);
+        if (!layout) 
             layout = this.getLayout(`${props.domain}.${props.space}`, props);
-        return null
+        return layout
     }
 
     getIconSize =(d)=> {
-        const layout = this.getStyleLayout(d)
-        if(layout === null) return this.DEFAULT_IMAGE_PUSHPIN_SIZE
+        let layout = this.getStyleLayoutIcon(d)
+        if(!layout) return this.DEFAULT_IMAGE_PUSHPIN_SIZE
         return layout.iconSize || this.DEFAULT_IMAGE_PUSHPIN_SIZE
     }
 
 
     getIcon =(d)=> {
-        const layout = this.getStyleLayout(d)
-        if(layout === null) return
+        let layout = this.getStyleLayoutIcon(d)
+        if(!layout) layout = {}
         return {
-            url: layout.image,
+            url: layout.image || 'https://i.pinimg.com/originals/fc/c5/77/fcc57757270fbcacb3ec70a4ec384d26.jpg',
             width: layout.imageWidth || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             height: layout.imageHeight || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY: layout.imageAnchorY || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
@@ -97,24 +116,58 @@ export default class MapStyle {
         }
     }
 
-    getLayout(source, model){
-        const layer  = this.findLayer(source);
-        if(layer === null || layer === undefined) return null;
+    //https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/
+    getLayout(source, model, type ='symbol'){
+        let layer  = this.findLayerBySource(source, type);
+        if(!layer) layer = this.findLayerById(source, type);
+        if(!layer) return null
         for(let layout of layer.layout) {
             if(layout.condition === undefined) continue;
-            const value = Parser.evaluate(layout.condition, model)
-            if(value) return layout
+            try{
+                const value = Parser.evaluate(layout.condition, model)
+                if(value) return layout
+            } catch(err) { //case any condition is matched 2 lines above
+                continue
+            }
         }
         return null
     }
     
 
-    findLayer(source){
-        const layer = this.style.layers.filter( l => l.source === source);
+    findLayerBySource(source, type){
+        const layer = this.layers.filter( l => l.source === source && l.type === type);
         return layer === undefined ? null : layer[0];
     }
-}
 
+
+    findLayerById(id, type){
+        const layer = this.layers.filter( l => l.id === id && l.type === type);
+        return layer === undefined ? null : layer[0];
+    }
+
+    getStyleLayoutLine(d) {
+        if (!this.layers)
+            return null;
+        let layout = null;
+        if (d.id) 
+            layout = this.getLayout(`${d.id}`, d.properties, 'line');
+        if (!layout && d.properties.domain && d.properties.space) 
+            layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'line');
+        return layout
+    }
+
+
+    getStyleLayoutPolygon(d) {
+        if (!this.layers)
+            return null;
+        let layout = null;
+        if (d.id) 
+            layout = this.getLayout(`${d.id}`, d.properties, 'polygon');
+        if (!layout && d.properties.domain && d.properties.space) 
+            layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'polygon');
+        return layout
+    }
+}
 
 
 
@@ -131,8 +184,4 @@ export default class MapStyle {
 //     type: MapStyleLayerType,
 //     source: string,
 //     layout: Array<MapStyleLayout>
-// }
-
-//  interface MapStyle {
-//     layers: Array<MapStyleLayer>
 // }

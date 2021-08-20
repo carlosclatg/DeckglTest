@@ -39,6 +39,9 @@
     <div id="abc">ABC<button id="wms-button2">WMS/button</div>
     <div id="abc">ABC<button id="center-to-bcn">Center to BCN</div>
     <div id="abc">ABC<button id="zoom-to-5">zoom-to-5</div>
+    <div id="abc">ABC<button id="center-on-object">center-on-object</div> 
+    <div id="abc">ABC<button id="tiled-layer-add-tramos">tiled-layer-add-tramos</div> 
+    <div id="abc">ABC<button id="add-polygon-layer">add-polygon-layer</div>   
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -50,17 +53,18 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <my-map 
+    <!-- <my-map 
       id="my-map"
-      zoom="10"
-      height="700"
-      width="700"
+      zoom="8"
+      height="800"
+      width="800"
       enable_select_object=true
+      map_style = "URL"
     >
-      <div slot="top-left">Slot TL from outside</div>
+      <div slot="top-left"><p style="color:red;">A red paragraph in top-left.</p></div>
       <div slot="bottom-left">Slot BL from outside</div>
       <div slot="bottom-right">Slot BR from outside</div>
-    </my-map>
+    </my-map> -->
     
   </body>
    <script src="../src/dist/App.js"></script>
@@ -127,7 +131,11 @@
             },
             {
               "type": "Feature",
-              "properties": {},
+              "id": "linetest",
+              "properties": {
+                "space":"gam-issue",
+                "domain":"grid-act-maintenance"
+              },
               "geometry": {
                 "type": "LineString",
                 "coordinates": [
@@ -176,8 +184,8 @@
           layer:{
             "type": "Feature",
             "properties": {
-                "domain_code": "Coors Field",
-                "space_code": "Baseball Stadium",
+                "domain": "Coors Field",
+                "space": "Baseball Stadium",
                 "cazzo": "This is where the Rockies play!"
             },
             "geometry": {
@@ -214,7 +222,8 @@
         {detail: 
           {id:'wms-1', 
           type:'wms', 
-          layer:'http://serviziogc.regione.fvg.it/geoserver/STRAT_PR/wms?version=1.1.1&request=GetMap&layers=DBPRIOR_0205_LAGUNA_GM&TRANSPARENT=true&'
+          layer:"http://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=Catastro&TRANSPARENT=TRUE&"
+          //layer:'http://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx?service=WMS&version=1.1.1&layer=Catastro&styles=""&'
         }
       })
 
@@ -250,7 +259,7 @@
         detail: {
           id: '2-m',
           type: 'geojson',
-          layer: 'http://localhost:8080/features/topology/1-h',
+          layer: 'http://localhost:8080/features/topology/1-h', ///home/vant/Desktop/Enel_GIS/glin-mp00060-lan-spatialentitymdb/src/docker_virtualentity/target
           tiled: true,
           minZoom: 2, maxZoom: 12
         }
@@ -297,7 +306,73 @@
     var a11 = document.getElementById('zoom-to-5');
     a11.onclick = () =>{
       var map = document.getElementById('my-map')
-      map.zoom = 5;
+      map.zoom = {value: 5};
+    }
+
+
+    var a12 = document.getElementById("center-on-object")
+    a12.onclick = () => {
+      const url = 'http://localhost:8081/tiled'
+      document.dispatchEvent(new CustomEvent('topogisevt_center_on_object', { detail: url }))
+    }
+
+
+    var a13 = document.getElementById('tiled-layer-add-tramos');
+    a13.onclick = () =>{
+      const event = new CustomEvent('topogisevt_add_layer', {
+        detail: {
+        id: 'test',
+        type: 'geojson',
+        layer: 'http://localhost:8080/features/topology/tmat',
+      }
+      });
+      document.dispatchEvent(event, true, false)
+    }
+
+
+    var a14 = document.getElementById('add-polygon-layer');
+    a14.onclick = () =>{
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id:"polygontest",
+          type: "geojson",
+          layer:{
+            "type": "Feature",
+            "properties": {
+              "space":"gam-issue",
+              "domain":"grid-act-maintenance",
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    16.875,
+                    39.90973623453719
+                  ],
+                  [
+                    31.289062500000004,
+                    39.90973623453719
+                  ],
+                  [
+                    31.289062500000004,
+                    48.69096039092549
+                  ],
+                  [
+                    16.875,
+                    48.69096039092549
+                  ],
+                  [
+                    16.875,
+                    39.90973623453719
+                  ]
+                ]
+              ]
+            }
+          }
+        }
+      });
+      document.dispatchEvent(event, true, false)
     }
 
     var divlisten = document.getElementById('root');
@@ -307,7 +382,5 @@
     document.addEventListener("topogisevt_map_ready", d => console.log(d.detail))
   </script>
 </html>
-
-
 
 

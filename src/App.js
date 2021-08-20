@@ -26,6 +26,7 @@ const App = (props) =>{
   //MOCK DATA
   const MAXZOOM = 20
   const MINZOOM=1
+  
 
   //STATE
   const [previousZoom, setPreviousZoom] = useState(parseInt(props.zoom))
@@ -38,8 +39,9 @@ const App = (props) =>{
   })
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
-  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.backgroud_tile_url, MINZOOM, MAXZOOM)])
-  
+  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.backgroud_tile_url, MINZOOM, MAXZOOM, defaultStyle)])
+
+
   //REFS TO DOM
   const myRef = useRef();
   const deckRef = useRef();
@@ -180,7 +182,7 @@ const App = (props) =>{
           newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remoteuser)
         } else {
           let extent = viewportToExtension(viewport)
-          return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser).then(layer=>{
+          return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser, mapStyle).then(layer=>{
             if(layer) setLayerList((layerList)=>[...layerList, layer])
             return
           })
@@ -279,6 +281,20 @@ const App = (props) =>{
   } 
 
 
+  const getTooltip = ({object}) => {
+    return (
+      object && {
+        html: `\
+    <div><b>INFO</b></div>
+    <div>${object.properties} / parcel</div>
+    <div>${object.properties.valuePerSqm} / m<sup>2</sup></div>
+    <div><b>Growth</b></div>
+    <div>${Math.round(object.properties.growth * 100)}%</div>
+    `
+      }
+    );
+  }
+
   return (
     <div className="App" ref={myRef} style={{ height: props.height + "px", width: props.width + "px", position: 'relative' }}>
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
@@ -302,7 +318,8 @@ const App = (props) =>{
         layers={layerList} 
         pickable={true}
         onClick={onDeckClick}
-        canvas={canvas}>
+        canvas={canvas}
+        getTooltip={getTooltip}>
       </DeckGL>
     </div>
   );
@@ -418,6 +435,8 @@ https://github.com/visgl/deck.gl/blob/6.4-release/showcases/wind/src/control-pan
 //console.log(gjv.valid(geojson_data)) //Expect true
 //console.log(gjv.valid({myapp: 1})) //expect false
 
+
+//google-chrome --disable-web-security --user-data-dir="./"
 
 //Highlight
 //https://stackoverflow.com/questions/60734315/change-colour-of-clicked-item-in-deck-gl

@@ -1,45 +1,93 @@
-import generateGeoJsonLayer from './geojsonLayer'
+const http = require('http');
 
-export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser, mapStyle){
-    let url = layer.layer + "/extent?";
-    url += `xmin=${Math.max(-180, roundDegree(extent.west))}`
-    url += `&ymin=${Math.max(-90, roundDegree(extent.south))}`
-    url += `&xmax=${Math.min(180, roundDegree(extent.east))}`
-    url += `&ymax=${Math.min(90, roundDegree(extent.north))}`
-    url += `&props=code,unique_id,_id,domain,space,internal_id,type`
-    if (layer.filter) url += ("&" + layer.filter)
-    if (url.indexOf('status') == -1) url += "&status=AP"
-    let options = {}
-    if (remoteUser && remoteUser.trim().length) {
-        options = { headers: { 'REMOTE_USER': remoteUser } }
-    }
-    console.log(url)
-    return fetch(url, options)
-        .then((response) => {
-            return response.json()
-                .then(json => {
-                    console.log(json)
-                    const newLayerData = { id: jsonreponse.id, type: 'geojson', layer: jsonreponse.layer };
-                    console.log(newLayerData)
-                    return generateGeoJsonLayer(newLayerData, mapStyle)
-                });
-        })
-        .catch(() => { });
+//node application simulating server
+const server = http.createServer((req, res) => {
+    res.statusCode = 200;
+    console.log('handling req')
+    res.setHeader('Content-Type', 'application/json');
+    let htmlFile = '';
+      switch(req.url) {
+        case '/':
+          res.write(JSON.stringify(geojson_base));
+          break;
+        case '/tiled':
+          res.write(JSON.stringify(polygon_base));
+          break;
+        case '/services':
+          htmlFile = 'services.html';
+          break;
+        default:
+          break;
+      }
     
-    function roundDegree (num) {
-        return Math.round(num * 100000000) / 100000000;
-    }
-}
+    res.end();
+  });
+  
+  server.listen(8081, () => {
+    console.log(`El servidor se está ejecutando en 8081`);
+  });
 
-
-const jsonreponse ={
-    id: "grid-act-maintenance-gam-activity",
-    layer: {
+  const geojson_base = {
     "type": "FeatureCollection",
     "features": [
       {
         "type": "Feature",
-        "properties": {},
+        "properties": {
+          "domain_code": "abc",
+          "space_code":"cazzata" 
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -7.3828125,
+                44.213709909702054
+              ],
+              [
+                -10.986328125,
+                41.31082388091818
+              ],
+              [
+                -12.65625,
+                33.284619968887675
+              ],
+              [
+                3.8671874999999996,
+                28.07198030177986
+              ],
+              [
+                6.328125,
+                35.53222622770337
+              ],
+              [
+                6.6796875,
+                42.68243539838623
+              ],
+              [
+                1.7578125,
+                44.902577996288876
+              ],
+              [
+                -7.3828125,
+                44.213709909702054
+              ]
+            ]
+          ]
+        }
+      }
+    ]
+  }
+
+  const geojson_tiled = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "domain_code": "tiled",
+          "space_code":"cazzata_tiled" 
+        },
         "geometry": {
           "type": "LineString",
           "coordinates": [
@@ -196,5 +244,56 @@ const jsonreponse ={
       }
     ]
   }
-}
 
+  const polygon_base = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  2.449951171875,
+                  49.653404588437894
+                ],
+                [
+                  1.021728515625,
+                  48.67645370777654
+                ],
+                [
+                  0.9777832031250001,
+                  47.68757916850813
+                ],
+                [
+                  1.900634765625,
+                  47.025206001585396
+                ],
+                [
+                  4.7900390625,
+                  47.44294999517949
+                ],
+                [
+                  4.383544921875,
+                  48.378145469762444
+                ],
+                [
+                  4.7021484375,
+                  49.688954878870305
+                ],
+                [
+                  3.2958984375,
+                  50.15578588538455
+                ],
+                [
+                  2.449951171875,
+                  49.653404588437894
+                ]
+              ]
+            ]
+          }
+        }
+      ]
+    }

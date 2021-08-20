@@ -19,7 +19,6 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
         tileSize: 512,
         getFillColor: f =>
             {
-                debugger
                 if(f.properties.unique_id === 'topology-1-h-A400.1.384710'){ //lake up rome
                     return  [150, 250, 100];
                 } else return  [200, 100, 150];
@@ -27,7 +26,7 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
             },
         getRadius: 4,
         pointRadiusUnits: 'pixels',
-        getIcon: d => 'marker',
+        getIcon: d => 'icon',
         sizeScale: 1,
         getPosition: d => d.coordinates,
         getSize: d => 5,
