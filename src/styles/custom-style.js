@@ -46,7 +46,7 @@ export const defaultStyle = {
             "layout": [
                 {
                     "condition": "true",
-                    "lineColor": [200, 200, 70, 200],
+                    "lineColor": [0, 0, 0, 50],
                     "lineWidth": 2
                 }              
             ]

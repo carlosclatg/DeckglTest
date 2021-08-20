@@ -156,11 +156,11 @@ export default class MapStyle {
         if (!this.layers)
             return null;
         let layout = null;
-        if (d.id) 
+        if (d.id ) 
             layout = this.getLayout(`${d.id}`, d.properties, 'line');
-        debugger
         if (!layout && d.properties.domain && d.properties.space) 
             layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'line');
+        debugger
         return layout
     }
 

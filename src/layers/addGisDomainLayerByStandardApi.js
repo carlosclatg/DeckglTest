@@ -1,4 +1,5 @@
 import generateGeoJsonLayer from './geojsonLayer'
+import {promisify} from 'es6-promisify'
 
 export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser, mapStyle){
     let url = layer.layer + "/extent?";
@@ -13,7 +14,7 @@ export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser
     if (remoteUser && remoteUser.trim().length) {
         options = { headers: { 'REMOTE_USER': remoteUser } }
     }
-    console.log(url)
+
     return fetch(url, options)
         .then((response) => {
             return response.json()
@@ -41,8 +42,6 @@ const jsonreponse ={
       {
         "type": "Feature",
         "properties": {
-          "domain": "cazzo",
-          "space": "cazzo"
         },
         "geometry": {
           "type": "LineString",

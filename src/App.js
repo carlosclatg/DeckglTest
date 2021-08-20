@@ -125,12 +125,13 @@ const App = (props) =>{
   }
 
   const handleRemoveLayer = ({detail}) => {
+    debugger
     if(detail){
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
-        setLayerList(new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
+        setLayerList((layers) =>new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
       } else {
-        setLayerList(new Array(...layer))
+        setLayerList((layers) =>new Array(...layer))
       }
     }
   }

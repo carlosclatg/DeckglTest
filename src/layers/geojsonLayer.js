@@ -31,7 +31,7 @@ export default function generateGeoJsonLayer(data, mapStyle){
         pointRadiusUnits: 'pixels',
         autoHighlight: true,
         highlightColor: [255, 0, 0, 128],
-        getLineColor: d => mapStyle.getLineColor(d),
+        getLineColor: d => { debugger; console.log(data); return mapStyle.getLineColor(d)},
         getLineWidth: d => mapStyle.getLineWidth(d)
     });
 }
