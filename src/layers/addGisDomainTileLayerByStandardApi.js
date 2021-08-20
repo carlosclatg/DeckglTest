@@ -1,4 +1,5 @@
 import {TileLayer} from '@deck.gl/geo-layers';
+import { GeoJsonLayer, IconLayer, SolidPolygonLayer, PathLayer} from '@deck.gl/layers';
 
 export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remoteUser) {
     const DEFAULT_IMAGE_PUSHPIN_SIZE = 24
@@ -9,6 +10,7 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
     if (remoteUser && remoteUser.trim().length) {
         loadOptions = { fetch: { headers: { 'REMOTE_USER': remoteUser } } }
     }
+    console.log(url)
     return new TileLayer({
         id: layer.id,
         data: url,
@@ -26,10 +28,26 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
             },
         getRadius: 4,
         pointRadiusUnits: 'pixels',
-        getIcon: d => 'icon',
+        _subLayerProps: {
+            points: {
+                type: IconLayer,
+                getIcon: d =>mapStyle.getIcon(d),
+                getSize: d => 2,
+                pickable: true,
+                sizeScale: 15,
+            },
+            'polygons-fill': {
+                type: SolidPolygonLayer,
+                getFillColor: f =>
+                    {
+                        return mapStyle.getPolygonFillColor(f);
+            
+                    }
+            },
+        },
         sizeScale: 1,
         getPosition: d => d.coordinates,
-        getSize: d => 5,
+        getSize: d => 2,
         getColor: d => [Math.sqrt(d.exits), 140, 0]
 
     })

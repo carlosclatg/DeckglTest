@@ -231,8 +231,8 @@ const App = (props) =>{
     }    
     const detail = selectedObjects.map(sel => {
       let obj = new Object();
-      obj.domain_code = sel.object.properties && sel.object.properties.domain_code || undefined
-      obj.space_code = sel.object.properties && sel.object.properties.space_code || undefined
+      obj.domain = sel.object.properties && sel.object.properties.domain || undefined
+      obj.space = sel.object.properties && sel.object.properties.space || undefined
       obj.id = sel.layer.id
       obj.object_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
       obj.object = sel.object

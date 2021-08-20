@@ -250,7 +250,9 @@ const server = http.createServer((req, res) => {
       "features": [
         {
           "type": "Feature",
-          "properties": {},
+          "properties": {
+            "id": "cazzi"
+          },
           "geometry": {
             "type": "Polygon",
             "coordinates": [

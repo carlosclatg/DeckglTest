@@ -47,27 +47,32 @@ export default class MapStyle {
 
     getLineWidth =(d)=>{
         let layout = this.getStyleLayoutLine(d)
-        if(!layout && !layout.width) return this.DEFAULT_LINE_COLOR
-        return layout.width
+        debugger
+        if(!layout) return this.DEFAULT_LINE_WIDTH
+        if(!layout.lineWidth) return this.DEFAULT_LINE_WIDTH
+        return layout.lineWidth
     }
 
     getLineColor =(d)=>{
         let layout = this.getStyleLayoutLine(d)
         debugger
-        if(!layout && !layout.color) return this.DEFAULT_LINE_COLOR
-        return layout.color
+        if(!layout)return this.DEFAULT_LINE_COLOR
+        if(!layout.lineColor) return this.DEFAULT_LINE_COLOR
+        return layout.lineColor
     }
 
 
     getPolygonLineColor =(d)=>{
         let layout = this.getStyleLayoutPolygon(d)
-        if(!layout && !layout.lineColor) return this.DEFAULT_LINE_COLOR
+        if(!layout) return this.DEFAULT_LINE_COLOR
+        if(!layout.lineColor) return this.DEFAULT_LINE_COLOR
         return layout.lineColor
     }
 
     getPolygonFillColor =(d)=>{
         let layout = this.getStyleLayoutPolygon(d)
-        if(!layout && !layout.fillColor) return this.DEFAULT_LINE_COLOR
+        if(!layout) return this.DEFAULT_LINE_COLOR
+        if(!layout.fillColor) return this.DEFAULT_LINE_COLOR
         return layout.fillColor
     }
 
@@ -75,8 +80,9 @@ export default class MapStyle {
 
     getFillColor =(d)=>{
         let layout = this.getStyleLayoutPolygon(d)
-        if(!layout && !layout.fillColor) return layout.fillColor
-        return this.DEFAULT_LINE_COLOR
+        if(!layout) return this.DEFAULT_FILL_COLOR
+        if(!layout.fillColor) return this.DEFAULT_FILL_COLOR
+        return layout.fillColor
     }
 
     getFillOutlineColor =(layer)=> {
@@ -90,6 +96,7 @@ export default class MapStyle {
             return null;
         const props = d.__source.object.properties;
         let layout = null;
+        debugger
         if (d.__source.parent instanceof GeoJsonLayer && d.__source.parent.parent && d.__source.parent.parent instanceof TileLayer) 
             layout = this.getLayout(`${d.__source.parent.parent.id}`, props);
         if (!layout) 
@@ -151,6 +158,7 @@ export default class MapStyle {
         let layout = null;
         if (d.id) 
             layout = this.getLayout(`${d.id}`, d.properties, 'line');
+        debugger
         if (!layout && d.properties.domain && d.properties.space) 
             layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'line');
         return layout
@@ -171,17 +179,28 @@ export default class MapStyle {
 
 
 
-// interface MapStyleLayout {
-//     condition?: string,
-//     image?: string
-//     imageWidth?: number | 24,
-//     imageHeight?: number | 24,
-//     imageAnchorY?: number | 24,
-//     imageAnchorX?: number | 12
-// }
-//  interface MapStyleLayer {
-//     id: string,
-//     type: MapStyleLayerType,
-//     source: string,
-//     layout: Array<MapStyleLayout>
-// }
+/*
+
+dudas styling:
+
+Como hacer distinguir cuando es un punto entre Point y Icon
+https://deck.gl/docs/api-reference/layers/geojson-layer#sub-layers
+
+specs de custom-style.json --> la hacemos nosotros?
+
+Icon: {url, imagewidth, imageHeight} - default icon? default point
+Line: color, width
+Polygon: fillColor, lineColor
+.
+Style:
+-ById
+-Bydomainspace
+
+
+
+
+
+
+
+
+*/

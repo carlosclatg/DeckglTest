@@ -21,7 +21,7 @@ export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser
                     console.log(json)
                     const newLayerData = { id: jsonreponse.id, type: 'geojson', layer: jsonreponse.layer };
                     console.log(newLayerData)
-                    return generateGeoJsonLayer(newLayerData, mapStyle)
+                    return generateGeoJsonLayer(jsonreponse, mapStyle)
                 });
         })
         .catch(() => { });
@@ -33,13 +33,17 @@ export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser
 
 
 const jsonreponse ={
-    id: "grid-act-maintenance-gam-activity",
+    id: "cazzi",
+    type: "geojson",
     layer: {
     "type": "FeatureCollection",
     "features": [
       {
         "type": "Feature",
-        "properties": {},
+        "properties": {
+          "domain": "cazzo",
+          "space": "cazzo"
+        },
         "geometry": {
           "type": "LineString",
           "coordinates": [
