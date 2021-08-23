@@ -24,7 +24,7 @@ import { defaultStyle } from './styles/custom-style';
 const App = (props) =>{
 
   //MOCK DATA
-  const MAXZOOM = 20
+  const MAXZOOM = 22
   const MINZOOM=1
   
 
@@ -74,13 +74,12 @@ const App = (props) =>{
 
   //zoom paramter changed
   useEffect(()=>{
-    console.log(props)
     setViewport({
       width: viewport.width,
       height: viewport.height,
       latitude: viewport.latitude,
       longitude: viewport.longitude,
-      zoom: parseInt(props.zoom.value),
+      zoom: parseInt(props.zoom),
     })
   }, [props.zoom])
 
@@ -215,7 +214,7 @@ const App = (props) =>{
   }
 
   const toogleDrawingMode = () => {
-    setdrawMode(isdrawMode ? !isdrawMode : true)
+    setdrawMode(isdrawMode ? false : true)
   }
 
   //Valorar si podemos enviar el polygono de seleccion.
@@ -279,19 +278,25 @@ const App = (props) =>{
       zoom: previousZoom-1 > MINZOOM ? previousZoom - 1: previousZoom,
     })
     setPreviousZoom(previousZoom)
-  } 
-
+  }
+  
 
   const getTooltip = ({object}) => {
+    
     return (
       object && {
         html: `\
+        <div style="opacity: 0.5">
     <div><b>INFO</b></div>
-    <div>${object.properties} / parcel</div>
-    <div>${object.properties.valuePerSqm} / m<sup>2</sup></div>
-    <div><b>Growth</b></div>
-    <div>${Math.round(object.properties.growth * 100)}%</div>
-    `
+    <div>id : ${object.properties.id}</div>
+    <div>domain : ${object.properties.domain}</div>
+    <div>space : ${object.properties.space}</div>
+    </div>
+    `,
+    style: {
+      background: 'rgba(0,0,0,0.7)',
+      color: 'white'
+    }
       }
     );
   }
@@ -300,8 +305,8 @@ const App = (props) =>{
     <div className="App" ref={myRef} style={{ height: props.height + "px", width: props.width + "px", position: 'relative' }}>
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
         <div style={{...divInsideHost, ...topRight}} id="top-right">
-            <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://w7.pngwing.com/pngs/618/94/png-transparent-computer-icons-zooming-user-interface-zoom-lens-sign-share-icon-zooming-user-interface.png" alt="Zoom in" /></div>
-            <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://img1.freepng.es/20180320/fdq/kisspng-computer-icons-macintosh-iconfinder-zoom-out-save-icon-format-5ab09cc9ca9ed1.4091764015215239138299.jpg" alt="Zoom out" /></div>
+            <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://www.freeiconspng.com/uploads/zoom-png-12.png" alt="Zoom in" /></div>
+            <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://www.freeiconspng.com/uploads/zoom-out-icon-png-24.png" alt="Zoom out" /></div>
             <div style={divInsideTopRight}>{Math.round(viewport.zoom)}</div>
             { props.enable_select_object ?
               <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFEoc-j7y2Vq3-VZ9VkGRF0v__zUr7k408BA&usqp=CAU" : "https://img.icons8.com/ios/452/unchecked-checkbox.png"} alt="Selection" /></div>
@@ -312,6 +317,7 @@ const App = (props) =>{
       <slot style={{...hostStyle, ...slotBottomLeft}} name="bottom-left" />
       <slot style={{...hostStyle, ...slotBottomRight}} name="bottom-right" />
       <DeckGL
+        mapStyle={defaultStyle}
         ref={deckRef}
         initialViewState={viewport}
         controller={true}
@@ -401,7 +407,7 @@ App.propTypes = {
   width :  PropTypes.number,
   height: PropTypes.number,
   center: PropTypes.any,
-  zoom: PropTypes.any, 
+  zoom: PropTypes.number, 
   enable_select_object: PropTypes.bool,
   map_style:   PropTypes.string, 
   remoteuser:   PropTypes.string

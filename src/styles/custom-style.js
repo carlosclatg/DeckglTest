@@ -59,7 +59,7 @@ export const defaultStyle = {
             "layout": [
                 {
                     "condition": "true",
-                    "fillColor": [230, 0, 100, 100],
+                    "fillColor": [230, 120, 100, 100],
                     "lineColor": [100, 100, 90, 255]
                 }              
             ]
@@ -77,5 +77,5 @@ export const defaultStyle = {
             ]
         }
     ]
-  }
+}
   
