@@ -91,7 +91,7 @@ export default class MapStyle {
 
     //ICON
     DEFAULT_IMAGE_PUSHPIN_SIZE = 24
-    DEFAULT_ICON_URL= 'https://img.favpng.com/17/6/1/circle-desktop-wallpaper-point-png-favpng-m4CEAbfBDUnNyapdmdFD4Tw1V.jpg'
+    DEFAULT_ICON_URL= 'https://github.com/carlosclatg/DeckglTest/blob/master/src/icons/blackPoint.png?raw=true'
     getIconSize =(d)=> {
         let layout = this.getStyleLayoutIcon(d)
         if(!layout) return this.DEFAULT_IMAGE_PUSHPIN_SIZE
