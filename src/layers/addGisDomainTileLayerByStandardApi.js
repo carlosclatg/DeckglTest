@@ -18,40 +18,48 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
         loadOptions: loadOptions,
         tileSize: 512,
         getRadius: 4,
-        pointRadiusUnits: 'pixels',
         _subLayerProps: {
             points: {
                 type: IconLayer,
                 getIcon: d =>mapStyle.getIcon(d),
                 getSize: d => mapStyle.getIconSize(d),
                 pickable: true,
+                getSize: d => 2,
+                sizeMinPixels: 5,
+                sizeScale: 18,
             },
             'polygons-fill': {
                 type: SolidPolygonLayer,
                 getFillColor: f =>
                     {
-                        return mapStyle.getPolygonFillColor(f)
+                        return mapStyle.getPolygonFillColor(f);
             
                     },
-                getLineColor: f => {
-                    return mapStyle.getPolygonLineColor(f)
-                }
-            },
-            'linestrings' : {
-                type: PathLayer,
-                getColor: f =>
-                    {
-                        return mapStyle.getLineColor(f);
-            
-                    },
-                getWidth : f => {
-                    return mapStyle.getLineWidth(f)
-                }
             }
         },
-        sizeScale: 1,
         getPosition: d => d.coordinates,
-        getLineColor: d => mapStyle.getLineColor(d),
-        getLineWidth: d => mapStyle.getLineWidth(d)
+        pointRadiusUnits: 'pixels',
+        autoHighlight: true,
+        highlightColor: [255, 0, 0, 128],
+        getLineWidth: d => {
+            if (d && d.geometry && d.geometry.type == 'Polygon') {
+                return mapStyle.getPolygonLineWidth(d)
+            } 
+            if(d && d.geometry && d.geometry.type == 'LineString') {
+                return mapStyle.getLineWidth(d)
+            }
+
+            return mapStyle.DEFAULT_LINE_WIDTH
+        },
+        getLineColor: d => {
+            if (d && d.geometry && d.geometry.type == 'Polygon') {
+                return mapStyle.getPolygonLineColor(d)
+            } 
+            if(d && d.geometry && d.geometry.type == 'LineString') {
+                return mapStyle.getLineColor(d)
+            }
+
+            return mapStyle.DEFAULT_LINE_COLOR
+        },
     })
 }

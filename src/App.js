@@ -299,15 +299,17 @@ const App = (props) =>{
     );
   }
 
+
+  //THE URLS of the image must be switched
   return (
     <div className="App" ref={myRef} style={{ height: props.height + "px", width: props.width + "px", position: 'relative' }}>
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
         <div style={{...divInsideHost, ...topRight}} id="top-right">
-            <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://www.freeiconspng.com/uploads/zoom-png-12.png" alt="Zoom in" /></div>
-            <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://www.freeiconspng.com/uploads/zoom-out-icon-png-24.png" alt="Zoom out" /></div>
+            <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_in-24px.svg" alt="Zoom in" /></div>
+            <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_out-24px.svg" alt="Zoom out" /></div>
             <div style={divInsideTopRight}>{Math.round(viewport.zoom)}</div>
             { props.enable_select_object ?
-              <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFEoc-j7y2Vq3-VZ9VkGRF0v__zUr7k408BA&usqp=CAU" : "https://img.icons8.com/ios/452/unchecked-checkbox.png"} alt="Selection" /></div>
+              <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://github.com/carlosclatg/DeckglTest/blob/master/src/icons/selection.png?raw=true" : "https://github.com/carlosclatg/DeckglTest/blob/master/src/icons/unselection.png?raw=true"} alt="Selection" /></div>
               : 
               null
             }

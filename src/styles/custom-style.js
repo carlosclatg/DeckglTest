@@ -39,32 +39,7 @@ export const defaultStyle = {
                 }              
             ]
         },
-        {
-            "id": "myline",
-            "type": "line",
-            "source": "myline.otherline",
-            "layout": [
-                {
-                    "condition": "true",
-                    "lineColor": [0, 0, 0, 50],
-                    "lineWidth": 2
-                }              
-            ]
-            
-        },
-        {
-            "id": "polygontest",
-            "type": "polygon",
-            "source": "grid-act-maintenance.gam-issue",
-            "layout": [
-                {
-                    "condition": "true",
-                    "fillColor": [230, 120, 100, 100],
-                    "lineColor": [100, 0, 150, 255],
-                    "lineWidth": 2
-                }              
-            ]
-        },
+
         {
             "id": "polygontest",
             "type": "symbol",

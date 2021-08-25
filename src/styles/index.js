@@ -91,6 +91,7 @@ export default class MapStyle {
 
     //ICON
     DEFAULT_IMAGE_PUSHPIN_SIZE = 24
+    DEFAULT_ICON_URL= 'https://img.favpng.com/17/6/1/circle-desktop-wallpaper-point-png-favpng-m4CEAbfBDUnNyapdmdFD4Tw1V.jpg'
     getIconSize =(d)=> {
         let layout = this.getStyleLayoutIcon(d)
         if(!layout) return this.DEFAULT_IMAGE_PUSHPIN_SIZE
@@ -102,7 +103,7 @@ export default class MapStyle {
         let layout = this.getStyleLayoutIcon(d)
         if(!layout) layout = {}
         return {
-            url: layout.image || 'https://i.pinimg.com/originals/fc/c5/77/fcc57757270fbcacb3ec70a4ec384d26.jpg',
+            url: layout.image || this.DEFAULT_ICON_URL,
             width: layout.imageWidth || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             height: layout.imageHeight || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY: layout.imageAnchorY || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
