@@ -23,8 +23,8 @@ import { defaultStyle } from './styles/custom-style';
 const App = (props) =>{
 
   //MOCK DATA
-  const MAXZOOM = 22
-  const MINZOOM=1
+  const MAXZOOM = 23
+  const MINZOOM=0
   
 
   //STATE
@@ -39,7 +39,7 @@ const App = (props) =>{
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
   const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.backgroud_tile_url, MINZOOM, MAXZOOM, defaultStyle)])
-
+  const [selectedItems, setSelectedItems] = useState([])
 
   //REFS TO DOM
   const myRef = useRef();
@@ -48,12 +48,10 @@ const App = (props) =>{
 
   //HOOKS
   useEffect(()=>{
-    console.log(props)
     if(props.map_style){
       fetch(props.map_style)
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
         .catch(e => {
-          console.log(e)
           setMapStyle(new MapStyle(null)) //default style
         });
     } else {
@@ -67,7 +65,6 @@ const App = (props) =>{
   },[])
 
   useEffect(()=>{
-    console.log(layerList)
   }, [layerList])
 
 
@@ -113,7 +110,6 @@ const App = (props) =>{
 
 
   const onDeckClick = (info) => {
-    console.log(info)
     if(props.enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
       let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
       if(objectSelected){
@@ -123,8 +119,8 @@ const App = (props) =>{
   }
 
   const handleRemoveLayer = ({detail}) => {
-    debugger
     if(detail){
+      if(!deckRef.current.props.layers.some(e => e.id == detail)) return
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
         setLayerList((layers) =>new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
@@ -144,18 +140,13 @@ const App = (props) =>{
             .then((response) => {
                 response.json().then(json => {
                     if(!gjv.isGeoJSONObject(json)) return
-                    console.log(json)
                     const extent = getBoundingBox(json);
                     const newviewport = new WebMercatorViewport(viewport);
                     if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
                       //Polygon not provided --> Nothing to do in the viewport
-                      console.log('not inside')
                     } else {
-                      console.log('inside')
                       let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
-                      console.log(zoom)
                       if(zoom < 0) zoom = Math.abs(zoom) +1
-                      console.log(zoom)
                       setViewport({width: viewport.width,height: viewport.height,latitude,longitude,zoom})
                     }
                 });
@@ -396,7 +387,7 @@ App.defaultProps = {
   width :  600,
   height: 600,
   center: {lat: 41.8788383, lng: 12.3594608},
-  zoom: 4,
+  zoom: 7,
   enable_select_object: true, 
   map_style: null,
   remoteuser: null
@@ -436,11 +427,7 @@ https://github.com/visgl/deck.gl/blob/6.4-release/showcases/wind/src/control-pan
 **/
 
 
-//Proxies for type checking: https://medium.com/@SylvainPV/type-safety-in-javascript-using-es6-proxies-eee8fbbbd600
-// validate geojson https://www.npmjs.com/package/geojson-validation 
 
-//console.log(gjv.valid(geojson_data)) //Expect true
-//console.log(gjv.valid({myapp: 1})) //expect false
 
 
 //google-chrome --disable-web-security --user-data-dir="./"

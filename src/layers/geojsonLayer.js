@@ -27,7 +27,6 @@ export default function generateGeoJsonLayer(data, mapStyle){
                     },
             }
         },
-        pointRadiusUnits: 'pixels',
         autoHighlight: true,
         highlightColor: [255, 0, 0, 128],
         getLineWidth: d => {

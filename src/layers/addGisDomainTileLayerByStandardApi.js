@@ -1,5 +1,5 @@
 import {TileLayer} from '@deck.gl/geo-layers';
-import { IconLayer, SolidPolygonLayer, PathLayer} from '@deck.gl/layers';
+import { IconLayer, SolidPolygonLayer} from '@deck.gl/layers';
 
 export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remoteUser) {
     let url = layer.layer + "/tile/{z}/{x}/{y}?props=code,unique_id,_id,domain,space,internal_id,type"
@@ -13,7 +13,7 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
         id: layer.id,
         data: url,
         minZoom: layer.minZoom ? layer.minZoom : 0,
-        maxZoom: layer.maxZoom ? layer.maxZoom : 22,
+        maxZoom: layer.maxZoom ? layer.maxZoom : 23,
         pickable: true,
         loadOptions: loadOptions,
         tileSize: 512,
