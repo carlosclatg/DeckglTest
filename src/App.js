@@ -309,7 +309,7 @@ const App = (props) =>{
             <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_out-24px.svg" alt="Zoom out" /></div>
             <div style={divInsideTopRight}>{Math.round(viewport.zoom)}</div>
             { props.enable_select_object ?
-              <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/selection.svg" : "https://github.com/carlosclatg/DeckglTest/blob/master/src/icons/unselection.svg"} alt="Selection" /></div>
+              <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/selection.svg" : "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/unselection.svg"} alt="Selection" /></div>
               : 
               null
             }

@@ -17,9 +17,6 @@ export default function generateGeoJsonLayer(data, mapStyle){
                 getIcon: d =>mapStyle.getIcon(d),
                 getSize: d => mapStyle.getIconSize(d),
                 pickable: true,
-                getSize: d => 2,
-                sizeMinPixels: 5,
-                sizeScale: 18,
             },
             'polygons-fill': {
                 type: SolidPolygonLayer,

@@ -90,12 +90,12 @@ export default class MapStyle {
 
 
     //ICON
-    DEFAULT_IMAGE_PUSHPIN_SIZE = 24
+    DEFAULT_IMAGE_PUSHPIN_SIZE = 36
     DEFAULT_ICON_URL= 'https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/blackPoint.svg'
     getIconSize =(d)=> {
         let layout = this.getStyleLayoutIcon(d)
-        if(!layout) return this.DEFAULT_IMAGE_PUSHPIN_SIZE
-        return layout.iconSize || this.DEFAULT_IMAGE_PUSHPIN_SIZE
+        if(!layout) return 36
+        return layout.iconSize || 36
     }
 
 
@@ -107,7 +107,7 @@ export default class MapStyle {
             width: layout.imageWidth || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             height: layout.imageHeight || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY: layout.imageAnchorY || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
-            anchorX: layout.imageAnchorX || (this.DEFAULT_IMAGE_PUSHPIN_SIZE / 2),
+            anchorX: layout.imageAnchorX || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
         }
     }
 

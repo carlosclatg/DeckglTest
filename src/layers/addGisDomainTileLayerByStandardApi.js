@@ -24,9 +24,7 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
                 getIcon: d =>mapStyle.getIcon(d),
                 getSize: d => mapStyle.getIconSize(d),
                 pickable: true,
-                getSize: d => 2,
-                sizeMinPixels: 5,
-                sizeScale: 18,
+                sizeScale: 1,
             },
             'polygons-fill': {
                 type: SolidPolygonLayer,
