@@ -1,4 +1,4 @@
-import { GeoJsonLayer, IconLayer, SolidPolygonLayer, PathLayer} from '@deck.gl/layers';
+import { GeoJsonLayer, IconLayer, SolidPolygonLayer, PathLayer, LineLayer} from '@deck.gl/layers';
 
 
 export default function generateGeoJsonLayer(data, mapStyle){
@@ -15,9 +15,8 @@ export default function generateGeoJsonLayer(data, mapStyle){
             points: {
                 type: IconLayer,
                 getIcon: d =>mapStyle.getIcon(d),
-                getSize: d => 1,
+                getSize: d => mapStyle.getIconSize(d),
                 pickable: true,
-                sizeScale: 15,
             },
             'polygons-fill': {
                 type: SolidPolygonLayer,
@@ -25,13 +24,31 @@ export default function generateGeoJsonLayer(data, mapStyle){
                     {
                         return mapStyle.getPolygonFillColor(f);
             
-                    }
-            },
+                    },
+            }
         },
         pointRadiusUnits: 'pixels',
         autoHighlight: true,
         highlightColor: [255, 0, 0, 128],
-        getLineColor: d => { debugger; console.log(data); return mapStyle.getLineColor(d)},
-        getLineWidth: d => mapStyle.getLineWidth(d)
+        getLineWidth: d => {
+            if (d && d.geometry && d.geometry.type == 'Polygon') {
+                return mapStyle.getPolygonLineWidth(d)
+            } 
+            if(d && d.geometry && d.geometry.type == 'LineString') {
+                return mapStyle.getLineWidth(d)
+            }
+
+            return mapStyle.DEFAULT_LINE_WIDTH
+        },
+        getLineColor: d => {
+            if (d && d.geometry && d.geometry.type == 'Polygon') {
+                return mapStyle.getPolygonLineColor(d)
+            } 
+            if(d && d.geometry && d.geometry.type == 'LineString') {
+                return mapStyle.getLineColor(d)
+            }
+
+            return mapStyle.DEFAULT_LINE_COLOR
+        },
     });
 }

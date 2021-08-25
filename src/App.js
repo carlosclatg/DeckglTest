@@ -1,5 +1,4 @@
 import DeckGL from '@deck.gl/react';
-import { GeoJsonLayer} from '@deck.gl/layers';
 import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
@@ -55,10 +54,10 @@ const App = (props) =>{
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
         .catch(e => {
           console.log(e)
-          setMapStyle(new MapStyle(defaultStyle))
+          setMapStyle(new MapStyle(null)) //default style
         });
     } else {
-      setMapStyle(new MapStyle(defaultStyle))
+      setMapStyle(new MapStyle(null)) //default style
     }
     const event = eventMapReadyBuilder();
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
@@ -219,7 +218,6 @@ const App = (props) =>{
 
   //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
-    console.log(selectedObjects)
     setdrawMode(false)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
@@ -231,10 +229,10 @@ const App = (props) =>{
     }    
     const detail = selectedObjects.map(sel => {
       let obj = new Object();
-      obj.domain = sel.object.properties && sel.object.properties.domain || undefined
-      obj.space = sel.object.properties && sel.object.properties.space || undefined
-      obj.id = sel.layer.id
-      obj.object_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
+      obj.domain_code = sel.object.properties && sel.object.properties.domain || undefined
+      obj.space_code = sel.object.properties && sel.object.properties.space || undefined
+      obj.layer_id = sel.layer.id
+      obj.internal_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
       obj.object = sel.object
 
       if(sel.coordinate){ //case picked

@@ -40,9 +40,9 @@ export const defaultStyle = {
             ]
         },
         {
-            "id": "cazzi",
+            "id": "myline",
             "type": "line",
-            "source": "cazzo.cazzo",
+            "source": "myline.otherline",
             "layout": [
                 {
                     "condition": "true",
@@ -60,7 +60,8 @@ export const defaultStyle = {
                 {
                     "condition": "true",
                     "fillColor": [230, 120, 100, 100],
-                    "lineColor": [100, 100, 90, 255]
+                    "lineColor": [100, 0, 150, 255],
+                    "lineWidth": 2
                 }              
             ]
         },
@@ -78,4 +79,29 @@ export const defaultStyle = {
         }
     ]
 }
+
+
+
+/**
+ * 
+ * ACCEPETED PROPERTIES PER LAYER:
+ * 
+ * LAYER TYPE: 
+ *    LINE:
+*         lineWidth: Integer || Default: 1
+          lineColor: RGBA [A, B, C, D] : Default [0,0,0,255]
+ * 
+ *      POLYGON:
+ *          lineColor: RGBA [A, B, C, D]  : Default [0,0,0,255]
+ *          fillColor: RGBA [A, B, C, D]: Default [0,0,0,100]
+*       ICON: 
+            iconSize: integer : 24
+            image?: URL : xxxx.
+            imageWidth?: number | 24,
+            imageHeight?: number | 24,
+            imageAnchorY?: number | 24,
+            imageAnchorX?: number | 12
+ *          
+ * 
+ */
   

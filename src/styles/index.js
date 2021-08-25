@@ -10,44 +10,23 @@ import { defaultStyle } from './custom-style';
 export default class MapStyle {
 
     constructor(l){
-        
+        if(!l) {
+            this.layers = defaultStyle.layers
+        } else {
+            if(!l.layers){
+                this.layers = defaultStyle.layers
+            } else {
+                this.layers = l.layers
 
-
-        this.layers = defaultStyle.layers
-    
-        
-        
-
-        /*
-        forEach elem
-            id: string
-            type: enum value
-            filter: optional
-            source: string
-            layout [] -> {
-                    condition?: string,
-                    image?: string
-                    imageWidth?: number | 24,
-                    imageHeight?: number | 24,
-                    imageAnchorY?: number | 24,
-                    imageAnchorX?: number | 12
             }
-            minzoom
-            maxzoom
-
-        */
+        }
     }
 
-    DEFAULT_LINE_COLOR = [25, 100, 100, 255];
-    DEFAULT_FILL_COLOR = [0, 0, 0, 255];
-    DEFAULT_OUTLINE_FILL_COLOR = [100, 230, 23, 255];
-    DEFAULT_LINE_WIDTH = 5;
-    DEFAULT_IMAGE_PUSHPIN_SIZE = 24
-
-
+    //LINE
+    DEFAULT_LINE_COLOR = [0, 0, 0, 255];
+    DEFAULT_LINE_WIDTH = 1;
     getLineWidth =(d)=>{
         let layout = this.getStyleLayoutLine(d)
-        debugger
         if(!layout) return this.DEFAULT_LINE_WIDTH
         if(!layout.lineWidth) return this.DEFAULT_LINE_WIDTH
         return layout.lineWidth
@@ -55,13 +34,27 @@ export default class MapStyle {
 
     getLineColor =(d)=>{
         let layout = this.getStyleLayoutLine(d)
-        debugger
         if(!layout)return this.DEFAULT_LINE_COLOR
         if(!layout.lineColor) return this.DEFAULT_LINE_COLOR
         return layout.lineColor
     }
 
+    getStyleLayoutLine(d) {
+        if (!this.layers)
+            return null;
+        let layout = null;
+        if (d.id ) 
+            layout = this.getLayout(`${d.id}`, d.properties, 'line');
+        if (!layout && d.properties.domain && d.properties.space) 
+            layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'line');
+        return layout
+    }
 
+
+
+    //POLYGON
+    DEFAULT_FILL_COLOR = [0, 0, 0, 100];
+    DEFAULT_LINE_COLOR = [0, 0, 0, 255];
     getPolygonLineColor =(d)=>{
         let layout = this.getStyleLayoutPolygon(d)
         if(!layout) return this.DEFAULT_LINE_COLOR
@@ -71,39 +64,33 @@ export default class MapStyle {
 
     getPolygonFillColor =(d)=>{
         let layout = this.getStyleLayoutPolygon(d)
-        if(!layout) return this.DEFAULT_LINE_COLOR
-        if(!layout.fillColor) return this.DEFAULT_LINE_COLOR
-        return layout.fillColor
-    }
-
-
-
-    getFillColor =(d)=>{
-        let layout = this.getStyleLayoutPolygon(d)
         if(!layout) return this.DEFAULT_FILL_COLOR
         if(!layout.fillColor) return this.DEFAULT_FILL_COLOR
         return layout.fillColor
     }
 
-    getFillOutlineColor =(layer)=> {
-        return this.DEFAULT_OUTLINE_FILL_COLOR
+    getPolygonLineWidth =(d)=> {
+        let layout = this.getStyleLayoutPolygon(d)
+        if(!layout) return this.DEFAULT_LINE_WIDTH
+        if(!layout.lineWidth) return this.DEFAULT_LINE_WIDTH
+        return layout.lineWidth
     }
-    
-    getStyleLayoutIcon (d) {
+
+    getStyleLayoutPolygon(d) {
         if (!this.layers)
             return null;
-        if (!(d.__source && d.__source.object && d.__source.object.properties)) 
-            return null;
-        const props = d.__source.object.properties;
         let layout = null;
-        debugger
-        if (d.__source.parent instanceof GeoJsonLayer && d.__source.parent.parent && d.__source.parent.parent instanceof TileLayer) 
-            layout = this.getLayout(`${d.__source.parent.parent.id}`, props);
-        if (!layout) 
-            layout = this.getLayout(`${props.domain}.${props.space}`, props);
+        if (d.id) 
+            layout = this.getLayout(`${d.id}`, d.properties, 'polygon');
+        if (!layout && d.properties.domain && d.properties.space) 
+            layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'polygon');
         return layout
     }
 
+
+
+    //ICON
+    DEFAULT_IMAGE_PUSHPIN_SIZE = 24
     getIconSize =(d)=> {
         let layout = this.getStyleLayoutIcon(d)
         if(!layout) return this.DEFAULT_IMAGE_PUSHPIN_SIZE
@@ -123,7 +110,29 @@ export default class MapStyle {
         }
     }
 
+    getStyleLayoutIcon (d) {
+        if (!this.layers)
+            return null;
+        if (!(d.__source && d.__source.object && d.__source.object.properties)) 
+            return null;
+        const props = d.__source.object.properties;
+        let layout = null;
+        if (d.__source.parent instanceof GeoJsonLayer && d.__source.parent.parent && d.__source.parent.parent instanceof TileLayer) 
+            layout = this.getLayout(`${d.__source.parent.parent.id}`, props);
+        if (!layout) 
+            layout = this.getLayout(`${props.domain}.${props.space}`, props);
+        return layout
+    }
+
+    
+
     //https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/
+
+
+
+    //COMMON 
+    
+    //type = symbol, line, polygon
     getLayout(source, model, type ='symbol'){
         let layer  = this.findLayerBySource(source, type);
         if(!layer) layer = this.findLayerById(source, type);
@@ -152,29 +161,9 @@ export default class MapStyle {
         return layer === undefined ? null : layer[0];
     }
 
-    getStyleLayoutLine(d) {
-        if (!this.layers)
-            return null;
-        let layout = null;
-        if (d.id ) 
-            layout = this.getLayout(`${d.id}`, d.properties, 'line');
-        if (!layout && d.properties.domain && d.properties.space) 
-            layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'line');
-        debugger
-        return layout
-    }
 
 
-    getStyleLayoutPolygon(d) {
-        if (!this.layers)
-            return null;
-        let layout = null;
-        if (d.id) 
-            layout = this.getLayout(`${d.id}`, d.properties, 'polygon');
-        if (!layout && d.properties.domain && d.properties.space) 
-            layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'polygon');
-        return layout
-    }
+
 }
 
 

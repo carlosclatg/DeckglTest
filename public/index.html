@@ -39,6 +39,7 @@
     <div id="abc">ABC<button id="wms-button2">WMS/button</div>
     <div id="abc">ABC<button id="center-to-bcn">Center to BCN</div>
     <div id="abc">ABC<button id="zoom-to-5">zoom-to-5</div>
+    <div id="abc">ABC<button id="zoom-to-4">zoom-to-4</div>
     <div id="abc">ABC<button id="center-on-object">center-on-object</div> 
     <div id="abc">ABC<button id="tiled-layer-add-tramos">tiled-layer-add-tramos</div> 
     <div id="abc">ABC<button id="add-polygon-layer">add-polygon-layer</div>   
@@ -53,7 +54,7 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <!-- <my-map 
+    <my-map 
       id="my-map"
       zoom="8"
       height="800"
@@ -64,7 +65,7 @@
       <div slot="top-left"><p style="color:red;">A red paragraph in top-left.</p></div>
       <div slot="bottom-left">Slot BL from outside</div>
       <div slot="bottom-right">Slot BR from outside</div>
-    </my-map> -->
+    </my-map> 
     
   </body>
    <script src="../src/dist/App.js"></script>
@@ -297,8 +298,8 @@
     }
 
 
-    var a11 = document.getElementById('center-to-bcn');
-    a11.onclick = () =>{
+    var a11center = document.getElementById('center-to-bcn');
+    a11center.onclick = () =>{
       var map = document.getElementById('my-map')
       map.center = { lat: 41.5, lng: 2.1 };
     }
@@ -306,7 +307,13 @@
     var a11 = document.getElementById('zoom-to-5');
     a11.onclick = () =>{
       var map = document.getElementById('my-map')
-      map.zoom = {value: 5};
+      map.zoom = 5;
+    }
+
+    var a11prima = document.getElementById('zoom-to-4');
+    a11prima.onclick = () =>{
+      var map = document.getElementById('my-map')
+      map.zoom = 4;
     }
 
 
