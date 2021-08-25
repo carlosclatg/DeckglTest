@@ -22,8 +22,8 @@ export const defaultStyle = {
                 },
                 {
                     "condition": "true",
-                    "image": "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/blackPoint.svg",
-                    "imageWidth": 20, "imageHeight": 20, "imageAnchorY": 20, "imageAnchorX": 20
+                    "image": "https://img2.freepng.es/20180522/eww/kisspng-web-development-computer-icons-website-5b043775017c54.2851318415270029970061.jpg",
+                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17
                 }              
             ]
         },
@@ -39,7 +39,32 @@ export const defaultStyle = {
                 }              
             ]
         },
-
+        {
+            "id": "cazzi",
+            "type": "line",
+            "source": "cazzo.cazzo",
+            "layout": [
+                {
+                    "condition": "true",
+                    "lineColor": [0, 0, 0, 50],
+                    "lineWidth": 2
+                }              
+            ]
+            
+        },
+        {
+            "id": "polygontest",
+            "type": "polygon",
+            "source": "grid-act-maintenance.gam-issue",
+            "layout": [
+                {
+                    "condition": "true",
+                    "fillColor": [230, 120, 100, 100],
+                    "lineColor": [200, 100, 0, 255],
+                    "lineWidth": 5
+                }              
+            ]
+        },
         {
             "id": "polygontest",
             "type": "symbol",
@@ -48,7 +73,7 @@ export const defaultStyle = {
                 {
                     "condition": "true",
                     "image": "https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/231/among-us-player-white-512.png",
-                    "imageWidth": 15, "imageHeight": 15, "imageAnchorY": 15, "imageAnchorX": 15
+                    "imageWidth": 25, "imageHeight": 25, "imageAnchorY": 25, "imageAnchorX": 17
                 }              
             ]
         }
