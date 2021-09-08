@@ -2,7 +2,7 @@ import {TileLayer} from '@deck.gl/geo-layers';
 import { IconLayer, SolidPolygonLayer} from '@deck.gl/layers';
 
 export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remoteUser) {
-    let url = layer.layer + "/tile/{z}/{x}/{y}?props=code,unique_id,_id,domain,space,internal_id,type"
+    let url = layer.layer + "/tile/{z}/{x}/{y}?props=code,unique_id,_id,domain,space,external_id,type"
     if (layer.filter) url += ("&" + layer.filter)
     if (url.indexOf('status') == -1) url += "&status=40"
     let loadOptions = {}

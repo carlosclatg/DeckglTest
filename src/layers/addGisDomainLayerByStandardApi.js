@@ -6,7 +6,7 @@ export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser
     url += `&ymin=${Math.max(-90, roundDegree(extent.south))}`
     url += `&xmax=${Math.min(180, roundDegree(extent.east))}`
     url += `&ymax=${Math.min(90, roundDegree(extent.north))}`
-    url += `&props=code,unique_id,_id,domain,space,internal_id,type`
+    url += `&props=code,unique_id,_id,domain,space,external_id,type`
     if (layer.filter) url += ("&" + layer.filter)
     if (url.indexOf('status') == -1) url += "&status=AP"
     let options = {}

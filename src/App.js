@@ -169,6 +169,7 @@ const App = (props) =>{
     if(detail.type === GEOJSON_LAYER){
       if(detail.layer instanceof Object){
         if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing
+          //Verify if unique_id is present or not, else generate.
           newLayer = generateGeoJsonLayer(detail, mapStyle)
         } else return
       } else {
@@ -211,6 +212,7 @@ const App = (props) =>{
 
   //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
+    console.log(selectedObjects)
     setdrawMode(false)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
@@ -225,8 +227,9 @@ const App = (props) =>{
       obj.domain_code = sel.object.properties && sel.object.properties.domain || undefined
       obj.space_code = sel.object.properties && sel.object.properties.space || undefined
       obj.layer_id = sel.layer.id
-      obj.internal_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
+      obj.external_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
       obj.object = sel.object
+      obj.unique_id = sel.object && sel.object.properties && sel.object.properties.unique_id || undefined
 
       if(sel.coordinate){
         obj.position = {
@@ -234,7 +237,6 @@ const App = (props) =>{
           lng: sel.coordinate[0] ? sel.coordinate[0] : null
         }
       }
-      console.log(obj)
       return obj
     })
     const ev = eventObjectSelectedBuilder(detail)
