@@ -1,5 +1,4 @@
 import generateGeoJsonLayer from './geojsonLayer'
-import {promisify} from 'es6-promisify'
 
 export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser, mapStyle){
     let url = layer.layer + "/extent?";

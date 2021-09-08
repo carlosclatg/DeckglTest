@@ -18,6 +18,7 @@ import {WebMercatorViewport} from '@deck.gl/core';
 import { fromEvent } from 'rxjs';
 import PropTypes from 'prop-types';
 import { defaultStyle } from './styles/custom-style';
+import { divInsideHost, divInsideTopRight, hostStyle, slotBottomLeft, slotBottomRight, slotTopLeft, topRight } from './css-styles';
 
 //PROPS AND COMPONENT-
 const App = (props) =>{
@@ -48,6 +49,9 @@ const App = (props) =>{
 
   //HOOKS
   useEffect(()=>{
+    console.log("props")
+    console.log(props)
+    if(props.multi_polygon_selector) console.log("true")
     if(props.map_style){
       fetch(props.map_style)
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
@@ -102,7 +106,7 @@ const App = (props) =>{
 
   useEffect(()=>{
     if(isdrawMode){
-      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects)))
+      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects, props.multi_polygon_selector)))
     } else {
       setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
     }
@@ -123,7 +127,7 @@ const App = (props) =>{
       if(!deckRef.current.props.layers.some(e => e.id == detail)) return
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
-        setLayerList((layers) =>new Array(...layer,getSelectionLayer(layer, handleSelectedObjects))) //update selectable layers as well.
+        setLayerList((layers) =>new Array(...layer.filter(e => e.id !== 'selection'),getSelectionLayer(layer, handleSelectedObjects, props.multi_polygon_selector))) //update selectable layers as well.
       } else {
         setLayerList((layers) =>new Array(...layer))
       }
@@ -174,7 +178,6 @@ const App = (props) =>{
           let extent = viewportToExtension(viewport)
           return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser, mapStyle).then(layer=>{
             if(layer) setLayerList((layerList)=>[...layerList, layer])
-            return
           })
         }
       }
@@ -190,7 +193,6 @@ const App = (props) =>{
 
     if(newLayer){
       //https://github.com/visgl/deck.gl/discussions/5593
-      //Diferencia entre:
       setLayerList((layerList)=>[...layerList, newLayer])
       
     }
@@ -226,23 +228,18 @@ const App = (props) =>{
       obj.internal_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
       obj.object = sel.object
 
-      if(sel.coordinate){ //case picked
+      if(sel.coordinate){
         obj.position = {
-          lat: sel.coordinate[1],
-          lng: sel.coordinate[0]
+          lat: sel.coordinate[1] ? sel.coordinate[1] : null,
+          lng: sel.coordinate[0] ? sel.coordinate[0] : null
         }
-      } else {//case selected
-        obj.position = {
-          lat: null,
-          lng: null
-        }
-      } 
-
+      }
+      console.log(obj)
       return obj
     })
     const ev = eventObjectSelectedBuilder(detail)
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
-    if(!isdrawMode)setLayerList((layerList) => [layerList]) //re-initialize layers in order to get the selected items. 
+    //if(!isdrawMode)setLayerList((layerList) => layerList) //re-initialize layers in order to get the selected items. 
   }
 
   const zoomIn = () => {
@@ -273,7 +270,7 @@ const App = (props) =>{
   const getTooltip = ({object}) => {
     
     return (
-      object && {
+      object && !isdrawMode && {
         html: `\
         <div style="opacity: 0.5">
     <div><b>INFO</b></div>
@@ -323,61 +320,7 @@ const App = (props) =>{
   );
 }
 
-//:host
-const hostStyle = {
-  display: "block",
-  position: "relative"
-}
 
-//:host > div:host > div
-const divInsideHost ={
-  zIndex: 1000
-}
-
-//#top-right
-const topRight= {
-  position:"absolute",
-  top:"10px",
-  right:"10px",
-  width:"30px",
-  minHeight:"50px",
-  backgroundColor:"#f2f2f2",
-  borderRadius:"8px",
-  border:"1px solid darkgray",
-  zIndex:"1000"
-}
-
-//#top-right > div 
-const divInsideTopRight = {
-  margin: "4px",
-  textAlign: "center",
-  cursor: "pointer"
-}
-
-//::slotted([slot=top-left])
-const slotTopLeft = {
-  position:"absolute",
-  top: "10px",
-  left: "10px",
-  zIndex: 1000,
-}
-
-
-//::slotted([slot=bottom-left])
-const slotBottomLeft = {
-  position:"absolute",
-  bottom: "10px",
-  left: "10px",
-  zIndex: 1000,
-}
-
-//::slotted([slot=bottom-right])
-const slotBottomRight = {
-  position:"absolute",
-  bottom: "10px",
-  right: "10px",
-  zIndex: 1000,
-}
 
 
 export default App;
@@ -390,7 +333,8 @@ App.defaultProps = {
   zoom: 7,
   enable_select_object: true, 
   map_style: null,
-  remoteuser: null
+  remoteuser: null,
+  multi_polygon_selector: false
 };
 
 App.propTypes = {
@@ -401,11 +345,12 @@ App.propTypes = {
   zoom: PropTypes.number, 
   enable_select_object: PropTypes.bool,
   map_style:   PropTypes.string, 
-  remoteuser:   PropTypes.string
+  remoteuser:   PropTypes.string,
+  multi_polygon_selector: PropTypes.bool
 };
 
 const WebApp = reactToWebComponent(App, React, ReactDOM, {shadow: true});
-customElements.define("my-map", WebApp);
+customElements.define("enel-gis-map", WebApp);
 
 
 

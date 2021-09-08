@@ -1,4 +1,4 @@
-import { GeoJsonLayer, IconLayer, SolidPolygonLayer, PathLayer, LineLayer} from '@deck.gl/layers';
+import { GeoJsonLayer, IconLayer, SolidPolygonLayer} from '@deck.gl/layers';
 
 
 export default function generateGeoJsonLayer(data, mapStyle){
@@ -6,7 +6,6 @@ export default function generateGeoJsonLayer(data, mapStyle){
         id: data.id,
         data: data.layer,
         autoHighLight: true,
-        highlightColor: [255, 255, 0],
         pickable: true,
         filled: true,
         stroke: true,
@@ -30,20 +29,20 @@ export default function generateGeoJsonLayer(data, mapStyle){
         autoHighlight: true,
         highlightColor: [255, 0, 0, 128],
         getLineWidth: d => {
-            if (d && d.geometry && d.geometry.type == 'Polygon') {
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
                 return mapStyle.getPolygonLineWidth(d)
             } 
-            if(d && d.geometry && d.geometry.type == 'LineString') {
+            if(d && d.geometry && d.geometry.type === 'LineString') {
                 return mapStyle.getLineWidth(d)
             }
 
             return mapStyle.DEFAULT_LINE_WIDTH
         },
         getLineColor: d => {
-            if (d && d.geometry && d.geometry.type == 'Polygon') {
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
                 return mapStyle.getPolygonLineColor(d)
             } 
-            if(d && d.geometry && d.geometry.type == 'LineString') {
+            if(d && d.geometry && d.geometry.type === 'LineString') {
                 return mapStyle.getLineColor(d)
             }
 

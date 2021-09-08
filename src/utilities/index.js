@@ -2,7 +2,7 @@ import {Viewport} from '@deck.gl/core';
 
 
 const getBoundingBox = (data) => {
-  var bounds = {}, coordinates, point, latitude, longitude;
+  var bounds = {}, coordinates, latitude, longitude;
 
 
   // Loop through each "feature"

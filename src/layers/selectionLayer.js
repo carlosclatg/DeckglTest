@@ -1,9 +1,9 @@
-import { SelectionLayer } from '@nebula.gl/layers';
+import { SelectionLayer} from '@nebula.gl/layers';
 
-export default function getSelectionLayer(layerlist, handleSelectedObject){
+export default function getSelectionLayer(layerlist, handleSelectedObject, polygon){
   return new SelectionLayer({
       id: 'selection',
-      selectionType: 'rectangle',
+      selectionType: polygon ? 'polygon' : 'rectangle',
       layerIds: layerlist.map(e=>e.id),
       onSelect: ({ pickingInfos }) => handleSelectedObject(pickingInfos),
       getTentativeFillColor: () => [255, 0, 255, 100],

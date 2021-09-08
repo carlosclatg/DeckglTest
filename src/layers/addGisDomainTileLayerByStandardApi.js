@@ -28,11 +28,7 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
             },
             'polygons-fill': {
                 type: SolidPolygonLayer,
-                getFillColor: f =>
-                    {
-                        return mapStyle.getPolygonFillColor(f);
-            
-                    },
+                getFillColor: f => mapStyle.getPolygonFillColor(f)
             }
         },
         getPosition: d => d.coordinates,
@@ -40,20 +36,20 @@ export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remo
         autoHighlight: true,
         highlightColor: [255, 0, 0, 128],
         getLineWidth: d => {
-            if (d && d.geometry && d.geometry.type == 'Polygon') {
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
                 return mapStyle.getPolygonLineWidth(d)
             } 
-            if(d && d.geometry && d.geometry.type == 'LineString') {
+            if(d && d.geometry && d.geometry.type === 'LineString') {
                 return mapStyle.getLineWidth(d)
             }
 
             return mapStyle.DEFAULT_LINE_WIDTH
         },
         getLineColor: d => {
-            if (d && d.geometry && d.geometry.type == 'Polygon') {
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
                 return mapStyle.getPolygonLineColor(d)
             } 
-            if(d && d.geometry && d.geometry.type == 'LineString') {
+            if(d && d.geometry && d.geometry.type === 'LineString') {
                 return mapStyle.getLineColor(d)
             }
 
