@@ -24,7 +24,7 @@ import { divInsideHost, divInsideTopRight, hostStyle, slotBottomLeft, slotBottom
 const App = (props) =>{
 
   //MOCK DATA
-  const MAXZOOM = 23
+  const MAXZOOM=23
   const MINZOOM=0
   
 

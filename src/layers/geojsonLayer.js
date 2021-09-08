@@ -1,7 +1,16 @@
 import { GeoJsonLayer, IconLayer, SolidPolygonLayer} from '@deck.gl/layers';
-
+import { v4 as uuidv4 } from 'uuid';
 
 export default function generateGeoJsonLayer(data, mapStyle){
+
+
+    //validate if data has unique_id; else add new one
+    data.layer.features.forEach(element => {
+        if(element.properties && !element.properties.unique_id){
+            element.properties.unique_id = uuidv4();
+        }
+    })
+
     return new GeoJsonLayer({
         id: data.id,
         data: data.layer,
