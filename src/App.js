@@ -5,7 +5,7 @@ import reactToWebComponent from "react-to-webcomponent";
 import getSelectionLayer from './layers/selectionLayer'
 import getTileMapLayer from './layers/tileMapLayer'
 import eventObjectSelectedBuilder from './events/eventObjectSelectedBuilder'
-import generateGeoJsonLayer from './layers/geojsonLayer'
+// import generateGeoJsonLayer from './layers/geojsonLayer'
 import gjv from 'geojson-validation'
 import eventMapReadyBuilder from './events/eventMapReadyBuilder'
 import { GEOJSON_LAYER, WMS_LAYER } from './constants';
@@ -19,6 +19,9 @@ import { fromEvent } from 'rxjs';
 import PropTypes from 'prop-types';
 import { defaultStyle } from './styles/custom-style';
 import { divInsideHost, divInsideTopRight, hostStyle, slotBottomLeft, slotBottomRight, slotTopLeft, topRight } from './css-styles';
+import { GeoJsonLayer, IconLayer, SolidPolygonLayer} from '@deck.gl/layers';
+import { v4 as uuidv4 } from 'uuid';
+import {TileLayer} from '@deck.gl/geo-layers';
 
 //PROPS AND COMPONENT-
 const App = (props) =>{
@@ -40,7 +43,7 @@ const App = (props) =>{
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
   const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.backgroud_tile_url, MINZOOM, MAXZOOM, defaultStyle)])
-  const [selectedItems, setSelectedItems] = useState([])
+  const [selectedItems, setSelectedItems] = useState(new Set())
 
   //REFS TO DOM
   const myRef = useRef();
@@ -49,9 +52,6 @@ const App = (props) =>{
 
   //HOOKS
   useEffect(()=>{
-    console.log("props")
-    console.log(props)
-    if(props.multi_polygon_selector) console.log("true")
     if(props.map_style){
       fetch(props.map_style)
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
@@ -66,6 +66,7 @@ const App = (props) =>{
     fromEvent(document, "topogisevt_add_layer").subscribe(event=>handleAddLayer(event)) //BE very careful... handleAddLayer is inmunatable after initial load. 
     fromEvent(document, "topogisevt_remove_layer").subscribe(event=>handleRemoveLayer(event))
     fromEvent(document, "topogisevt_center_on_object").subscribe(event=>handleCenterOnObject(event))
+    localStorage.removeItem("selectedItems")
   },[])
 
   useEffect(()=>{
@@ -170,14 +171,14 @@ const App = (props) =>{
       if(detail.layer instanceof Object){
         if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing
           //Verify if unique_id is present or not, else generate.
-          newLayer = generateGeoJsonLayer(detail, mapStyle)
+          newLayer = generateGeoJsonLayer(detail, mapStyle, selectedItems)
         } else return
       } else {
         if(detail.tiled){
-          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remoteuser)
+          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remoteuser, selectedItems)
         } else {
           let extent = viewportToExtension(viewport)
-          return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser, mapStyle).then(layer=>{
+          return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser, mapStyle, selectedItems).then(layer=>{
             if(layer) setLayerList((layerList)=>[...layerList, layer])
           })
         }
@@ -191,11 +192,9 @@ const App = (props) =>{
     } else {
 
     }
-
     if(newLayer){
       //https://github.com/visgl/deck.gl/discussions/5593
       setLayerList((layerList)=>[...layerList, newLayer])
-      
     }
   }
 
@@ -207,11 +206,12 @@ const App = (props) =>{
   }
 
   const toogleDrawingMode = () => {
-    setdrawMode(isdrawMode ? false : true)
+    setdrawMode(!isdrawMode)
   }
 
   //Valorar si podemos enviar el polygono de seleccion.
   const handleSelectedObjects = (selectedObjects) => {
+    console.log(layerList)
     console.log(selectedObjects)
     setdrawMode(false)
     if(!selectedObjects) return //case nothing
@@ -221,7 +221,12 @@ const App = (props) =>{
       if(!Array.isArray(selectedObjects)){
         selectedObjects = new Array(selectedObjects) //case single selection.
       }
-    }    
+    }
+    const newSelectedItems =  new Set([...selectedItems, ...selectedObjects.map(e => e.object.properties.unique_id)])
+    localStorage.removeItem("selectedItems")
+    localStorage.setItem("selectedItems", JSON.stringify([...newSelectedItems]))
+    const affectedLayerIds = new Set(selectedObjects.map(obj => obj.layer.id))
+    console.log(affectedLayerIds)
     const detail = selectedObjects.map(sel => {
       let obj = new Object();
       obj.domain_code = sel.object.properties && sel.object.properties.domain || undefined
@@ -229,7 +234,7 @@ const App = (props) =>{
       obj.layer_id = sel.layer.id
       obj.external_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
       obj.object = sel.object
-      obj.unique_id = sel.object && sel.object.properties && sel.object.properties.unique_id || undefined
+      obj.unique_id = sel.object && sel.object.properties && sel.object.properties.unique_id || undefined //will send even if it has been added manually
 
       if(sel.coordinate){
         obj.position = {
@@ -241,7 +246,27 @@ const App = (props) =>{
     })
     const ev = eventObjectSelectedBuilder(detail)
     ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
-    //if(!isdrawMode)setLayerList((layerList) => layerList) //re-initialize layers in order to get the selected items. 
+    
+    if(true){
+      console.log(layerList)
+      console.log(affectedLayerIds)
+      const reinitLayerList = layerList.map(layer => {
+        if(affectedLayerIds.has(layer.id)){
+          if(layer instanceof GeoJsonLayer){
+            return reinitGeoJSONLayer(layer)
+          }
+          if(layer instanceof WMSTileLayer){
+            return layer
+          }
+          if(layer instanceof TileLayer){
+            return reinitTileLayer(layer)
+          }
+        } else {
+          return layer
+        }
+      })
+      setLayerList((layerList) => reinitLayerList) 
+    }
   }
 
   const zoomIn = () => {
@@ -267,8 +292,26 @@ const App = (props) =>{
     })
     setPreviousZoom(previousZoom)
   }
-  
 
+  const deleteSelectedItems = () => {
+    console.log(localStorage.getItem('selectedItems'))
+    localStorage.removeItem('selectedItems')
+    const reinitLayerList = layerList.map(layer => {
+      if(layer instanceof GeoJsonLayer){
+        debugger
+        return reinitGeoJSONLayer(layer)
+      }
+      if(layer instanceof WMSTileLayer){
+        return layer
+      }
+      if(layer instanceof TileLayer && layer.id !== "main-map-tile-layer"){
+        return reinitTileLayer(layer)
+      }
+      return layer
+    })
+    setLayerList((layerList) => reinitLayerList) 
+  }
+    
   const getTooltip = ({object}) => {
     
     return (
@@ -276,7 +319,7 @@ const App = (props) =>{
         html: `\
         <div style="opacity: 0.5">
     <div><b>INFO</b></div>
-    <div>id : ${object.properties.id}</div>
+    <div>unique id : ${object.properties.unique_id}</div>
     <div>domain : ${object.properties.domain}</div>
     <div>space : ${object.properties.space}</div>
     </div>
@@ -289,6 +332,233 @@ const App = (props) =>{
     );
   }
 
+  const generateGeoJsonLayer = (data) =>{
+    //validate if data has unique_id; else add new one
+    data.layer.features.forEach(element => {
+        if(element.properties && !element.properties.unique_id){
+            element.properties.unique_id = uuidv4();
+        }
+    })
+    console.log('The selelect items are')
+    let selItems = null
+    if(localStorage.getItem("selectedItems")){
+      selItems = new Set(JSON.parse(localStorage.getItem("selectedItems")))
+    }
+
+    return new GeoJsonLayer({
+        id: data.id,
+        data: data.layer,
+        pickable: true,
+        filled: true,
+        stroke: true,
+        lineWidthUnits: 'pixels',        
+        _subLayerProps: {
+            points: {
+                type: IconLayer,
+                getIcon: d =>{
+                  debugger
+                  if(JSON.parse(localStorage.getItem("selectedItems")) && new Set(JSON.parse(localStorage.getItem("selectedItems"))).has(d.__source.object.properties.unique_id)){
+                    debugger
+                    return mapStyle.getDefaultIcon(d)
+                  }
+                    return mapStyle.getIcon(d)
+                },
+                getSize: d => {
+                  if(JSON.parse(localStorage.getItem("selectedItems")) && new Set(JSON.parse(localStorage.getItem("selectedItems"))).has(d.__source.object.properties.unique_id)){
+                    debugger
+                    return 50
+                  }
+                    return mapStyle.getIconSize(d)
+                },
+                pickable: true,
+                updateTriggers: {
+                  getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  id: [data.id]
+                },
+            },
+            'polygons-fill': {
+                type: SolidPolygonLayer,
+                getFillColor: f =>
+                    {
+                        return mapStyle.getPolygonFillColor(f);
+            
+                    },
+                updateTriggers: {
+                  getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  id: [data.id]
+                },
+            }
+        },
+        autoHighlight: true,
+        highlightColor: [255, 0, 0, 128],
+        getLineWidth: d => {
+            if(JSON.parse(localStorage.getItem("selectedItems")) && new Set(JSON.parse(localStorage.getItem("selectedItems"))).has(d.properties.unique_id)){
+              return 50
+            }
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
+                return mapStyle.getPolygonLineWidth(d)
+            } 
+            if(d && d.geometry && d.geometry.type === 'LineString') {
+                return mapStyle.getLineWidth(d)
+            }
+            return mapStyle.DEFAULT_LINE_WIDTH
+        },
+        getLineColor: d => {
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
+                return mapStyle.getPolygonLineColor(d)
+            } 
+            if(d && d.geometry && d.geometry.type === 'LineString') {
+                return mapStyle.getLineColor(d)
+            }
+
+            return mapStyle.DEFAULT_LINE_COLOR
+        },
+        updateTriggers: {
+          getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
+          id: [data.id]
+        },
+    });
+  }
+
+  const reinitGeoJSONLayer =(data) => {
+    return new GeoJsonLayer({
+        id: data.id,
+        data: data.props.data,
+        pickable: true,
+        filled: true,
+        stroke: true,
+        lineWidthUnits: 'pixels',        
+        _subLayerProps: {
+            points: {
+                type: IconLayer,
+                getIcon: d =>{
+                  debugger
+                  if(JSON.parse(localStorage.getItem("selectedItems")) && new Set(JSON.parse(localStorage.getItem("selectedItems"))).has(d.__source.object.properties.unique_id)){
+                    debugger
+                    return mapStyle.getDefaultIcon(d)
+                  }
+                    return mapStyle.getIcon(d)
+                },
+                getSize: d => {
+                  if(JSON.parse(localStorage.getItem("selectedItems")) && new Set(JSON.parse(localStorage.getItem("selectedItems"))).has(d.__source.object.properties.unique_id)){
+                    debugger
+                    return 50
+                  }
+                    return mapStyle.getIconSize(d)
+                },
+                pickable: true,
+                updateTriggers: {
+                  getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  id: [data.id]
+                },
+            },
+            'polygons-fill': {
+                type: SolidPolygonLayer,
+                getFillColor: f =>
+                    {
+                        return mapStyle.getPolygonFillColor(f);
+            
+                    },
+                updateTriggers: {
+                  getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  id: [data.id]
+                },
+            }
+        },
+        autoHighlight: true,
+        highlightColor: [255, 0, 0, 128],
+        getLineWidth: d => {
+            if(JSON.parse(localStorage.getItem("selectedItems")) && new Set(JSON.parse(localStorage.getItem("selectedItems"))).has(d.properties.unique_id)){
+              return 50
+            }
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
+                return mapStyle.getPolygonLineWidth(d)
+            } 
+            if(d && d.geometry && d.geometry.type === 'LineString') {
+                return mapStyle.getLineWidth(d)
+            }
+            return mapStyle.DEFAULT_LINE_WIDTH
+        },
+        getLineColor: d => {
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
+                return mapStyle.getPolygonLineColor(d)
+            } 
+            if(d && d.geometry && d.geometry.type === 'LineString') {
+                return mapStyle.getLineColor(d)
+            }
+
+            return mapStyle.DEFAULT_LINE_COLOR
+        },
+        updateTriggers: {
+          getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
+          id: [data.id]
+        },
+    });
+  }
+
+  const reinitTileLayer = (layer)=> {
+    return new TileLayer({
+        id: layer.id,
+        data: layer.props.data,
+        minZoom: layer.minZoom ? layer.minZoom : 0,
+        maxZoom: layer.maxZoom ? layer.maxZoom : 23,
+        pickable: true,
+        loadOptions: {},
+        tileSize: 512,
+        getRadius: 4,
+        _subLayerProps: {
+            points: {
+                type: IconLayer,
+                getIcon: d =>{
+                  if(JSON.parse(localStorage.getItem("selectedItems")) && new Set(JSON.parse(localStorage.getItem("selectedItems"))).has(d.__source.object.properties.unique_id)){
+                    debugger
+                    return mapStyle.getDefaultIcon(d)
+                  }
+                    return mapStyle.getIcon(d)
+                },
+                getSize: d => mapStyle.getIconSize(d),
+                pickable: true,
+                sizeScale: 1,
+                updateTriggers: {
+                  getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  id: [layer.id]
+                },
+            },
+            'polygons-fill': {
+                type: SolidPolygonLayer,
+                getFillColor: f => mapStyle.getPolygonFillColor(f)
+            }
+        },
+        getPosition: d => d.coordinates,
+        pointRadiusUnits: 'pixels',
+        autoHighlight: true,
+        highlightColor: [255, 0, 0, 128],
+        getLineWidth: d => {
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
+                return mapStyle.getPolygonLineWidth(d)
+            } 
+            if(d && d.geometry && d.geometry.type === 'LineString') {
+                return mapStyle.getLineWidth(d)
+            }
+
+            return mapStyle.DEFAULT_LINE_WIDTH
+        },
+        getLineColor: d => {
+            if (d && d.geometry && d.geometry.type === 'Polygon') {
+                return mapStyle.getPolygonLineColor(d)
+            } 
+            if(d && d.geometry && d.geometry.type === 'LineString') {
+                return mapStyle.getLineColor(d)
+            }
+
+            return mapStyle.DEFAULT_LINE_COLOR
+        },
+    })
+  }
+
 
   //THE URLS of the image must be switched
   return (
@@ -299,7 +569,10 @@ const App = (props) =>{
             <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_out-24px.svg" alt="Zoom out" /></div>
             <div style={divInsideTopRight}>{Math.round(viewport.zoom)}</div>
             { props.enable_select_object ?
+              <div>
               <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/selection.svg" : "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/polygon.svg"} alt="Selection" /></div>
+              <div style={divInsideTopRight} onClick={deleteSelectedItems}><img height="24" viewBox="0 0 24 24" width="24" src={"https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/waste.svg"} alt="Delete" /></div>
+              </div>
               : 
               null
             }
@@ -351,8 +624,8 @@ App.propTypes = {
   multi_polygon_selector: PropTypes.bool
 };
 
-const WebApp = reactToWebComponent(App, React, ReactDOM, {shadow: true});
-customElements.define("enel-gis-map", WebApp);
+// const WebApp = reactToWebComponent(App, React, ReactDOM, {shadow: true});
+// customElements.define("enel-gis-map", WebApp);
 
 
 

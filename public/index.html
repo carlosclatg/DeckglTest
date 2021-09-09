@@ -175,27 +175,45 @@
       document.dispatchEvent(event, true, false)
     }
 
+
+/**
+ *               "type": "Feature",
+              "properties": {
+                  "domain": "Coors Field",
+                  "space": "Baseball Stadium",
+                  "cazzo": "This is where the Rockies play!"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [-104.99404, 39.75621]
+              }
+ * 
+ * */
+
     var a2 = document.getElementById('geojson-point');
     a2.onclick = () =>{
       //ADDING ONE POINT GEOJSON
       const event = new CustomEvent('topogisevt_add_layer', { detail: 
         {
-          id:"layer-geojson-point",
-          type: "geojson",
-          layer:{
+          id: 'layer-geojson-point',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
             "type": "Feature",
-            "properties": {
-                "domain": "Coors Field",
-                "space": "Baseball Stadium",
-                "cazzo": "This is where the Rockies play!"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [-104.99404, 39.75621]
-            }
-          },
-        }
-      });
+              "properties": {
+                  "domain": "Coors Field",
+                  "space": "Baseball Stadium",
+                  "cazzo": "This is where the Rockies play!"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [-104.99404, 39.75621]
+              }
+              }]
+          }
+      }});
       document.dispatchEvent(event, true, false)
     }
 
@@ -344,41 +362,45 @@
           id:"polygontest",
           type: "geojson",
           layer:{
-            "type": "Feature",
-            "properties": {
-              "space":"gam-issue",
-              "domain":"grid-act-maintenance",
-            },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [
-                [
-                  [
-                    16.875,
-                    39.90973623453719
-                  ],
-                  [
-                    31.289062500000004,
-                    39.90973623453719
-                  ],
-                  [
-                    31.289062500000004,
-                    48.69096039092549
-                  ],
-                  [
-                    16.875,
-                    48.69096039092549
-                  ],
-                  [
-                    16.875,
-                    39.90973623453719
-                  ]
+            "type": "FeatureCollection",
+            "features": [
+                      {
+                    "type": "Feature",
+                    "properties": {
+                      "space":"gam-issue",
+                      "domain":"grid-act-maintenance",
+                    },
+                    "geometry": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            16.875,
+                            39.90973623453719
+                          ],
+                          [
+                            31.289062500000004,
+                            39.90973623453719
+                          ],
+                          [
+                            31.289062500000004,
+                            48.69096039092549
+                          ],
+                          [
+                            16.875,
+                            48.69096039092549
+                          ],
+                          [
+                            16.875,
+                            39.90973623453719
+                          ]
+                        ]
+                      ]
+                    }
+                  }
                 ]
-              ]
-            }
-          }
         }
-      });
+      }});
       document.dispatchEvent(event, true, false)
     }
 

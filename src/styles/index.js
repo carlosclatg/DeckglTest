@@ -99,6 +99,16 @@ export default class MapStyle {
     }
 
 
+    getDefaultIcon = (d) => {
+        return {
+            url:  this.DEFAULT_ICON_URL,
+            width:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            height:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            anchorY:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            anchorX:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+        }
+    }
+
     getIcon =(d)=> {
         let layout = this.getStyleLayoutIcon(d)
         if(!layout) layout = {}

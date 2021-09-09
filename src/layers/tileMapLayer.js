@@ -9,7 +9,6 @@ export default function getTileMapLayer(mapURL, minZoom, maxZoom){
     maxZoom,
     tileSize: 256,
     id:"main-map-tile-layer",
-
     renderSubLayers: props => {
       const {
         bbox: {west, south, east, north}
