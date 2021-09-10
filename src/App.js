@@ -111,11 +111,12 @@ const App = (props) =>{
     }
   },[isdrawMode])
 
-  const onDeckClick = (info) => {
+  const onDeckClick = (info, event) => {
+    console.log(event)
     if(props.enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
       let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
       if(objectSelected){
-        handleSelectedObjects(objectSelected)
+        handleSelectedObjects(objectSelected, event)
       }
     }
   }
@@ -205,7 +206,7 @@ const App = (props) =>{
     setdrawMode(!isdrawMode)
   }
 
-  const handleSelectedObjects = (selectedObjects) => {
+  const handleSelectedObjects = (selectedObjects, event = null) => {
     setdrawMode(false)
     if(!selectedObjects) return //case nothing
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
@@ -216,33 +217,41 @@ const App = (props) =>{
       }
     }
     let newSelectedItems =  []
-    if(localStorage.getItem("selectedItems")){ //add to the previous selected items.
-      newSelectedItems =  new Set([...new Set(JSON.parse(localStorage.getItem("selectedItems"))), ...selectedObjects.map(e => e.object.properties.unique_id)])
-    } else { //no one is previously selected
+    if(event && event.srcEvent && event.srcEvent.ctrlKey){//add to the previous selected items.
+      if(localStorage.getItem("selectedItems")){ 
+        newSelectedItems =  new Set([...new Set(JSON.parse(localStorage.getItem("selectedItems"))), ...selectedObjects.map(e => e.object.properties.unique_id)])
+      } else { //no one is previously selected
+        newSelectedItems =  new Set([...selectedObjects.map(e => e.object.properties.unique_id)])
+      }
+    } else { //only new elements
       newSelectedItems =  new Set([...selectedObjects.map(e => e.object.properties.unique_id)])
     }
-    localStorage.removeItem("selectedItems")
+    
+    localStorage.removeItem("selectedItems") //remove all, add all + new ones.
     localStorage.setItem("selectedItems", JSON.stringify([...newSelectedItems]))
-    const detail = selectedObjects.map(sel => {
-      let obj = new Object();
-      obj.domain_code = sel.object.properties && sel.object.properties.domain || undefined
-      obj.space_code = sel.object.properties && sel.object.properties.space || undefined
-      obj.layer_id = sel.layer.id
-      obj.external_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
-      obj.object = sel.object
-      obj.unique_id = sel.object && sel.object.properties && sel.object.properties.unique_id || undefined //will send even if it has been added manually
+    const ev = eventObjectSelectedBuilder(buildSelectedObjects(selectedObjects))
+    ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
+    reinitLayer()
+  }
 
-      if(sel.coordinate){
+  const buildSelectedObjects =(selectedObjects)=> {
+    return selectedObjects.map(sel => {
+      let obj = new Object();
+      obj.domain_code = sel.object.properties && sel.object.properties.domain || undefined;
+      obj.space_code = sel.object.properties && sel.object.properties.space || undefined;
+      obj.layer_id = sel.layer.id;
+      obj.external_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined;
+      obj.object = sel.object;
+      obj.unique_id = sel.object && sel.object.properties && sel.object.properties.unique_id || undefined; //will send even if it has been added manually
+  
+      if (sel.coordinate) {
         obj.position = {
           lat: sel.coordinate[1] ? sel.coordinate[1] : null,
           lng: sel.coordinate[0] ? sel.coordinate[0] : null
-        }
+        };
       }
-      return obj
-    })
-    const ev = eventObjectSelectedBuilder(detail)
-    ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
-    reinitLayer()
+      return obj;
+    });
   }
 
   const zoomIn = () => {
@@ -372,6 +381,8 @@ App.propTypes = {
   remoteuser:   PropTypes.string,
   multi_polygon_selector: PropTypes.bool
 };
+
+
 
 
 
