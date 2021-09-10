@@ -23,7 +23,11 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             }
         })
     }
-    debugger
+
+    const ICON_MAPPING = {
+      marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
+    };
+    
     return new GeoJsonLayer({
         id: data.id,
         data: isNew ? data.layer : data.props.data,
@@ -38,20 +42,32 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                 type: IconLayer,
                 getIcon: d =>{
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    return mapStyle.getDefaultIcon(d)
+                    const res = mapStyle.getIcon(d)
+                    res.mask = true
+                    return res
                   }
-                    return mapStyle.getIcon(d)
+                  const res = mapStyle.getIcon(d)
+                  return res
                 },
                 getSize: d => {
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    return 50
+                    return mapStyle.getIconSize(d) * 3
                   }
                     return mapStyle.getIconSize(d)
+                },
+                getColor: (d) => {
+                  if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
+                    debugger
+                    return [150,0,0,255]
+                  }
+                  debugger
+                  return [0,0,0,255]
                 },
                 pickable: true,
                 updateTriggers: {
                   getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
                   getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  getColor: [JSON.parse(localStorage.getItem("selectedItems"))],
                   id: [data.id]
                 },
             },

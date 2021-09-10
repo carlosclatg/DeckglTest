@@ -106,6 +106,7 @@ export default class MapStyle {
             height:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorX:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            mask: true
         }
     }
 

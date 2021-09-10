@@ -2,7 +2,7 @@ import DeckGL from '@deck.gl/react';
 import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
-import getSelectionLayer from './layers/selectionLayer'
+import getSelectionLayer from './layers/getSelectionLayer'
 import getTileMapLayer from './layers/tileMapLayer'
 import eventObjectSelectedBuilder from './events/eventObjectSelectedBuilder'
 import generateGeoJsonLayer from './layers/geojsonLayer'
@@ -107,14 +107,14 @@ const App = (props) =>{
     if(isdrawMode){
       setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects, props.multi_polygon_selector)))
     } else {
-      setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
+      setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="SelectionLayer")))
     }
   },[isdrawMode])
 
   const onDeckClick = (info, event) => {
     console.log(event)
     if(props.enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
-      let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
+      let objectSelected = deckRef.current.pickMultipleObjects({x: info.x, y: info.y, radius: 10 })
       if(objectSelected){
         handleSelectedObjects(objectSelected, event)
       }
@@ -126,7 +126,7 @@ const App = (props) =>{
       if(!deckRef.current.props.layers.some(e => e.id == detail)) return
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
-        setLayerList((layers) =>new Array(...layer.filter(e => e.id !== 'selection'),getSelectionLayer(layer, handleSelectedObjects, props.multi_polygon_selector))) //update selectable layers as well.
+        setLayerList((layers) =>new Array(...layer.filter(e => e.id !== 'SelectionLayer'),getSelectionLayer(layer, handleSelectedObjects, props.multi_polygon_selector))) //update selectable layers as well.
       } else {
         setLayerList((layers) =>new Array(...layer))
       }
@@ -208,7 +208,12 @@ const App = (props) =>{
 
   const handleSelectedObjects = (selectedObjects, event = null) => {
     setdrawMode(false)
-    if(!selectedObjects) return //case nothing
+    if(!selectedObjects){
+      localStorage.removeItem("selectedItems")
+      console.log("removed elements")
+      reinitLayer()
+      return //case nothing
+    } 
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
     if(!selectedObjects instanceof Object && !Array.isArray(selectedObjects))return //safety type-check single or multiple selection
     if(selectedObjects instanceof Object) {

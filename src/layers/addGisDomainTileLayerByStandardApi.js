@@ -46,11 +46,16 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
                 type: IconLayer,
                 getIcon: d =>{
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    return mapStyle.getDefaultIcon(d)
+                    return mapStyle.getIcon(d)
                   }
                     return mapStyle.getIcon(d)
                 },
-                getSize: d => mapStyle.getIconSize(d),
+                getSize: d => {
+                    if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
+                      return mapStyle.getIconSize(d) * 2
+                    }
+                      return mapStyle.getIconSize(d)
+                  },
                 pickable: true,
                 sizeScale: 1,
                 updateTriggers: {
