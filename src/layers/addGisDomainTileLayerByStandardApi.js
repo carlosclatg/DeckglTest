@@ -1,30 +1,63 @@
 import {TileLayer} from '@deck.gl/geo-layers';
 import { IconLayer, SolidPolygonLayer} from '@deck.gl/layers';
+import MapStyle from '../styles';
 
-export default function addGisDomainTileLayerByStandardApi(layer, mapStyle, remoteUser) {
-    let url = layer.layer + "/tile/{z}/{x}/{y}?props=code,unique_id,_id,domain,space,external_id,type"
-    if (layer.filter) url += ("&" + layer.filter)
+/**
+ * 
+ * @param {layer} layer 
+ * @param {MapStyle} mapStyle 
+ * @param {String} remoteUser 
+ * @param {boolean} isNew 
+ * @returns 
+ */
+export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remoteUser, isNew) {
+    let url = data.layer + "/tile/{z}/{x}/{y}?props=code,unique_id,_id,domain,space,external_id,type"
+    if (data.filter) url += ("&" + data.filter)
     if (url.indexOf('status') == -1) url += "&status=40"
     let loadOptions = {}
     if (remoteUser && remoteUser.trim().length) {
         loadOptions = { fetch: { headers: { 'REMOTE_USER': remoteUser } } }
     }
+    let selectedItems = null
+    if(JSON.parse(localStorage.getItem("selectedItems"))){
+      selectedItems = new Set(JSON.parse(localStorage.getItem("selectedItems")))
+    }
+    debugger
+    let minZoom, maxZoom;
+
+    if(isNew) {
+        minZoom = data.minZoom ? data.minZoom : 0
+        maxZoom = data.maxZoom ? data.maxZoom : 23
+    } else {
+        minZoom = data.props.minZoom
+        maxZoom = data.props.maxZoom
+    }
     return new TileLayer({
-        id: layer.id,
-        data: url,
-        minZoom: layer.minZoom ? layer.minZoom : 0,
-        maxZoom: layer.maxZoom ? layer.maxZoom : 23,
+        id: data.id,
+        data: isNew ? url : data.props.data,
+        minZoom : minZoom,
+        maxZoom : maxZoom,
         pickable: true,
-        loadOptions: loadOptions,
+        loadOptions: {},
         tileSize: 512,
         getRadius: 4,
         _subLayerProps: {
             points: {
                 type: IconLayer,
-                getIcon: d =>mapStyle.getIcon(d),
+                getIcon: d =>{
+                  if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
+                    return mapStyle.getDefaultIcon(d)
+                  }
+                    return mapStyle.getIcon(d)
+                },
                 getSize: d => mapStyle.getIconSize(d),
                 pickable: true,
                 sizeScale: 1,
+                updateTriggers: {
+                  getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  id: [data.id]
+                },
             },
             'polygons-fill': {
                 type: SolidPolygonLayer,
