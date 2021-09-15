@@ -65,6 +65,9 @@ const App = (props) =>{
     fromEvent(document, "topogisevt_remove_layer").subscribe(event=>handleRemoveLayer(event))
     fromEvent(document, "topogisevt_center_on_object").subscribe(event=>handleCenterOnObject(event))
     localStorage.removeItem("selectedItems")
+    return () => {
+      localStorage.removeItem("selectedItems")
+    }
   },[])
 
   useEffect(()=>{
