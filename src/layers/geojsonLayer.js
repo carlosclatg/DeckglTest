@@ -51,17 +51,16 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                 },
                 getSize: d => {
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    return mapStyle.getIconSize(d) * 3
+                    return mapStyle.getIconSize(d) * 1.5
                   }
                     return mapStyle.getIconSize(d)
                 },
                 getColor: (d) => {
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    debugger
-                    return [150,0,0,255]
+                    return mapStyle.getSelectedColor(d);
                   }
                   debugger
-                  return [0,0,0,255]
+                  return mapStyle.getColor(d);
                 },
                 pickable: true,
                 updateTriggers: {
@@ -85,13 +84,14 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             }
         },
         getLineWidth: d => {
-            if(selectedItems && selectedItems.has(d.properties.unique_id)){
-              return 50
-            }
+            
             if (d && d.geometry && d.geometry.type === 'Polygon') {
                 return mapStyle.getPolygonLineWidth(d)
             } 
             if(d && d.geometry && d.geometry.type === 'LineString') {
+              if(selectedItems && selectedItems.has(d.properties.unique_id)){
+                return mapStyle.getLineWidth(d) * 1.5
+              }
                 return mapStyle.getLineWidth(d)
             }
             return mapStyle.DEFAULT_LINE_WIDTH

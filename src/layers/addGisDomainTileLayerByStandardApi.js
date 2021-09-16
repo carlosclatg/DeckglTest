@@ -2,6 +2,22 @@ import {TileLayer} from '@deck.gl/geo-layers';
 import { IconLayer, SolidPolygonLayer} from '@deck.gl/layers';
 import MapStyle from '../styles';
 
+
+const ICON_MAPPING = {
+    marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
+};
+
+//To update in documentation
+
+/**
+ * const ICON_MAPPING = {
+    marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
+    };
+ */
+
+
+
+
 /**
  * 
  * @param {layer} layer 
@@ -46,27 +62,45 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
                 type: IconLayer,
                 getIcon: d =>{
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    return mapStyle.getIcon(d)
+                    const res = mapStyle.getIcon(d)
+                    res.mask = true
+                    return res
                   }
-                    return mapStyle.getIcon(d)
+                  const res = mapStyle.getIcon(d)
+                  return res
                 },
                 getSize: d => {
-                    if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                      return mapStyle.getIconSize(d) * 2
-                    }
-                      return mapStyle.getIconSize(d)
-                  },
+                  if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
+                    return mapStyle.getIconSize(d) * 1.5
+                  }
+                    return mapStyle.getIconSize(d)
+                },
+                getColor: (d) => {
+                  if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
+                    return mapStyle.getSelectedColor(d);
+                  }
+                  debugger
+                  return mapStyle.getColor(d);
+                },
                 pickable: true,
-                sizeScale: 1,
                 updateTriggers: {
                   getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
                   getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  getColor: [JSON.parse(localStorage.getItem("selectedItems"))],
                   id: [data.id]
                 },
             },
             'polygons-fill': {
                 type: SolidPolygonLayer,
-                getFillColor: f => mapStyle.getPolygonFillColor(f)
+                getFillColor: f =>
+                    {
+                        return mapStyle.getPolygonFillColor(f);
+            
+                    },
+                updateTriggers: {
+                  getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  id: [data.id]
+                },
             }
         },
         getPosition: d => d.coordinates,
@@ -87,7 +121,7 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
             if (d && d.geometry && d.geometry.type === 'Polygon') {
                 return mapStyle.getPolygonLineColor(d)
             } 
-            if(d && d.geometry && d.geometry.type === 'LineString') {
+            if(d && d.geometry && d.geometry.type === 'LineString') { //if
                 return mapStyle.getLineColor(d)
             }
 

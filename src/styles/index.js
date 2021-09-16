@@ -98,6 +98,19 @@ export default class MapStyle {
         return layout.iconSize || 36
     }
 
+    getColor = (d) => {
+        let layout = this.getStyleLayoutIcon(d)
+        debugger
+        if(!layout || !layout.color) return this.DEFAULT_LINE_COLOR
+        return layout.color
+    }
+
+    getSelectedColor = (d) => {
+        let layout = this.getStyleLayoutIcon(d)
+        debugger
+        if(!layout || !layout.selectedColor) return this.DEFAULT_LINE_COLOR
+        return layout.selectedColor
+    }
 
     getDefaultIcon = (d) => {
         return {
@@ -119,6 +132,7 @@ export default class MapStyle {
             height: layout.imageHeight || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY: layout.imageAnchorY || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorX: layout.imageAnchorX || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            mask: true
         }
     }
 

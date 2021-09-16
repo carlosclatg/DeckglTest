@@ -1,3 +1,19 @@
+/**
+ * const ICON_MAPPING = {
+    marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
+};
+ */
+const trans = 240
+const selectedColor = [100,0,0,255]
+const selectedColor2 = [200,0,80,255]
+const selectedColor3 = [100,0,200,255]
+
+//OPTION 1:
+// Fornire una imagine
+// png o svg
+
+
+
 export const defaultStyle = {
     "layers": [
         {
@@ -7,23 +23,31 @@ export const defaultStyle = {
             "layout": [
                 {
                     "condition": "type == 'issue-level-1'", //condition matched by property.type
-                    "image": "https://img1.freepng.es/20171220/dsw/number-1-png-5a3ab5345bc7e2.1804244915137969163759.jpg", //number1
-                    "imageWidth": 25, "imageHeight": 25, "imageAnchorY": 35, "imageAnchorX": 17
+                    "image": "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png", //number1
+                    "imageWidth": 25, "imageHeight": 25, "imageAnchorY": 35, "imageAnchorX": 17,
+                    "color": [0,100,0,240],
+                    "selectedColor": selectedColor,
                 },
                 {
                     "condition": "type == 'issue-level-2'",
                     "image": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",//number2
-                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17
+                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17,
+                    "color": [0,200,100,240],
+                    "selectedColor": selectedColor2
                 },
                 {
                     "condition": "type == 'issue-level-3'",
                     "image": "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",//number3
-                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17
+                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17,
+                    "color": [200,50,50,240],
+                    "selectedColor": selectedColor3
                 },
                 {
                     "condition": "true",
                     "image": "https://img2.freepng.es/20180522/eww/kisspng-web-development-computer-icons-website-5b043775017c54.2851318415270029970061.jpg",
-                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17
+                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17,
+                    "color": [0,100,200,240],
+                    "selectedColor": selectedColor
                 }              
             ]
         },
@@ -73,7 +97,9 @@ export const defaultStyle = {
                 {
                     "condition": "true",
                     "image": "https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/231/among-us-player-white-512.png",
-                    "imageWidth": 25, "imageHeight": 25, "imageAnchorY": 25, "imageAnchorX": 17
+                    "imageWidth": 10, "imageHeight": 10, "imageAnchorY": 10, "imageAnchorX": 8,
+                    "color": selectedColor,
+                    "selectedColor": selectedColor2
                 }              
             ]
         }
@@ -104,4 +130,44 @@ export const defaultStyle = {
  *          
  * 
  */
-  
+
+
+
+
+//OPTION 2 PNG MAP WITH DIMENSIONS
+
+const defaultStyle2222 = {
+"layers": [
+    {
+        "id": "layer3",
+        "type": "symbol",
+        "source": "grid-act-maintenance.gam-issue",
+        "iconAtlas": "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",
+        "layout": [
+            {
+                condition: "type == 'issue-level-1'", //condition matched by property.type
+                icon: "nameOfTheIcon",
+                image: "marker", 
+                x: 0, x: 0, width: 128, height: 128,
+                color: [100,100,100,255],
+                highLightColor: [0,0,0,255]
+            },
+            {
+                "condition": "type == 'issue-level-2'",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",//number2
+                "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17
+            },
+            {
+                "condition": "type == 'issue-level-3'",
+                "image": "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",//number3
+                "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17
+            },
+            {
+                "condition": "true",
+                "image": "https://img2.freepng.es/20180522/eww/kisspng-web-development-computer-icons-website-5b043775017c54.2851318415270029970061.jpg",
+                "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17
+            }              
+        ]
+    }
+]
+}

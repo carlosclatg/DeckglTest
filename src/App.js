@@ -32,13 +32,7 @@ const App = (props) =>{
 
   //STATE
   const [previousZoom, setPreviousZoom] = useState(parseInt(props.zoom))
-  const [viewport, setViewport] = useState({
-    width: 1,
-    height: 1,
-    latitude: props.center.lat,
-    longitude: props.center.lng,
-    zoom: parseInt(props.zoom),
-  })
+  const [viewport, setViewport] = useState({width: 1,height: 1,latitude: props.center.lat,longitude: props.center.lng,zoom: parseInt(props.zoom)})
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
   const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.backgroud_tile_url, MINZOOM, MAXZOOM, defaultStyle)])
@@ -65,7 +59,7 @@ const App = (props) =>{
     fromEvent(document, "topogisevt_remove_layer").subscribe(event=>handleRemoveLayer(event))
     fromEvent(document, "topogisevt_center_on_object").subscribe(event=>handleCenterOnObject(event))
     localStorage.removeItem("selectedItems")
-    return () => {
+    return () => { //when unmounting
       localStorage.removeItem("selectedItems")
     }
   },[])
@@ -117,7 +111,7 @@ const App = (props) =>{
   const onDeckClick = (info, event) => {
     console.log(event)
     if(props.enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
-      let objectSelected = deckRef.current.pickMultipleObjects({x: info.x, y: info.y, radius: 10 })
+      let objectSelected = deckRef.current.pickMultipleObjects({x: info.x, y: info.y, radius: 1 })
       if(objectSelected){
         handleSelectedObjects(objectSelected, event)
       }
@@ -225,7 +219,7 @@ const App = (props) =>{
       }
     }
     let newSelectedItems =  []
-    if(event && event.srcEvent && event.srcEvent.ctrlKey){//add to the previous selected items.
+    if(event && event.srcEvent && event.srcEvent.ctrlKey){//add to the previous selected items
       if(localStorage.getItem("selectedItems")){ 
         newSelectedItems =  new Set([...new Set(JSON.parse(localStorage.getItem("selectedItems"))), ...selectedObjects.map(e => e.object.properties.unique_id)])
       } else { //no one is previously selected
