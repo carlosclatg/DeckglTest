@@ -59,7 +59,7 @@ export const defaultStyle = {
                 {
                     "condition": "true",
                     "lineColor": [0, 0, 70, 255],
-                    "lineWidth": 3
+                    "lineWidth": 3,
                 }              
             ]
         },

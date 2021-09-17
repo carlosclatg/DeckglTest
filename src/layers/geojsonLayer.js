@@ -56,7 +56,6 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
                     return mapStyle.getSelectedColor(d);
                   }
-                  debugger
                   return mapStyle.getColor(d);
                 },
                 pickable: true,
