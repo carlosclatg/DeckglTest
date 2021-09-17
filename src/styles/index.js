@@ -69,6 +69,14 @@ export default class MapStyle {
         return layout.fillColor
     }
 
+    getPolygonFillColorSelected =(d)=> {
+        let layout = this.getStyleLayoutPolygon(d)
+        if(!layout) return this.DEFAULT_FILL_COLOR
+        if(!layout.selectedFillColor) return this.DEFAULT_FILL_COLOR
+        return layout.selectedFillColor
+    }
+    
+
     getPolygonLineWidth =(d)=> {
         let layout = this.getStyleLayoutPolygon(d)
         if(!layout) return this.DEFAULT_LINE_WIDTH

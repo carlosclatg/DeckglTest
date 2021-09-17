@@ -58,8 +58,8 @@ export const defaultStyle = {
             "layout": [
                 {
                     "condition": "true",
-                    "lineColor": [0, 200, 70, 100],
-                    "lineWidth": 5
+                    "lineColor": [0, 0, 70, 255],
+                    "lineWidth": 3
                 }              
             ]
         },
@@ -85,6 +85,7 @@ export const defaultStyle = {
                     "condition": "true",
                     "fillColor": [230, 120, 100, 100],
                     "lineColor": [200, 100, 0, 255],
+                    "selectedFillColor": [0,0,200,200],
                     "lineWidth": 5
                 }              
             ]
