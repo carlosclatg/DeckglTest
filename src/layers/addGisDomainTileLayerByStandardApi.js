@@ -38,7 +38,6 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
     if(JSON.parse(localStorage.getItem("selectedItems"))){
       selectedItems = new Set(JSON.parse(localStorage.getItem("selectedItems")))
     }
-    debugger
     let minZoom, maxZoom;
 
     if(isNew) {
@@ -54,7 +53,7 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
         minZoom : minZoom,
         maxZoom : maxZoom,
         pickable: true,
-        loadOptions: {},
+        loadOptions,
         tileSize: 512,
         getRadius: 4,
         _subLayerProps: {
