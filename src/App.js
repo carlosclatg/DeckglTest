@@ -362,8 +362,7 @@ export default App;
 
 App.defaultProps = {
   backgroud_tile_url: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  width :  600,
-  height: 600,
+  style="",
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 7,
   enable_select_object: true, 
@@ -374,8 +373,7 @@ App.defaultProps = {
 
 App.propTypes = {
   backgroud_tile_url: PropTypes.string,
-  width :  PropTypes.number,
-  height: PropTypes.number,
+  style = PropTypes.string,
   center: PropTypes.any,
   zoom: PropTypes.number, 
   enable_select_object: PropTypes.bool,
