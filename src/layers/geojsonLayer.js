@@ -40,7 +40,7 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                 getIcon: d =>{
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
                     const res = mapStyle.getIcon(d)
-                    res.mask = true
+                    res.mask = false
                     return res
                   }
                   const res = mapStyle.getIcon(d)
@@ -52,17 +52,17 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                   }
                     return mapStyle.getIconSize(d)
                 },
-                getColor: (d) => {
-                  if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    return mapStyle.getSelectedColor(d);
-                  }
-                  return mapStyle.getColor(d);
-                },
+                // getColor: (d) => {
+                //   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
+                //     return mapStyle.getSelectedColor(d);
+                //   }
+                //   return mapStyle.getColor(d);
+                // },
                 pickable: true,
                 updateTriggers: {
                   getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
                   getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
-                  getColor: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  //getColor: [JSON.parse(localStorage.getItem("selectedItems"))],
                   id: [data.id]
                 },
             },

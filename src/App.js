@@ -35,7 +35,7 @@ const App = (props) =>{
   const [viewport, setViewport] = useState({width: 1,height: 1,latitude: props.center.lat,longitude: props.center.lng,zoom: parseInt(props.zoom)})
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
-  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.backgroud_tile_url, MINZOOM, MAXZOOM, defaultStyle)])
+  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.background_tile_url, MINZOOM, MAXZOOM, defaultStyle)])
 
   //REFS TO DOM
   const myRef = useRef();
@@ -44,6 +44,7 @@ const App = (props) =>{
 
   //HOOKS
   useEffect(()=>{
+    console.log(props)
     if(props.map_style){
       fetch(props.map_style)
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
@@ -133,8 +134,8 @@ const App = (props) =>{
   const handleCenterOnObject = ({detail}) => {
     if(detail){
         let options = {}
-        if (props.remoteuser && props.remoteuser.trim().length) {
-            options = { headers: { 'REMOTE_USER': props.remoteuser } }
+        if (props.remote_user && props.remote_user.trim().length) {
+            options = { headers: { 'REMOTE_USER': props.remote_user } }
         }
         fetch(detail, options)
             .then((response) => {
@@ -171,10 +172,10 @@ const App = (props) =>{
         } else return
       } else {
         if(detail.tiled){
-          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remoteuser, true)
+          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remote_user, true)
         } else {
           let extent = viewportToExtension(viewport)
-          return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser, mapStyle).then(layer=>{
+          return addGisDomainLayerByStandardApi(detail, extent,props.remote_user, mapStyle).then(layer=>{
             if(layer) setLayerList((layerList)=>[...layerList, layer])
           })
         }
@@ -184,7 +185,7 @@ const App = (props) =>{
         console.log("WMS does not support layer object")
         return
       }
-      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: props.remoteuser})
+      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remote_user: props.remote_user})
     } else {
 
     }
@@ -294,7 +295,7 @@ const App = (props) =>{
         return layer;
       }
       if (layer instanceof TileLayer && layer.id !== "main-map-tile-layer") {
-        return addGisDomainTileLayerByStandardApi(layer, mapStyle, props.remoteuser, false);
+        return addGisDomainTileLayerByStandardApi(layer, mapStyle, props.remote_user, false);
       }
       return layer;
     });
@@ -308,9 +309,8 @@ const App = (props) =>{
         html: `\
         <div style="opacity: 0.5">
     <div><b>INFO</b></div>
-    <div>unique id : ${object.properties.unique_id}</div>
-    <div>domain : ${object.properties.domain}</div>
-    <div>space : ${object.properties.space}</div>
+    <div>unique id : ${object.properties.code}</div>
+    <div>domain : ${object.properties.description}</div>
     </div>
     `,
     style: {
@@ -322,7 +322,7 @@ const App = (props) =>{
   }
 
   return (
-    <div className="App" ref={myRef} style={{ height: props.height + "px", width: props.width + "px", position: 'relative' }}>
+    <div className="App" ref={myRef} style={{width: props.width, height: props.height, position: "relative"}}>
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
         <div style={{...divInsideHost, ...topRight}} id="top-right">
             <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_in-24px.svg" alt="Zoom in" /></div>
@@ -361,24 +361,26 @@ const App = (props) =>{
 export default App;
 
 App.defaultProps = {
-  backgroud_tile_url: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  style="",
+  background_tile_url: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  width : "500px",
+  height : "500px",
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 7,
   enable_select_object: true, 
   map_style: null,
-  remoteuser: null,
+  remote_user: null,
   multi_polygon_selector: false
 };
 
 App.propTypes = {
-  backgroud_tile_url: PropTypes.string,
-  style = PropTypes.string,
+  background_tile_url: PropTypes.string,
+  width : PropTypes.string,
+  height : PropTypes.string,
   center: PropTypes.any,
   zoom: PropTypes.number, 
   enable_select_object: PropTypes.bool,
   map_style:   PropTypes.string, 
-  remoteuser:   PropTypes.string,
+  remote_user:   PropTypes.string,
   multi_polygon_selector: PropTypes.bool
 };
 
@@ -386,8 +388,8 @@ App.propTypes = {
 
 
 
-// const WebApp = reactToWebComponent(App, React, ReactDOM, {shadow: true});
-// customElements.define("enel-gis-map", WebApp);
+const WebApp = reactToWebComponent(App, React, ReactDOM, {shadow: true});
+customElements.define("enel-gis-map", WebApp);
 
 
 
