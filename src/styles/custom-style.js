@@ -97,8 +97,8 @@ export const defaultStyle = {
             "layout": [
                 {
                     "condition": "true",
-                    "image": "https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/231/among-us-player-white-512.png",
-                    "imageWidth": 10, "imageHeight": 10, "imageAnchorY": 10, "imageAnchorX": 8,
+                    "image": "https://www.iconpacks.net/icons/1/free-pin-icon-48-thumb.png",
+                    "imageWidth": 20, "imageHeight": 20, "imageAnchorY": 20, "imageAnchorX": 11,
                     "color": selectedColor,
                     "selectedColor": selectedColor2
                 }              

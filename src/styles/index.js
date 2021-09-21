@@ -127,7 +127,7 @@ export default class MapStyle {
             height:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorX:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
-            mask: false
+            mask: true
         }
     }
 
@@ -140,7 +140,7 @@ export default class MapStyle {
             height: layout.imageHeight || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY: layout.imageAnchorY || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorX: layout.imageAnchorX || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
-            mask: false
+            mask: true
         }
     }
 

@@ -141,7 +141,6 @@ const App = (props) =>{
         }
         fetch(detail, options)
             .then((response) => {
-              console.log(response)
               response.json().then(json => {
                 if(!gjv.isGeoJSONObject(json)) return
                 const extent = getBoundingBox(json);
@@ -154,7 +153,7 @@ const App = (props) =>{
                 } else {
                   let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
                   if(zoom < 0) zoom = Math.abs(zoom) +1
-                  setViewport({width: viewport.width,height: viewport.height,latitude,longitude,zoom})
+                  setViewport(viewport => ({width: viewport.width, height: viewport.height,latitude,longitude,zoom}))
                 }
             });
             })
