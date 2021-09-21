@@ -132,34 +132,31 @@ const App = (props) =>{
   }
 
   const handleCenterOnObject = ({detail}) => {
+    console.log('The detail is ......')
+    console.log(detail)
     if(detail){
         let options = {}
         if (props.remote_user && props.remote_user.trim().length) {
             options = { headers: { 'REMOTE_USER': props.remote_user } }
         }
-        console.log("+++++++++++++++++++++++++++++++++++++ HANDLING CENTER OBJECT ++++++++++++++++++ with remoteuser" + props.remote_user)
         fetch(detail, options)
             .then((response) => {
               console.log(response)
-                return response.json().then(json => {
-                  console.log("is a valid geojson?" + gjv.isGeoJSONObject(json))
-                    if(!gjv.isGeoJSONObject(json)) return
-                    const extent = getBoundingBox(json);
-                    console.log('The extent is ....')
-                    console.log(extent)
-                    const newviewport = new WebMercatorViewport(viewport);
-                    if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
-                      //Polygon not provided --> Nothing to do in the viewport
-                      console.log("extents are 0!")
-                    } else {
-                      let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
-                      console.log(latitude)
-                      console.log(longitude)
-                      console.log(zoom)
-                      if(zoom < 0) zoom = Math.abs(zoom) +1
-                      setViewport({width: viewport.width,height: viewport.height,latitude,longitude,zoom})
-                    }
+              response.json().then(json => {
+                if(!gjv.isGeoJSONObject(json)) return
+                const extent = getBoundingBox(json);
+                const newviewport =  new WebMercatorViewport({
+                  width: myRef.current.clientWidth,
+                  height: myRef.current.clientHeight,
                 });
+                if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
+                  //Polygon not provided --> Nothing to do in the viewport
+                } else {
+                  let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
+                  if(zoom < 0) zoom = Math.abs(zoom) +1
+                  setViewport({width: viewport.width,height: viewport.height,latitude,longitude,zoom})
+                }
+            });
             })
             .catch((err) => console.log('An error ocurred while fetching or transforming the layer from the URL'));
     }
@@ -371,8 +368,8 @@ export default App;
 
 App.defaultProps = {
   background_tile_url: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  width : "500px",
-  height : "500px",
+  width : "600px",
+  height : "600px",
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 7,
   enable_select_object: true, 
