@@ -137,16 +137,25 @@ const App = (props) =>{
         if (props.remote_user && props.remote_user.trim().length) {
             options = { headers: { 'REMOTE_USER': props.remote_user } }
         }
+        console.log("+++++++++++++++++++++++++++++++++++++ HANDLING CENTER OBJECT ++++++++++++++++++ with remoteuser" + props.remote_user)
         fetch(detail, options)
             .then((response) => {
-                response.json().then(json => {
+              console.log(response)
+                return response.json().then(json => {
+                  console.log("is a valid geojson?" + gjv.isGeoJSONObject(json))
                     if(!gjv.isGeoJSONObject(json)) return
                     const extent = getBoundingBox(json);
+                    console.log('The extent is ....')
+                    console.log(extent)
                     const newviewport = new WebMercatorViewport(viewport);
                     if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
                       //Polygon not provided --> Nothing to do in the viewport
+                      console.log("extents are 0!")
                     } else {
                       let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
+                      console.log(latitude)
+                      console.log(longitude)
+                      console.log(zoom)
                       if(zoom < 0) zoom = Math.abs(zoom) +1
                       setViewport({width: viewport.width,height: viewport.height,latitude,longitude,zoom})
                     }

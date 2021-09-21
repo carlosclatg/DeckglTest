@@ -54,21 +54,21 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <!-- <enel-gis-map 
-      id="my-map"
-      zoom="8"
-      height="800"
-      width="800"
-      enable_select_object=true
-      map_style = "url that has the default styling"
+    <enel-gis-map
+      id= "map-component"
+      background_tile_url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      width="500px"
+      height="500px"
+      remote_user="cazzo"
+      map_style="your map style"
     >
       <div slot="top-left"><p style="color:red;">A red paragraph in top-left.</p></div>
       <div slot="bottom-left">Slot BL from outside</div>
       <div slot="bottom-right">Slot BR from outside</div>
-    </enel-gis-map>  -->
+    </enel-gis-map> 
     
   </body>
-   <!-- <script src="../src/dist/App.js"></script> -->
+   <script src="../src/dist/App.js"></script>
   <script>
 
     
