@@ -95,6 +95,9 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
         },
         getLineWidth: d => {
             if (d && d.geometry && d.geometry.type === 'Polygon') {
+              if(selectedItems && selectedItems.has(d.properties.unique_id)){
+                return mapStyle.getPolygonLineWidth(d) * 1.5
+              }
                 return mapStyle.getPolygonLineWidth(d)
             } 
             if(d && d.geometry && d.geometry.type === 'LineString') {
