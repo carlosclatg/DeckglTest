@@ -7,17 +7,6 @@ const ICON_MAPPING = {
     marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
 };
 
-//To update in documentation
-
-/**
- * const ICON_MAPPING = {
-    marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
-    };
- */
-
-
-
-
 /**
  * 
  * @param {layer} layer 
@@ -73,18 +62,18 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
                   }
                     return mapStyle.getIconSize(d)
                 },
-                getColor: (d) => {
-                  if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    return mapStyle.getSelectedColor(d);
-                  }
-                  debugger
-                  return mapStyle.getColor(d);
-                },
+                // getColor: (d) => {
+                //   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
+                //     return mapStyle.getSelectedColor(d);
+                //   }
+                //   debugger
+                //   return mapStyle.getColor(d);
+                // },
                 pickable: true,
                 updateTriggers: {
                   getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
                   getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
-                  getColor: [JSON.parse(localStorage.getItem("selectedItems"))],
+                  // getColor: [JSON.parse(localStorage.getItem("selectedItems"))],
                   id: [data.id]
                 },
             },

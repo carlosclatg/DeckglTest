@@ -25,6 +25,11 @@ import {TileLayer} from '@deck.gl/geo-layers';
 //PROPS AND COMPONENT-
 const App = (props) =>{
 
+  const getProperty =(obj, key)=> {
+    var o = obj[key];
+    return(o);
+  }
+
   //MOCK DATA
   const MAXZOOM=23
   const MINZOOM=0
@@ -35,7 +40,7 @@ const App = (props) =>{
   const [viewport, setViewport] = useState({width: 1,height: 1,latitude: props.center.lat,longitude: props.center.lng,zoom: parseInt(props.zoom)})
   const [isdrawMode, setdrawMode] = useState(false)
   const [mapStyle, setMapStyle] = useState(new MapStyle(null))
-  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.background_tile_url, MINZOOM, MAXZOOM, defaultStyle)])
+  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(getProperty(props,'background-tile-url'), MINZOOM, MAXZOOM, defaultStyle)])
 
   //REFS TO DOM
   const myRef = useRef();
@@ -45,8 +50,9 @@ const App = (props) =>{
   //HOOKS
   useEffect(()=>{
     console.log(props)
-    if(props.map_style){
-      fetch(props.map_style)
+    console.log(getProperty(props, 'map-style'))
+    if(getProperty(props, 'map-style')){
+      fetch(getProperty(props, 'map-style'))
         .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
         .catch(e => {
           setMapStyle(new MapStyle(null)) //default style
@@ -103,7 +109,7 @@ const App = (props) =>{
 
   useEffect(()=>{
     if(isdrawMode){
-      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects, props.multi_polygon_selector)))
+      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects,getProperty(props, 'multi-polygon-selector'))))
     } else {
       setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="SelectionLayer")))
     }
@@ -111,7 +117,7 @@ const App = (props) =>{
 
   const onDeckClick = (info, event) => {
     console.log(event)
-    if(props.enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
+    if(getProperty(props, 'enable-select-object') && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
       let objectSelected = deckRef.current.pickMultipleObjects({x: info.x, y: info.y, radius: 1 })
       if(objectSelected){
         handleSelectedObjects(objectSelected, event)
@@ -124,7 +130,7 @@ const App = (props) =>{
       if(!deckRef.current.props.layers.some(e => e.id == detail)) return
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
-        setLayerList((layers) =>new Array(...layer.filter(e => e.id !== 'SelectionLayer'),getSelectionLayer(layer, handleSelectedObjects, props.multi_polygon_selector))) //update selectable layers as well.
+        setLayerList((layers) =>new Array(...layer.filter(e => e.id !== 'SelectionLayer'),getSelectionLayer(layer, handleSelectedObjects, getProperty(props, 'multi-polygon-selector')))) //update selectable layers as well.
       } else {
         setLayerList((layers) =>new Array(...layer))
       }
@@ -136,8 +142,8 @@ const App = (props) =>{
     console.log(detail)
     if(detail){
         let options = {}
-        if (props.remote_user && props.remote_user.trim().length) {
-            options = { headers: { 'REMOTE_USER': props.remote_user } }
+        if (getProperty(props,'remote-user') && getProperty(props,'remote-user').trim().length) {
+            options = { headers: { 'REMOTE_USER': getProperty(props,'remote-user') } }
         }
         fetch(detail, options)
             .then((response) => {
@@ -145,8 +151,8 @@ const App = (props) =>{
                 if(!gjv.isGeoJSONObject(json)) return
                 const extent = getBoundingBox(json);
                 const newviewport =  new WebMercatorViewport({
-                  width: myRef.current.clientWidth,
-                  height: myRef.current.clientHeight,
+                  width: document.getElementsByTagName('enel-gis-map')[0].clientWidth,
+                  height: document.getElementsByTagName('enel-gis-map')[0].clientHeight,
                 });
                 if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
                   //Polygon not provided --> Nothing to do in the viewport
@@ -177,10 +183,10 @@ const App = (props) =>{
         } else return
       } else {
         if(detail.tiled){
-          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remote_user, true)
+          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, getProperty(props,'remote-user'), true)
         } else {
           let extent = viewportToExtension(viewport)
-          return addGisDomainLayerByStandardApi(detail, extent,props.remote_user, mapStyle).then(layer=>{
+          return addGisDomainLayerByStandardApi(detail, extent,getProperty(props,'remote-user'), mapStyle).then(layer=>{
             if(layer) setLayerList((layerList)=>[...layerList, layer])
           })
         }
@@ -190,7 +196,7 @@ const App = (props) =>{
         console.log("WMS does not support layer object")
         return
       }
-      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remote_user: props.remote_user})
+      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remote_user: getProperty(props,'remote-user')})
     } else {
 
     }
@@ -300,7 +306,7 @@ const App = (props) =>{
         return layer;
       }
       if (layer instanceof TileLayer && layer.id !== "main-map-tile-layer") {
-        return addGisDomainTileLayerByStandardApi(layer, mapStyle, props.remote_user, false);
+        return addGisDomainTileLayerByStandardApi(layer, mapStyle, getProperty(props,'remote-user'), false);
       }
       return layer;
     });
@@ -313,27 +319,29 @@ const App = (props) =>{
       object && !isdrawMode && {
         html: `\
         <div style="opacity: 0.5">
-    <div><b>INFO</b></div>
-    <div>unique id : ${object.properties.code}</div>
-    <div>domain : ${object.properties.description}</div>
-    </div>
-    `,
-    style: {
-      background: 'rgba(0,0,0,0.7)',
-      color: 'white'
-    }
+        <div><b>INFO</b></div>
+        <div>code : ${object.properties.code}</div>
+        <div>description : ${object.properties.description}</div>
+        </div>
+        `,
+        style: {
+          background: 'rgba(0,0,0,0.7)',
+          color: 'white'
+        }
       }
     );
   }
 
+
+
   return (
-    <div className="App" ref={myRef} style={{width: props.width, height: props.height, position: "relative"}}>
+    <div className="App" ref={myRef} >
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
         <div style={{...divInsideHost, ...topRight}} id="top-right">
             <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_in-24px.svg" alt="Zoom in" /></div>
             <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_out-24px.svg" alt="Zoom out" /></div>
             <div style={divInsideTopRight}>{Math.round(viewport.zoom)}</div>
-            { props.enable_select_object ?
+            { getProperty(props,'enable-select-object') ?
               <div>
               <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/selection.svg" : "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/polygon.svg"} alt="Selection" /></div>
               <div style={divInsideTopRight} onClick={deleteSelectedItems}><img height="24" viewBox="0 0 24 24" width="24" src={"https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/waste.svg"} alt="Delete" /></div>
@@ -366,31 +374,26 @@ const App = (props) =>{
 export default App;
 
 App.defaultProps = {
-  background_tile_url: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  width : "600px",
-  height : "600px",
+  'background-tile-url': "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 7,
-  enable_select_object: true, 
-  map_style: null,
-  remote_user: null,
-  multi_polygon_selector: false
+  'enable-select-object': true, 
+  'map-style': null,
+  'remote-user': null,
+  'multi-polygon-selector': false,
+  'tool-tip': null
 };
 
 App.propTypes = {
-  background_tile_url: PropTypes.string,
-  width : PropTypes.string,
-  height : PropTypes.string,
+  'background-tile-url': PropTypes.string,
   center: PropTypes.any,
   zoom: PropTypes.number, 
-  enable_select_object: PropTypes.bool,
-  map_style:   PropTypes.string, 
-  remote_user:   PropTypes.string,
-  multi_polygon_selector: PropTypes.bool
+  'enable-select-object': PropTypes.bool,
+  'map-style':   PropTypes.string, 
+  'remote-user':   PropTypes.string,
+  'multi-polygon-selector': PropTypes.bool,
+  'tool-tip': PropTypes.string
 };
-
-
-
 
 
 const WebApp = reactToWebComponent(App, React, ReactDOM, {shadow: true});
