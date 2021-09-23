@@ -20,6 +20,7 @@ export default class MapStyle {
 
             }
         }
+        console.log(this.layers)
     }
 
     //LINE
@@ -127,7 +128,7 @@ export default class MapStyle {
             height:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorX:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
-            mask: true
+            mask: false
         }
     }
 
@@ -140,19 +141,20 @@ export default class MapStyle {
             height: layout.imageHeight || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY: layout.imageAnchorY || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorX: layout.imageAnchorX || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
-            mask: true
+            mask: false
         }
     }
 
     getStyleLayoutIcon (d) {
+        debugger
         if (!this.layers)
             return null;
         if (!(d.__source && d.__source.object && d.__source.object.properties)) 
             return null;
         const props = d.__source.object.properties;
         let layout = null;
-        if (d.__source.parent instanceof GeoJsonLayer && d.__source.parent.parent && d.__source.parent.parent instanceof TileLayer) 
-            layout = this.getLayout(`${d.__source.parent.parent.id}`, props);
+        if (d.__source.parent instanceof GeoJsonLayer && d.__source.parent) 
+            layout = this.getLayout(`${d.__source.parent.id}`, props);
         if (!layout) 
             layout = this.getLayout(`${props.domain}.${props.space}`, props);
         return layout

@@ -40,10 +40,11 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                 getIcon: d =>{
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
                     const res = mapStyle.getIcon(d)
-                    res.mask = false
+                    debugger
                     return res
                   }
                   const res = mapStyle.getIcon(d)
+                  debugger
                   return res
                 },
                 getSize: d => {

@@ -1,5 +1,5 @@
 import DeckGL from '@deck.gl/react';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
 import getSelectionLayer from './layers/getSelectionLayer'
@@ -22,6 +22,7 @@ import { divInsideHost, divInsideTopRight, hostStyle, slotBottomLeft, slotBottom
 import { GeoJsonLayer } from '@deck.gl/layers';
 import {TileLayer} from '@deck.gl/geo-layers';
 
+
 //PROPS AND COMPONENT-
 const App = (props) =>{
 
@@ -43,7 +44,6 @@ const App = (props) =>{
   const [layerList, setLayerList] = useState(()=>[getTileMapLayer(getProperty(props,'background-tile-url'), MINZOOM, MAXZOOM, defaultStyle)])
 
   //REFS TO DOM
-  const myRef = useRef();
   const deckRef = useRef();
   const canvas = useRef();
 
@@ -60,12 +60,14 @@ const App = (props) =>{
     } else {
       setMapStyle(new MapStyle(null)) //default style
     }
-    const event = eventMapReadyBuilder();
-    ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
+
     fromEvent(document, "topogisevt_add_layer").subscribe(event=>handleAddLayer(event)) //BE very careful... handleAddLayer is inmunatable after initial load. 
     fromEvent(document, "topogisevt_remove_layer").subscribe(event=>handleRemoveLayer(event))
     fromEvent(document, "topogisevt_center_on_object").subscribe(event=>handleCenterOnObject(event))
     localStorage.removeItem("selectedItems")
+    console.log("ohmygod")
+    const event = eventMapReadyBuilder();
+    ReactDOM.findDOMNode(deckRef.current).dispatchEvent(event)
     return () => { //when unmounting
       localStorage.removeItem("selectedItems")
     }
@@ -102,7 +104,7 @@ const App = (props) =>{
     if(Math.round(viewport.zoom) !== Math.round(previousZoom)){
       const { west, south, east, north } = viewportToExtension(viewport)
       const event = new CustomEvent("topogisevt_map_zoom_changed",  { bubbles: true, cancelable: true, composed: true, detail:{zoom: Math.round(viewport.zoom), west, south, east, north  }});
-      ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
+      ReactDOM.findDOMNode(deckRef.current).dispatchEvent(event)
     }
   }, [viewport])
 
@@ -145,22 +147,28 @@ const App = (props) =>{
         if (getProperty(props,'remote-user') && getProperty(props,'remote-user').trim().length) {
             options = { headers: { 'REMOTE_USER': getProperty(props,'remote-user') } }
         }
-        fetch(detail, options)
+        return fetch(detail, options)
             .then((response) => {
-              response.json().then(json => {
-                if(!gjv.isGeoJSONObject(json)) return
-                const extent = getBoundingBox(json);
-                const newviewport =  new WebMercatorViewport({
-                  width: document.getElementsByTagName('enel-gis-map')[0].clientWidth,
-                  height: document.getElementsByTagName('enel-gis-map')[0].clientHeight,
-                });
-                if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
-                  //Polygon not provided --> Nothing to do in the viewport
-                } else {
-                  let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
-                  if(zoom < 0) zoom = Math.abs(zoom) +1
-                  setViewport(viewport => ({width: viewport.width, height: viewport.height,latitude,longitude,zoom}))
-                }
+              response.json()
+                .then(json => {
+                  if(!gjv.isGeoJSONObject(json)) return
+                  const extent = getBoundingBox(json);
+                  console.log("The dimensions of the map are:")
+                  console.log(document.getElementsByTagName('enel-gis-map')[0].clientWidth)
+                  console.log(document.getElementsByTagName('enel-gis-map')[0].clientHeight)
+                  console.log("The dimensions of the map taking boundingRect are:")
+                  console.log(document.getElementsByTagName('enel-gis-map')[0].getBoundingClientRect())
+                  const newviewport =  new WebMercatorViewport({
+                    width: document.getElementsByTagName('enel-gis-map')[0].getBoundingClientRect().width,
+                    height: document.getElementsByTagName('enel-gis-map')[0].getBoundingClientRect().height,
+                  });
+                  if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
+                    //Polygon not provided --> Nothing to do in the viewport
+                  } else {
+                    let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
+                    if(zoom < 0) zoom = Math.abs(zoom) +1
+                    setViewport(viewport => ({width: viewport.width, height: viewport.height,latitude,longitude,zoom}))
+                  }
             });
             })
             .catch((err) => console.log('An error ocurred while fetching or transforming the layer from the URL'));
@@ -244,7 +252,7 @@ const App = (props) =>{
     localStorage.removeItem("selectedItems") //remove all, add all + new ones.
     localStorage.setItem("selectedItems", JSON.stringify([...newSelectedItems]))
     const ev = eventObjectSelectedBuilder(buildSelectedObjects(selectedObjects))
-    ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
+    ReactDOM.findDOMNode(deckRef.current).dispatchEvent(ev)
     reinitLayer()
   }
 
@@ -257,7 +265,7 @@ const App = (props) =>{
       obj.external_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined;
       obj.object = sel.object;
       obj.unique_id = sel.object && sel.object.properties && sel.object.properties.unique_id || undefined; //will send even if it has been added manually
-  
+
       if (sel.coordinate) {
         obj.position = {
           lat: sel.coordinate[1] ? sel.coordinate[1] : null,
@@ -335,7 +343,7 @@ const App = (props) =>{
 
 
   return (
-    <div className="App" ref={myRef} >
+    <Fragment>
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
         <div style={{...divInsideHost, ...topRight}} id="top-right">
             <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_in-24px.svg" alt="Zoom in" /></div>
@@ -364,7 +372,7 @@ const App = (props) =>{
         canvas={canvas}
         getTooltip={getTooltip}>
       </DeckGL>
-    </div>
+    </Fragment>
   );
 }
 
