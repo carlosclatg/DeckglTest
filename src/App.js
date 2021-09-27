@@ -153,14 +153,15 @@ const App = (props) =>{
                 .then(json => {
                   if(!gjv.isGeoJSONObject(json)) return
                   const extent = getBoundingBox(json);
-                  console.log("The dimensions of the map are:")
-                  console.log(document.getElementsByTagName('enel-gis-map')[0].clientWidth)
-                  console.log(document.getElementsByTagName('enel-gis-map')[0].clientHeight)
-                  console.log("The dimensions of the map taking boundingRect are:")
-                  console.log(document.getElementsByTagName('enel-gis-map')[0].getBoundingClientRect())
+                  console.log("The dimensions of the map are when getting by Tag:")
+                  // console.log(document.getElementsByTagName('enel-gis-map')[0].clientWidth)
+                  // console.log(document.getElementsByTagName('enel-gis-map')[0].clientHeight)
+                  console.log("The dimensions of the map are when using refs:")
+                  console.log(deckRef.current.viewports[0].width)
+                  console.log(deckRef.current.viewports[0].height)
                   const newviewport =  new WebMercatorViewport({
-                    width: document.getElementsByTagName('enel-gis-map')[0].getBoundingClientRect().width,
-                    height: document.getElementsByTagName('enel-gis-map')[0].getBoundingClientRect().height,
+                    width: deckRef.current.viewports[0].width ? deckRef.current.viewports[0].width: 500,
+                    height: deckRef.current.viewports[0].height ? deckRef.current.viewports[0].height: 500,
                   });
                   if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
                     //Polygon not provided --> Nothing to do in the viewport
@@ -381,6 +382,8 @@ const App = (props) =>{
 
 export default App;
 
+
+
 App.defaultProps = {
   'background-tile-url': "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
   center: {lat: 41.8788383, lng: 12.3594608},
@@ -412,7 +415,7 @@ customElements.define("enel-gis-map", WebApp);
 /*Make the build:
 
 const WebApp = reactToWebComponent(App, React, ReactDOM);
-customElements.define("my-map", WebApp);
+customElements.define("enel-gis-map", WebApp);
 
 from the folder that contains App.js (the component itself):
 parcel build App.js

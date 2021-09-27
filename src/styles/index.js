@@ -20,35 +20,50 @@ export default class MapStyle {
 
             }
         }
-        console.log(this.layers)
     }
 
     //LINE
     DEFAULT_LINE_COLOR = [0, 0, 0, 255];
     DEFAULT_LINE_WIDTH = 1;
-    getLineWidth =(d)=>{
-        let layout = this.getStyleLayoutLine(d)
+    getLineWidth =(d, id)=>{
+        let layout = this.getStyleLayoutLine(d, id)
         if(!layout) return this.DEFAULT_LINE_WIDTH
         if(!layout.lineWidth) return this.DEFAULT_LINE_WIDTH
         return layout.lineWidth
     }
 
-    getLineColor =(d)=>{
-        let layout = this.getStyleLayoutLine(d)
+    getLineColor =(d, id)=>{
+        let layout = this.getStyleLayoutLine(d, id)
         if(!layout)return this.DEFAULT_LINE_COLOR
         if(!layout.lineColor) return this.DEFAULT_LINE_COLOR
         return layout.lineColor
     }
 
-    getStyleLayoutLine(d) {
+    getStyleLayoutLine = (d, id) => {
         if (!this.layers)
             return null;
         let layout = null;
-        if (d.id ) 
-            layout = this.getLayout(`${d.id}`, d.properties, 'line');
+        if (d.properties && id) 
+            layout = this.getLayout(id, d.properties, 'line');
         if (!layout && d.properties.domain && d.properties.space) 
             layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'line');
         return layout
+    }
+
+    getLineDashArray(d){ //Without Id
+        if (!this.layers)
+            return null;
+        let layout = null;
+        if(d && d.__source && d.__source.object && d.__source.object.id ){
+            layout = this.getLayout(`${d.__source.object.id}`, d.__source.object.properties, 'line');
+        }
+        if (d && d.__source && d.__source.object && d.__source.object.properties.domain && d.__source.object.properties.space){
+            layout = this.getLayout(`${d.__source.object.properties.domain}.${d.__source.object.properties.space}`, d.__source.object.properties, 'line');
+        }
+        debugger 
+        if(!layout || !layout.dashArray) return [0,0]
+        return layout.dashArray
+
     }
 
 
@@ -56,44 +71,59 @@ export default class MapStyle {
     //POLYGON
     DEFAULT_FILL_COLOR = [0, 0, 0, 100];
     DEFAULT_LINE_COLOR = [0, 0, 0, 255];
-    getPolygonLineColor =(d)=>{
-        let layout = this.getStyleLayoutPolygon(d)
+    getPolygonLineColor =(d, id)=>{
+        let layout = this.getStyleLayoutPolygon(d, id)
         if(!layout) return this.DEFAULT_LINE_COLOR
         if(!layout.lineColor) return this.DEFAULT_LINE_COLOR
         return layout.lineColor
     }
 
-    getPolygonFillColor =(d)=>{
-        let layout = this.getStyleLayoutPolygon(d)
+    getPolygonFillColor =(d, id)=>{
+        let layout = this.getStyleLayoutPolygon(d, id)
         if(!layout) return this.DEFAULT_FILL_COLOR
         if(!layout.fillColor) return this.DEFAULT_FILL_COLOR
         return layout.fillColor
     }
 
-    getPolygonFillColorSelected =(d)=> {
-        let layout = this.getStyleLayoutPolygon(d)
+    getPolygonFillColorSelected =(d, id)=> {
+        let layout = this.getStyleLayoutPolygon(d, id)
         if(!layout) return this.DEFAULT_FILL_COLOR
         if(!layout.selectedFillColor) return this.DEFAULT_FILL_COLOR
         return layout.selectedFillColor
     }
     
 
-    getPolygonLineWidth =(d)=> {
-        let layout = this.getStyleLayoutPolygon(d)
+    getPolygonLineWidth =(d, id)=> {
+        let layout = this.getStyleLayoutPolygon(d, id)
         if(!layout) return this.DEFAULT_LINE_WIDTH
         if(!layout.lineWidth) return this.DEFAULT_LINE_WIDTH
         return layout.lineWidth
     }
 
-    getStyleLayoutPolygon(d) {
+    getStyleLayoutPolygon(d, id) {
         if (!this.layers)
             return null;
         let layout = null;
-        if (d.id) 
-            layout = this.getLayout(`${d.id}`, d.properties, 'polygon');
+        if (id) 
+            layout = this.getLayout(id, d.properties, 'polygon');
         if (!layout && d.properties.domain && d.properties.space) 
             layout = this.getLayout(`${d.properties.domain}.${d.properties.space}`, d.properties, 'polygon');
         return layout
+    }
+
+    getLineDashArrayForPolygon =(d,id)=> {
+        if (!this.layers)
+        return null;
+        let layout = null;
+        if(id ){
+            layout = this.getLayout(id, d.__source.object.properties, 'line');
+        }
+        if (d && d.__source && d.__source.object && d.__source.object.properties.domain && d.__source.object.properties.space){
+            layout = this.getLayout(`${d.__source.object.properties.domain}.${d.__source.object.properties.space}`, d.__source.object.properties, 'line');
+        }
+        debugger 
+        if(!layout || !layout.dashArray) return [0,0]
+        return layout.dashArray
     }
 
 
@@ -109,14 +139,14 @@ export default class MapStyle {
 
     getColor = (d) => {
         let layout = this.getStyleLayoutIcon(d)
-        debugger
+        
         if(!layout || !layout.color) return this.DEFAULT_LINE_COLOR
         return layout.color
     }
 
     getSelectedColor = (d) => {
         let layout = this.getStyleLayoutIcon(d)
-        debugger
+        
         if(!layout || !layout.selectedColor) return this.DEFAULT_LINE_COLOR
         return layout.selectedColor
     }
@@ -135,6 +165,7 @@ export default class MapStyle {
     getIcon =(d)=> {
         let layout = this.getStyleLayoutIcon(d)
         if(!layout) layout = {}
+        
         return {
             url: layout.image || this.DEFAULT_ICON_URL,
             width: layout.imageWidth || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
@@ -146,7 +177,7 @@ export default class MapStyle {
     }
 
     getStyleLayoutIcon (d) {
-        debugger
+
         if (!this.layers)
             return null;
         if (!(d.__source && d.__source.object && d.__source.object.properties)) 
@@ -196,8 +227,6 @@ export default class MapStyle {
         const layer = this.layers.filter( l => l.id === id && l.type === type);
         return layer === undefined ? null : layer[0];
     }
-
-
 
 
 }

@@ -6,7 +6,7 @@
   
   //:host > div:host > div
   export const divInsideHost ={
-    zIndex: 1000
+    zIndex: 1000,
   }
   
   //#top-right

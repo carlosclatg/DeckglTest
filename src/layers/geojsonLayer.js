@@ -3,6 +3,20 @@ import { v4 as uuidv4 } from 'uuid';
 import MapStyle from '../styles';
 import {PathStyleExtension} from '@deck.gl/extensions'
 
+
+/**
+ * Configurable parameters:
+ * ICON LAYER:
+ * ImageURL, width, height, imageAnchorX, imageAnchorY
+ * 
+ * LINELAYER:
+ *  LineWidth, LineColor
+ * 
+ * POLYGONLAYER:
+ * LineWidth, LineColor, FillColor
+ *
+ */
+
 /**
  * 
  * @param {json} data 
@@ -24,6 +38,10 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             }
         })
     }
+
+    console.log(data.layer)
+    console.log(data.props && data.props.data)
+    // const gap = mapStyle.getLineGap()
     
     return new GeoJsonLayer({
         id: data.id,
@@ -37,14 +55,12 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
         _subLayerProps: {
             points: {
                 type: IconLayer,
-                getIcon: d =>{
+                getIcon: d =>{ //sublayer props include d.__source.id
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
                     const res = mapStyle.getIcon(d)
-                    debugger
                     return res
                   }
                   const res = mapStyle.getIcon(d)
-                  debugger
                   return res
                 },
                 getSize: d => {
@@ -69,7 +85,15 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             },
             'polygons-stroke': {
                 type: PathLayer,
-                getDashArray: [3, 2],
+                getDashArray: d => {
+                  debugger
+                  if(d && d.__source && d.__source.object && d.__source.object.properties){
+                    const a = mapStyle.getLineDashArrayForPolygon(d,id)
+                    debugger
+                    return a
+                  }
+                  return [0,0] //line without any dashing, even if it is on true PathStyle
+                },
                 dashJustified: true,
                 dashGapPickable: true,
                 extensions: [new PathStyleExtension({dash: true})],
@@ -82,8 +106,14 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             },
             'line-strings': { //It is bad on documentation! https://deck.gl/docs/api-reference/layers/geojson-layer#sub-layers
               type: PathLayer,
-              getDashArray: [3, 3],
-              dashJustified: true,
+              getDashArray: d => {
+                debugger
+                if(d && d.__source && d.__source.object && d.__source.object.properties){
+                  return mapStyle.getLineDashArray(d)
+                }
+                return [0,0] //line without any dashing, even if it is on true PathStyle
+              },
+              dashJustified: false,
               dashGapPickable: true,
               extensions: [new PathStyleExtension({dash: true})],
               updateTriggers: {
@@ -95,42 +125,44 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             }
         },
         getLineWidth: d => {
+          debugger
             if (d && d.geometry && d.geometry.type === 'Polygon') {
               if(selectedItems && selectedItems.has(d.properties.unique_id)){
-                return mapStyle.getPolygonLineWidth(d) * 1.5
+                return mapStyle.getPolygonLineWidth(d, data.id) * 1.5
               }
-                return mapStyle.getPolygonLineWidth(d)
+                return mapStyle.getPolygonLineWidth(d, data.id)
             } 
             if(d && d.geometry && d.geometry.type === 'LineString') {
               if(selectedItems && selectedItems.has(d.properties.unique_id)){
-                return mapStyle.getLineWidth(d) * 1.5
+                return mapStyle.getLineWidth(d, data.id) * 1.5
               }
-                return mapStyle.getLineWidth(d)
+                return mapStyle.getLineWidth(d, data.id)
             }
             return mapStyle.DEFAULT_LINE_WIDTH
         },
         getLineColor: d => {
+          debugger
             if (d && d.geometry && d.geometry.type === 'Polygon') {
-                return mapStyle.getPolygonLineColor(d)
+                return mapStyle.getPolygonLineColor(d, data.id)
             } 
             if(d && d.geometry && d.geometry.type === 'LineString') {
-                return mapStyle.getLineColor(d)
+                return mapStyle.getLineColor(d, data.id)
             }
 
             return mapStyle.DEFAULT_LINE_COLOR
         },
-        getFillColor: f =>
-        {
+        getFillColor: f => {
+          debugger
           if(selectedItems && f.properties.unique_id && selectedItems.has(f.properties.unique_id)){
-            return mapStyle.getPolygonFillColorSelected(f)
+            return mapStyle.getPolygonFillColorSelected(f, data.id)
           }
-          return mapStyle.getPolygonFillColor(f);
+          return mapStyle.getPolygonFillColor(f, data.id);
         },
         updateTriggers: {
           getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
           getLineColor: [JSON.parse(localStorage.getItem("selectedItems"))],
           getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
           id: [data.id]
-        },
+        }
     });
 }
