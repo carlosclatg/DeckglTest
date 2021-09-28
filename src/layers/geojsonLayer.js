@@ -42,7 +42,7 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
     console.log(data.layer)
     console.log(data.props && data.props.data)
     // const gap = mapStyle.getLineGap()
-    
+    debugger
     return new GeoJsonLayer({
         id: data.id,
         data: isNew ? data.layer : data.props.data,
@@ -57,11 +57,9 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                 type: IconLayer,
                 getIcon: d =>{ //sublayer props include d.__source.id
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                    const res = mapStyle.getIcon(d)
-                    return res
+                    return mapStyle.getIcon(d, data.id)
                   }
-                  const res = mapStyle.getIcon(d)
-                  return res
+                  return mapStyle.getIcon(d, data.id)
                 },
                 getSize: d => {
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
@@ -86,11 +84,8 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             'polygons-stroke': {
                 type: PathLayer,
                 getDashArray: d => {
-                  debugger
                   if(d && d.__source && d.__source.object && d.__source.object.properties){
-                    const a = mapStyle.getLineDashArrayForPolygon(d,id)
-                    debugger
-                    return a
+                    return mapStyle.getLineDashArrayForPolygon(d,data.id) 
                   }
                   return [0,0] //line without any dashing, even if it is on true PathStyle
                 },
@@ -107,7 +102,7 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             'line-strings': { //It is bad on documentation! https://deck.gl/docs/api-reference/layers/geojson-layer#sub-layers
               type: PathLayer,
               getDashArray: d => {
-                debugger
+                
                 if(d && d.__source && d.__source.object && d.__source.object.properties){
                   return mapStyle.getLineDashArray(d)
                 }
@@ -125,7 +120,6 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             }
         },
         getLineWidth: d => {
-          debugger
             if (d && d.geometry && d.geometry.type === 'Polygon') {
               if(selectedItems && selectedItems.has(d.properties.unique_id)){
                 return mapStyle.getPolygonLineWidth(d, data.id) * 1.5
@@ -141,7 +135,7 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             return mapStyle.DEFAULT_LINE_WIDTH
         },
         getLineColor: d => {
-          debugger
+          
             if (d && d.geometry && d.geometry.type === 'Polygon') {
                 return mapStyle.getPolygonLineColor(d, data.id)
             } 
@@ -152,10 +146,10 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             return mapStyle.DEFAULT_LINE_COLOR
         },
         getFillColor: f => {
-          debugger
-          if(selectedItems && f.properties.unique_id && selectedItems.has(f.properties.unique_id)){
-            return mapStyle.getPolygonFillColorSelected(f, data.id)
-          }
+          
+          // if(selectedItems && f.properties.unique_id && selectedItems.has(f.properties.unique_id)){
+          //   return mapStyle.getPolygonFillColorSelected(f, data.id)
+          // }
           return mapStyle.getPolygonFillColor(f, data.id);
         },
         updateTriggers: {
