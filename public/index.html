@@ -57,13 +57,13 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-<!--     
-    <enel-gis-map
-      id= "map-component"
+    
+    <!-- <enel-gis-map
+      id= "my-map"
       background-tile-url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
       style="width: 100%; height: 78vh; position: absolute"
       remote-user="AF122333"
-      map-style="your map style"
+      map-style="https://jira.springlab.enel.com/secure/attachment/335421/geojsonstyles.json"
       tool-tip="ohmygod"
     >
       <div slot="top-left"><p style="color:red;">A red paragraph in top-left.</p></div>
@@ -78,7 +78,7 @@
     var a1 = document.getElementById('geojson-point-line');
     a1.onclick = () =>{
       const event = new CustomEvent('topogisevt_add_layer', { detail: {
-        id: 'layer3',
+        id: 'RAMI AT',
         type: 'geojson',
         layer: {
           "type": "FeatureCollection",
@@ -87,9 +87,10 @@
               "type": "Feature",
               "id": "obj1",
               "properties": {
-                "type": "issue-level-1",
-                "space":"gam-issue",
-                "domain":"grid-act-maintenance",
+                "NETWORK_TYPE" : 'H',
+                 "V_NOMINAL" : 400,
+                "space":"tmat",
+                "domain":"topology",
               },
               "geometry": {
                 "type": "Point",
@@ -102,9 +103,6 @@
             {
               "type": "Feature",
               "properties": {
-                "type": "issue-level-2",
-                "space":"gam-issue",
-                "domain":"grid-act-maintenance",
               },
               "id": "obj2",
               "geometry": {
@@ -204,8 +202,8 @@
               {
             "type": "Feature",
               "properties": {
-                  "domain": "Coors Field",
-                  "space": "Baseball Stadium",
+                  "domain": "Coors",
+                  "space": "Baseball",
                   "cazzo": "This is where the Rockies play!"
               },
               "geometry": {
@@ -277,7 +275,7 @@
     a7.onclick = () =>{
       const event = new CustomEvent('topogisevt_add_layer', {
         detail: {
-          id: '2-m',
+          id: 'activitylayer',
           type: 'geojson',
           layer: 'http://localhost:8080/features/topology/1-h', ///home/vant/Desktop/Enel_GIS/glin-mp00060-lan-spatialentitymdb/src/docker_virtualentity/target
           tiled: true,
@@ -360,7 +358,7 @@
     a14.onclick = () =>{
       const event = new CustomEvent('topogisevt_add_layer', { detail: 
         {
-          id:"polygontest",
+          id:"polygontest1",
           type: "geojson",
           layer:{
       "type": "FeatureCollection",
@@ -368,8 +366,8 @@
         {
           "type": "Feature",
           "properties": {
-            // "space":"gam-issue",
-            // "domain":"grid-act-maintenance",
+            "space":"gam-issue",
+            "domain":"grid-act-maintenance",
           },
           "geometry": {
             "type": "Polygon",
@@ -28590,6 +28588,8 @@
         },
         "type": "Feature",
         "properties": {
+          "domain": "province",
+          "space": "bologna",
           "code": "D310",
           "description": "BOLOGNA",
           "type": "ES",
@@ -28607,7 +28607,7 @@
     var a17 = document.getElementById('another-layer');
     a17.onclick = () =>{
       const event = new CustomEvent('topogisevt_add_layer', { detail: {
-        id: 'ticketlayer',
+        id: 'activitylayer',
         type: 'geojson',
         layer: {
   "type": "FeatureCollection",
@@ -28622,6 +28622,8 @@
       },
       "type": "Feature",
       "properties": {
+        "domain":"ohmygod",
+        "space":"god",
         "external_id": "60af6e0daa7cc464da67e230",
         "code": "ST001",
         "description": "App. sollevamento - Verifica annuale (Verifica di Legge)",
@@ -28711,7 +28713,7 @@
   ]
 }
       }});
-
+      console.log("cazzi suoii")
       document.dispatchEvent(event, true, false)
     }
 
