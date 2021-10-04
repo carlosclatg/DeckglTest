@@ -17,10 +17,12 @@ import MapStyle from './styles';
 import {WebMercatorViewport} from '@deck.gl/core';
 import { fromEvent } from 'rxjs';
 import PropTypes from 'prop-types';
-import { defaultStyle, geojsonstyles } from './styles/custom-style';
+import { defaultStyle } from './styles/custom-style';
 import { divInsideHost, divInsideTopRight, hostStyle, slotBottomLeft, slotBottomRight, slotTopLeft, topRight } from './css-styles';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import {TileLayer} from '@deck.gl/geo-layers';
+import geojsonstyles from '../src/styles/geojsonstyles.json';
+
 
 
 //PROPS AND COMPONENT-
@@ -55,22 +57,19 @@ const App = (props) =>{
     if(getProperty(props, 'map-style')){
       fetch(getProperty(props, 'map-style'))
         .then(d => {
-          debugger
           if(d.ok) return d.json()
         })
         .then(j => {
-          debugger
            setMapStyle(new MapStyle(j)) 
            return initListeners();
         })
         .catch(e => {
-          console.log(e)
-          setMapStyle(new MapStyle(defaultStyle)) //default style
+          setMapStyle(new MapStyle(geojsonstyles)) //default style
           return initListeners();
         });
     } else {
       
-      setMapStyle(new MapStyle(defaultStyle)) //default style
+      setMapStyle(new MapStyle(geojsonstyles)) //default style
       return initListeners();
     }
   },[])

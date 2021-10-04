@@ -6,7 +6,7 @@
          "source":"topology.tmat",
          "layout":[
             {
-               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL < 400",
+               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132",
                "lineColor":[
                   255,
                   0,
@@ -16,7 +16,7 @@
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSAC'",
+               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSAC'",
                "lineColor":[
                   0,
                   0,
@@ -30,7 +30,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSUC'",
+               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSUC'",
                "lineColor":[
                   255,
                   0,
@@ -44,7 +44,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL <= 132",
+               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL <= 132",
                "lineColor":[
                   255,
                   0,
@@ -54,7 +54,7 @@
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL <= 132 && EDIT_TYPE_ID == 'EHVLSAC'",
+               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL <= 132 && EDIT_TYPE_ID == 'EHVLSAC'",
                "lineColor":[
                   255,
                   0,
@@ -68,7 +68,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL <= 132 && EDIT_TYPE_ID == 'EHVLSUC'",
+               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL <= 132 && EDIT_TYPE_ID == 'EHVLSUC'",
                "lineColor":[
                   255,
                   0,
@@ -84,12 +84,12 @@
             {
                "condition":"true",
                "lineColor":[
-                  100,
-                  150,
-                  200,
-                  255
+                  255,
+                  0,
+                  0,
+                  100
                ],
-               "lineWidth":20
+               "lineWidth":2
             }
          ]
       },
@@ -132,7 +132,7 @@
             },
             {
                "condition":"true",
-               "image":"https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
+               "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-secondaria-ut-blk-fill.svg",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
