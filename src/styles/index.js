@@ -206,6 +206,7 @@ export default class MapStyle {
         for(let layout of layer.layout) {
             if(layout.condition === undefined) continue;
             try{
+                debugger
                 const value = Parser.evaluate(layout.condition, model)
                 if(value) return layout
             } catch(err) { //case any condition is matched 2 lines above
@@ -223,7 +224,6 @@ export default class MapStyle {
 
 
     findLayerById(id, type){
-        debugger
         const layer = this.layers.filter( l => l.id === id && l.type === type);
         return layer === undefined ? null : layer[0];
     }
