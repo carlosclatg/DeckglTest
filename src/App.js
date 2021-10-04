@@ -55,24 +55,20 @@ const App = (props) =>{
     if(getProperty(props, 'map-style')){
       fetch(getProperty(props, 'map-style'))
         .then(d => {
-          
           if(d.ok) return d.json()
         })
         .then(j => {
-          //  localStorage.setItem("mapstyle", JSON.stringify(j))
-          
-           setMapStyle(new MapStyle(geojsonstyles)) 
+           setMapStyle(new MapStyle(j)) 
            return initListeners();
         })
         .catch(e => {
-          
           console.log(e)
-          setMapStyle(new MapStyle(geojsonstyles)) //default style
+          setMapStyle(new MapStyle(defaultStyle)) //default style
           return initListeners();
         });
     } else {
       
-      setMapStyle(new MapStyle(geojsonstyles)) //default style
+      setMapStyle(new MapStyle(defaultStyle)) //default style
       return initListeners();
     }
   },[])
@@ -195,11 +191,6 @@ const App = (props) =>{
     if(deckRef.current.props.layers.some(e=>{ //reference to DOM!!!!!
       return e.id == detail.id
     })) return
-    
-    console.log(mapStyle)
-    console.log(deckRef.current.props.mapStyle)
-    console.log(deckRef.current.props.cazzo)
-    const st = JSON.parse(localStorage.getItem('mapstyle'))
     //case layer geojson
     if(detail.type === GEOJSON_LAYER){
       if(detail.layer instanceof Object){
@@ -406,7 +397,7 @@ App.defaultProps = {
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 7,
   'enable-select-object': true, 
-  'map-style': 'https://raw.githubusercontent.com/carlosclatg/DeckglTest/selectitems/public/geojsonstyles.json',
+  'map-style': 'https://raw.githubusercontent.com/carlosclatg/DeckglTest/selectitems/src/styles/geojsonstyles.js',
   'remote-user': null,
   'multi-polygon-selector': false,
   'tool-tip': null

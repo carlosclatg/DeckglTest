@@ -52,16 +52,21 @@ export default class MapStyle {
         return layout
     }
 
-    getLineDashArray(d){ //Without Id
+    getLineDashArray(d, id){ //Without Id
         if (!this.layers)
             return null;
         let layout = null;
-        if(d && d.__source && d.__source.object && d.__source.object.id ){
-            layout = this.getLayout(`${d.__source.object.id}`, d.__source.object.properties, 'line');
+        if(d && d.__source && d.__source.object ){
+            debugger
+            layout = this.getLayout(id, d.__source.object.properties, 'line');
+            debugger
         }
-        if (d && d.__source && d.__source.object && d.__source.object.properties.domain && d.__source.object.properties.space){
+        if (!layout && d && d.__source && d.__source.object && d.__source.object.properties.domain && d.__source.object.properties.space){
+            debugger
             layout = this.getLayout(`${d.__source.object.properties.domain}.${d.__source.object.properties.space}`, d.__source.object.properties, 'line');
+            debugger
         } 
+        debugger
         if(!layout || !layout.dashArray) return [0,0]
         return layout.dashArray
 
@@ -205,17 +210,24 @@ export default class MapStyle {
         if(!layer) return null
         for(let layout of layer.layout) {
             if(layout.condition === undefined) continue;
+            let conditionArray = layout.condition.split(' && ')
             try{
-                debugger
-                const value = Parser.evaluate(layout.condition, model)
+                let value = true
+                for(let cond of conditionArray){
+                    let abc = Parser.evaluate(cond, model)
+        
+                    value = value && abc
+                    
+                }
+    
                 if(value) return layout
             } catch(err) { //case any condition is matched 2 lines above
+    
                 continue
             }
         }
         return null
     }
-    
 
     findLayerBySource(source, type){
         const layer = this.layers.filter( l => l.source === source && l.type === type);

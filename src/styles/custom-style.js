@@ -280,7 +280,7 @@ export const defaultStyle = {
 //         "source":"topology.tmat",
 //         "layout":[
 //            {
-//               "condition":"NETWORK_TYPE = 'H' && V_NOMINAL > 132",
+//               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132",
 //               "lineColor":[
 //                  255,
 //                  0,
@@ -290,7 +290,7 @@ export const defaultStyle = {
 //               "lineWidth":2
 //            },
 //            {
-//               "condition":"NETWORK_TYPE = 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID = 'EHHVLSAC'",
+//               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSAC'",
 //               "lineColor":[
 //                  255,
 //                  0,
@@ -304,7 +304,7 @@ export const defaultStyle = {
 //               ]
 //            },
 //            {
-//               "condition":"NETWORK_TYPE = 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID = 'EHHVLSUC'",
+//               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSUC'",
 //               "lineColor":[
 //                  255,
 //                  0,
@@ -1515,7 +1515,7 @@ export const defaultStyle = {
 // } 
 
 
-export const geojsonstyles = {
+export const geojsonstyles={
    "layers":[
       {
          "id":"RAMI AT",
@@ -1523,31 +1523,31 @@ export const geojsonstyles = {
          "source":"topology.tmat",
          "layout":[
             {
-               "condition":"NETWORK_TYPE = 'J'",
+               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL < 400",
                "lineColor":[
                   255,
                   0,
                   0,
                   100
                ],
-               "lineWidth":20
+               "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE = 'J' && V_NOMINAL > 132 && EDIT_TYPE_ID = 'EHHVLSAC'",
+               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSAC'",
                "lineColor":[
-                  255,
                   0,
                   0,
-                  100
+                  0,
+                  255
                ],
-               "lineWidth":2,
+               "lineWidth":20,
                "dashArray":[
                   4,
                   1
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'J' && V_NOMINAL > 132 && EDIT_TYPE_ID = 'EHHVLSUC'",
+               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSUC'",
                "lineColor":[
                   255,
                   0,
@@ -1561,7 +1561,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'J' && V_NOMINAL <= 132",
+               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL <= 132",
                "lineColor":[
                   255,
                   0,
@@ -1571,7 +1571,7 @@ export const geojsonstyles = {
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE = 'J' && V_NOMINAL <= 132 && EDIT_TYPE_ID = 'EHVLSAC'",
+               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL <= 132 && EDIT_TYPE_ID == 'EHVLSAC'",
                "lineColor":[
                   255,
                   0,
@@ -1585,7 +1585,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'J' && V_NOMINAL <= 132 && EDIT_TYPE_ID = 'EHVLSUC'",
+               "condition":"NETWORK_TYPE == 'J' && V_NOMINAL <= 132 && EDIT_TYPE_ID == 'EHVLSUC'",
                "lineColor":[
                   255,
                   0,
@@ -1601,22 +1601,22 @@ export const geojsonstyles = {
             {
                "condition":"true",
                "lineColor":[
-                  255,
-                  0,
-                  0,
-                  100
+                  100,
+                  150,
+                  200,
+                  255
                ],
-               "lineWidth":2
+               "lineWidth":20
             }
          ]
       },
       {
-         "id":"NODI MT 2 - CABINE",
+         "id":"activitylayer",
          "type":"symbol",
          "source":"topology.2-m",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE = 'PA'",
+               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE == 'PA'",
                "image":"http://10.151.1.168/p3/app/img/map-markers/214-PTP-small.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -1632,7 +1632,7 @@ export const geojsonstyles = {
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE = 'CU'",
+               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE == 'CU'",
                "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-secondaria-blk.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -1640,7 +1640,7 @@ export const geojsonstyles = {
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE = 'UT'",
+               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE == 'UT'",
                "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-secondaria-ut-blk-fill.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -1649,7 +1649,7 @@ export const geojsonstyles = {
             },
             {
                "condition":"true",
-               "image":"",
+               "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPVbmijZws9DQ1x8xnAB3jS8SgSefgY9_Agw&usqp=CAU",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
@@ -1672,7 +1672,7 @@ export const geojsonstyles = {
             },
             {
                "condition":"true",
-               "image":"",
+               "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPVbmijZws9DQ1x8xnAB3jS8SgSefgY9_Agw&usqp=CAU",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
@@ -1686,7 +1686,7 @@ export const geojsonstyles = {
          "source":"topology.g-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 'G' && NETWORK_TYPE = 'L'",
+               "condition":"LEGACY_NODE_TYPE == 'G' && NETWORK_TYPE == 'L'",
                "image":"black point",
                "imageWidth":25,
                "imageHeight":25,
@@ -1709,7 +1709,7 @@ export const geojsonstyles = {
          "source":"topology.t-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 'T' && NETWORK_TYPE = 'L'",
+               "condition":"LEGACY_NODE_TYPE == 'T' && NETWORK_TYPE == 'L'",
                "image":"http://10.151.1.168/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -1763,7 +1763,7 @@ export const geojsonstyles = {
          "source":"topology.tmmt",
          "layout":[
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 38",
                "lineColor":[
                   165,
                   42,
@@ -1773,7 +1773,7 @@ export const geojsonstyles = {
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 39",
                "lineColor":[
                   255,
                   255,
@@ -1783,7 +1783,7 @@ export const geojsonstyles = {
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 40",
                "lineColor":[
                   0,
                   0,
@@ -1793,7 +1793,7 @@ export const geojsonstyles = {
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 41",
                "lineColor":[
                   112,
                   48,
@@ -1803,7 +1803,7 @@ export const geojsonstyles = {
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 42",
                "lineColor":[
                   165,
                   42,
@@ -1813,7 +1813,7 @@ export const geojsonstyles = {
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 43",
                "lineColor":[
                   255,
                   255,
@@ -1823,7 +1823,7 @@ export const geojsonstyles = {
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 38",
                "lineColor":[
                   165,
                   42,
@@ -1837,7 +1837,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 39",
                "lineColor":[
                   255,
                   255,
@@ -1851,7 +1851,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 40",
                "lineColor":[
                   0,
                   0,
@@ -1865,7 +1865,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 41",
                "lineColor":[
                   112,
                   48,
@@ -1879,7 +1879,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 42",
                "lineColor":[
                   165,
                   42,
@@ -1893,7 +1893,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 43",
                "lineColor":[
                   255,
                   255,
@@ -1907,7 +1907,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 38",
                "lineColor":[
                   165,
                   42,
@@ -1921,7 +1921,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 39",
                "lineColor":[
                   255,
                   255,
@@ -1935,7 +1935,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 40",
                "lineColor":[
                   0,
                   0,
@@ -1949,7 +1949,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 41",
                "lineColor":[
                   112,
                   48,
@@ -1963,7 +1963,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 42",
                "lineColor":[
                   165,
                   42,
@@ -1977,7 +1977,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 43",
                "lineColor":[
                   255,
                   255,
@@ -2101,7 +2101,7 @@ export const geojsonstyles = {
          "source":"topology.tmbt",
          "layout":[
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 38",
                "lineColor":[
                   165,
                   42,
@@ -2111,7 +2111,7 @@ export const geojsonstyles = {
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 39",
                "lineColor":[
                   255,
                   255,
@@ -2121,7 +2121,7 @@ export const geojsonstyles = {
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 40",
                "lineColor":[
                   0,
                   176,
@@ -2131,7 +2131,7 @@ export const geojsonstyles = {
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 41",
                "lineColor":[
                   112,
                   48,
@@ -2141,7 +2141,7 @@ export const geojsonstyles = {
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 42",
                "lineColor":[
                   165,
                   42,
@@ -2151,7 +2151,7 @@ export const geojsonstyles = {
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 43",
                "lineColor":[
                   255,
                   255,
@@ -2161,7 +2161,7 @@ export const geojsonstyles = {
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 38",
                "lineColor":[
                   165,
                   42,
@@ -2175,7 +2175,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 39",
                "lineColor":[
                   255,
                   255,
@@ -2189,91 +2189,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 40",
-               "lineColor":[
-                  0,
-                  176,
-                  80,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 41",
-               "lineColor":[
-                  112,
-                  48,
-                  160,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 42",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 43",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 38",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 39",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 40",
                "lineColor":[
                   0,
                   176,
@@ -2287,7 +2203,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 41",
                "lineColor":[
                   112,
                   48,
@@ -2301,7 +2217,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 42",
                "lineColor":[
                   165,
                   42,
@@ -2315,7 +2231,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 43",
                "lineColor":[
                   255,
                   255,
@@ -2329,91 +2245,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 38",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 39",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 40",
-               "lineColor":[
-                  0,
-                  176,
-                  80,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 41",
-               "lineColor":[
-                  112,
-                  48,
-                  160,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 42",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 43",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 38",
                "lineColor":[
                   165,
                   42,
@@ -2427,7 +2259,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 39",
                "lineColor":[
                   255,
                   255,
@@ -2441,7 +2273,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 40",
                "lineColor":[
                   0,
                   176,
@@ -2455,7 +2287,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 41",
                "lineColor":[
                   112,
                   48,
@@ -2469,7 +2301,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 42",
                "lineColor":[
                   165,
                   42,
@@ -2483,7 +2315,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 43",
                "lineColor":[
                   255,
                   255,
@@ -2497,7 +2329,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 38",
                "lineColor":[
                   165,
                   42,
@@ -2511,7 +2343,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 39",
                "lineColor":[
                   255,
                   255,
@@ -2525,7 +2357,21 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 40",
+               "lineColor":[
+                  0,
+                  176,
+                  80,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 41",
                "lineColor":[
                   112,
                   48,
@@ -2539,21 +2385,7 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 41",
-               "lineColor":[
-                  112,
-                  48,
-                  160,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 42",
                "lineColor":[
                   165,
                   42,
@@ -2567,7 +2399,175 @@ export const geojsonstyles = {
                ]
             },
             {
-               "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 43",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 38",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 39",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 40",
+               "lineColor":[
+                  0,
+                  176,
+                  80,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 41",
+               "lineColor":[
+                  112,
+                  48,
+                  160,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 42",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 43",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 38",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 39",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 40",
+               "lineColor":[
+                  112,
+                  48,
+                  160,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 41",
+               "lineColor":[
+                  112,
+                  48,
+                  160,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 42",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 43",
                "lineColor":[
                   255,
                   255,
@@ -2622,7 +2622,7 @@ export const geojsonstyles = {
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE = 1 && BUILDING_TYPE = 'SA'",
+               "condition":"LEGACY_NODE_TYPE = 1 && BUILDING_TYPE == 'SA'",
                "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-primaria.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -2645,7 +2645,7 @@ export const geojsonstyles = {
          "source":"topology.g-m",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 'G' && NETWORK_TYPE = 'M'",
+               "condition":"LEGACY_NODE_TYPE == 'G' && NETWORK_TYPE == 'M'",
                "image":"black point",
                "imageWidth":25,
                "imageHeight":25,
@@ -2668,7 +2668,7 @@ export const geojsonstyles = {
          "source":"topology.t-m",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 'T' && NETWORK_TYPE = 'L'",
+               "condition":"LEGACY_NODE_TYPE == 'T' && NETWORK_TYPE == 'L'",
                "image":"http://10.151.1.168/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -2737,7 +2737,7 @@ export const geojsonstyles = {
          "source":"topology.8-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 8 && LEGACY_NODE_TYPE = '?'",
+               "condition":"LEGACY_NODE_TYPE = 8 && LEGACY_NODE_TYPE == '?'",
                "image":"http://10.151.1.168/p3/app/img/map-markers/giunto.svg",
                "imageWidth":25,
                "imageHeight":25,

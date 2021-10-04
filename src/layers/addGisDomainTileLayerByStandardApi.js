@@ -102,7 +102,7 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
           getDashArray: d => {
             
             if(d && d.__source && d.__source.object && d.__source.object.properties){
-              return mapStyle.getLineDashArray(d)
+              return mapStyle.getLineDashArray(d, data.id)
             }
             return [0,0] //line without any dashing, even if it is on true PathStyle
           },
