@@ -55,9 +55,11 @@ const App = (props) =>{
     if(getProperty(props, 'map-style')){
       fetch(getProperty(props, 'map-style'))
         .then(d => {
+          debugger
           if(d.ok) return d.json()
         })
         .then(j => {
+          debugger
            setMapStyle(new MapStyle(j)) 
            return initListeners();
         })
@@ -397,7 +399,7 @@ App.defaultProps = {
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 7,
   'enable-select-object': true, 
-  'map-style': 'https://raw.githubusercontent.com/carlosclatg/DeckglTest/selectitems/src/styles/geojsonstyles.js',
+  'map-style': 'https://github.com/carlosclatg/DeckglTest/blob/selectitems/src/styles/geojsonstyles.js',
   'remote-user': null,
   'multi-polygon-selector': false,
   'tool-tip': null
