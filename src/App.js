@@ -51,6 +51,7 @@ const App = (props) =>{
   useEffect(()=>{
     console.log(props)
     console.log(getProperty(props, 'map-style'))
+    debugger
     if(getProperty(props, 'map-style')){
       fetch(getProperty(props, 'map-style'))
         .then(d => {
@@ -59,10 +60,13 @@ const App = (props) =>{
         })
         .then(j => {
           //  localStorage.setItem("mapstyle", JSON.stringify(j))
-           setMapStyle(new MapStyle(defaultStyle)) 
+          debugger
+           setMapStyle(new MapStyle(j)) 
            return initListeners();
         })
         .catch(e => {
+          debugger
+          console.log(e)
           setMapStyle(new MapStyle(defaultStyle)) //default style
           return initListeners();
         });
@@ -73,20 +77,22 @@ const App = (props) =>{
 
     
 
-    function initListeners() {
-      fromEvent(document, "topogisevt_add_layer").subscribe(event => handleAddLayer(event)); //BE very careful... handleAddLayer is inmunatable after initial load. 
-      fromEvent(document, "topogisevt_remove_layer").subscribe(event => handleRemoveLayer(event));
-      fromEvent(document, "topogisevt_center_on_object").subscribe(event => handleCenterOnObject(event));
-      localStorage.removeItem("selectedItems");
-      const event = eventMapReadyBuilder();
-      ReactDOM.findDOMNode(deckRef.current).dispatchEvent(event);
-      return () => {
-        localStorage.removeItem("selectedItems");
-        localStorage.removeItem("mapstyle")
-      };
-    }
+
   },[])
 
+
+  const initListeners =()=> {
+    fromEvent(document, "topogisevt_add_layer").subscribe(event => handleAddLayer(event)); //BE very careful... handleAddLayer is inmunatable after initial load. 
+    fromEvent(document, "topogisevt_remove_layer").subscribe(event => handleRemoveLayer(event));
+    fromEvent(document, "topogisevt_center_on_object").subscribe(event => handleCenterOnObject(event));
+    localStorage.removeItem("selectedItems");
+    const event = eventMapReadyBuilder();
+    ReactDOM.findDOMNode(deckRef.current).dispatchEvent(event);
+    return () => {
+      localStorage.removeItem("selectedItems");
+      localStorage.removeItem("mapstyle")
+    };
+  }
   //zoom paramter changed
   useEffect(()=>{
     setViewport({
@@ -404,7 +410,7 @@ App.defaultProps = {
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 7,
   'enable-select-object': true, 
-  'map-style': null,
+  'map-style': 'https://raw.githubusercontent.com/carlosclatg/DeckglTest/selectitems/public/geojsonstyles.json',
   'remote-user': null,
   'multi-polygon-selector': false,
   'tool-tip': null
