@@ -53,29 +53,39 @@ const App = (props) =>{
     console.log(getProperty(props, 'map-style'))
     if(getProperty(props, 'map-style')){
       fetch(getProperty(props, 'map-style'))
-        .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
+        .then(d => {
+          debugger
+          if(d.ok) return d.json()
+        })
+        .then(j => {
+          //  localStorage.setItem("mapstyle", JSON.stringify(j))
+           setMapStyle(new MapStyle(defaultStyle)) 
+           return initListeners();
+        })
         .catch(e => {
-          setMapStyle(new MapStyle(null)) //default style
+          setMapStyle(new MapStyle(defaultStyle)) //default style
+          return initListeners();
         });
     } else {
-      setMapStyle(new MapStyle(null)) //default style
+      setMapStyle(new MapStyle(defaultStyle)) //default style
+      return initListeners();
     }
 
-    fromEvent(document, "topogisevt_add_layer").subscribe(event=>handleAddLayer(event)) //BE very careful... handleAddLayer is inmunatable after initial load. 
-    fromEvent(document, "topogisevt_remove_layer").subscribe(event=>handleRemoveLayer(event))
-    fromEvent(document, "topogisevt_center_on_object").subscribe(event=>handleCenterOnObject(event))
-    localStorage.removeItem("selectedItems")
-    console.log("ohmygod")
-    const event = eventMapReadyBuilder();
-    ReactDOM.findDOMNode(deckRef.current).dispatchEvent(event)
-    return () => { //when unmounting
-      localStorage.removeItem("selectedItems")
+    
+
+    function initListeners() {
+      fromEvent(document, "topogisevt_add_layer").subscribe(event => handleAddLayer(event)); //BE very careful... handleAddLayer is inmunatable after initial load. 
+      fromEvent(document, "topogisevt_remove_layer").subscribe(event => handleRemoveLayer(event));
+      fromEvent(document, "topogisevt_center_on_object").subscribe(event => handleCenterOnObject(event));
+      localStorage.removeItem("selectedItems");
+      const event = eventMapReadyBuilder();
+      ReactDOM.findDOMNode(deckRef.current).dispatchEvent(event);
+      return () => {
+        localStorage.removeItem("selectedItems");
+        localStorage.removeItem("mapstyle")
+      };
     }
   },[])
-
-  useEffect(()=>{
-  }, [layerList])
-
 
   //zoom paramter changed
   useEffect(()=>{
@@ -182,20 +192,24 @@ const App = (props) =>{
     if(deckRef.current.props.layers.some(e=>{ //reference to DOM!!!!!
       return e.id == detail.id
     })) return
-    
+    debugger
+    console.log(mapStyle)
+    console.log(deckRef.current.props.mapStyle)
+    console.log(deckRef.current.props.cazzo)
+    const st = JSON.parse(localStorage.getItem('mapstyle'))
     //case layer geojson
     if(detail.type === GEOJSON_LAYER){
       if(detail.layer instanceof Object){
         if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing
           //Verify if unique_id is present or not, else generate.
-          newLayer = generateGeoJsonLayer(detail,mapStyle, true)
+          newLayer = generateGeoJsonLayer(detail,deckRef.current.props.mapStyle, true)
         } else return
       } else {
         if(detail.tiled){
-          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, getProperty(props,'remote-user'), true)
+          newLayer = addGisDomainTileLayerByStandardApi(detail, deckRef.current.props.mapStyle, getProperty(props,'remote-user'), true)
         } else {
           let extent = viewportToExtension(viewport)
-          return addGisDomainLayerByStandardApi(detail, extent,getProperty(props,'remote-user'), mapStyle).then(layer=>{
+          return addGisDomainLayerByStandardApi(detail, extent,getProperty(props,'remote-user'), deckRef.current.props.mapStyle).then(layer=>{
             if(layer) setLayerList((layerList)=>[...layerList, layer])
           })
         }
@@ -362,7 +376,8 @@ const App = (props) =>{
       <slot style={{...hostStyle, ...slotBottomLeft}} name="bottom-left" />
       <slot style={{...hostStyle, ...slotBottomRight}} name="bottom-right" />
       <DeckGL
-        mapStyle={defaultStyle}
+        cazzo="abc"
+        mapStyle={mapStyle}
         ref={deckRef}
         initialViewState={viewport}
         controller={true}

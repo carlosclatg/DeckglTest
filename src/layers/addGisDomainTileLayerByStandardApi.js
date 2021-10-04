@@ -44,6 +44,7 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
   return new TileLayer({
     id: data.id,
     data: url,
+    loadOptions,
     pickable: true,
     filled: true,
     stroke: true,

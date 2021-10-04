@@ -16,130 +16,117 @@ const selectedColor3 = [100,0,200,255]
 //POINTS OK WITH ID AND DOMAIN-SPACE
 //POINT OK
 
-export const defaultStyle = {
-    "layers": [
-        {
-            "id": "layer3",
-            "type": "symbol",
-            "source": "grid-act-maintenance.gam-issue",
-            "layout": [ //In case colouring is needed provide in different URLs an icon with different color
-                {
-                    "condition": "type == 'issue-level-1'", //condition matched by property.type
-                    "image": "data:image/png;base64,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", //number1
-                    "imageWidth": 200, "imageHeight": 200, "imageAnchorY": 200, "imageAnchorX": 200,
-                },
-                {
-                    "condition": "type == 'issue-level-2'",
-                    "image": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",//number2
-                },
-                {
-                    "condition": "type == 'issue-level-3'",
-                    "image": "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",//number3
-                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17,
-                },
-                {
-                    "condition": "true",
-                    "image": "https://img2.freepng.es/20180522/eww/kisspng-web-development-computer-icons-website-5b043775017c54.2851318415270029970061.jpg",
-                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17,
-                }              
-            ]
-        },
-        {
-            "id": "linetest",
-            "type": "line",
-            "source": "grid-act-maintenance.gam-issue",
-            "layout": [
-                {
-                    "condition": "true",
-                    "lineColor": [0, 0, 170, 255],
-                    "lineWidth": 3,
-                    "dashArray": [20,20]
-                }              
-            ],
-
-        },
-        {
-            "id": "layer-geojson-point",
-            "type": "symbol",
-            "source": "Coors.Baseball",
-            "layout": [
-                {
-                    "condition": "true",
-                    "image": "https://img2.freepng.es/20180522/eww/kisspng-web-development-computer-icons-website-5b043775017c54.2851318415270029970061.jpg",
-                    "imageWidth": 27, "imageHeight": 35, "imageAnchorY": 35, "imageAnchorX": 17,
-                }             
-            ],
-
-        },
-        {
-            "id": "cazzi",
-            "type": "line",
-            "source": "cazzo.cazzo",
-            "layout": [
-                {
-                    "condition": "true",
-                    "lineColor": [0, 0, 0, 50],
-                    "lineWidth": 2
-                }              
-            ]
-            
-        },
-        {
-            "id": "polygontest1",
-            "type": "polygon",
-            "source": "grid-act-maintenance.gam-issue",
-            "layout": [
-                {
-                    "condition": "true",
-                    "fillColor": [240, 120, 100, 130],
-                    "lineColor": [100, 100, 200, 255],
-                    "selectedFillColor": [0,0,200,200],
-                    "lineWidth": 3,
-                    "dashArray": [5,2]
-                }              
-            ]
-        },
-        {
-            // "id": "layer-geojson-point-line-cazzi",
-            "type": "polygon",
-            "source": "province.bologna",
-            "layout": [
-                {
-                    "condition": "true",
-                    "fillColor": [230, 120, 100, 100],
-                    "lineColor": [200, 100, 0, 255],
-                    "selectedFillColor": [0,0,200,200],
-                    "lineWidth": 2,
-                    "dashArray": [6,12]
-                }              
-            ]
-        },
-        {
-            "id": "2-m",
-            "type": "symbol",
-            "source": "topology.1-h",
-            "layout": [
-                {
-                    "condition": "true",
-                    "image": "https://www.iconpacks.net/icons/1/free-pin-icon-48-thumb.png",
-                    "imageWidth": 20, "imageHeight": 20, "imageAnchorY": 20, "imageAnchorX": 11
-                }              
-            ]
-        },
-        {
-            // "id": "ticketlayer",
-            "type": "symbol",
-            "source": "ohmygod.god",
-            "layout": [
-                {
-                    "condition": "true",
-                    "image": "https://toppng.com/uploads/preview/two-tickets-icon-ticket-ico-11562902873mix2fznwjo.png",
-                    "imageWidth": 20, "imageHeight": 20, "imageAnchorY": 20, "imageAnchorX": 11
-                }              
-            ]
-        }
-    ]
-}
+// export const defaultStyle = {
+//     "layers": [
+//       {
+//         "id": "layer1",
+//         "type": "symbol",
+//         "source": "topology.1-h",
+//         "layout": [{ "condition": "true", "image": "../../../../assets/images/small/substation-marker.png" }]
+//       },
+//       {
+//         "id": "layer2",
+//         "type": "symbol",
+//         "source": "grid-act-maintenance.gam-activity",
+//         "layout": [{ "condition": "true", "image": "../../../../assets/images/small/activity-marker.png" }]
+//       },
+//       {
+//         "id": "layer3",
+//         "type": "symbol",
+//         "source": "grid-act-maintenance.gam-issue",
+//         "layout": [
+//           {
+//             "condition": "type == 'issue-level-1'",
+//             "image": "../../../../assets/images/small/issue-marker-high.png"
+//           },
+//           {
+//             "condition": "type == 'issue-level-2'",
+//             "image": "../../../../assets/images/small/issue-marker-medium.png"
+//           },
+//           {
+//             "condition": "type == 'issue-level-3'",
+//             "image": "../../../../assets/images/small/issue-marker-low.png"
+//           },
+//           { "condition": "true", "image": "../../../../assets/images/small/issue-marker-low.png" }
+//         ]
+//       },
+//       {
+//         "id": "issuelayer",
+//         "type": "symbol",
+//         "source": "issuelayer",
+//         "layout": [
+//           {
+//             "condition": "type == 'issue-level-1'",
+//             "image": "../../../../assets/images/medium/issue-marker-high.png",
+//             "imageWidth": 72,
+//             "imageHeight": 90,
+//             "imageAnchorY": 90,
+//             "imageAnchorX": 36,
+//             "iconSize": 70
+//           },
+//           {
+//             "condition": "type == 'issue-level-2'",
+//             "image": "../../../../assets/images/medium/issue-marker-medium.png",
+//             "imageWidth": 72,
+//             "imageHeight": 90,
+//             "imageAnchorY": 90,
+//             "imageAnchorX": 36,
+//             "iconSize": 70
+//           },
+//           {
+//             "condition": "type == 'issue-level-3'",
+//             "image": "../../../../assets/images/medium/issue-marker-low.png",
+//             "imageWidth": 72,
+//             "imageHeight": 90,
+//             "imageAnchorY": 90,
+//             "imageAnchorX": 36,
+//             "iconSize": 70
+//           },
+//           {
+//             "condition": "true",
+//             "image": "../../../../assets/images/medium/issue-marker-low.png",
+//             "imageWidth": 72,
+//             "imageHeight": 90,
+//             "imageAnchorY": 90,
+//             "imageAnchorX": 36,
+//             "iconSize": 70
+//           }
+//         ]
+//       },
+//       {
+//         "id": "activitylayer",
+//         "type": "symbol",
+//         "source": "activitylayer",
+//         "layout": [
+//           {
+//             "condition": "true",
+//             "image": "https://wonder-day.com/wp-content/uploads/2020/10/wonder-day-among-us-21.png",
+//             "imageWidth": 72,
+//             "imageHeight": 90,
+//             "imageAnchorY": 90,
+//             "imageAnchorX": 36,
+//             "iconSize": 70
+//           }
+//         ]
+//       },
+//       {
+//         "id": "ticketlayer",
+//         "type": "symbol",
+//         "source": "ticketlayer",
+//         "layout": [
+//           {
+//             "condition": "true",
+//             "image": "../../../../assets/images/medium/st-marker-low.png",
+//             "imageWidth": 72,
+//             "imageHeight": 90,
+//             "imageAnchorY": 90,
+//             "imageAnchorX": 36,
+//             "iconSize": 70
+//           }
+//         ]
+//       }
+//     ]
+//   }
 
 
 
@@ -282,3 +269,1247 @@ export const defaultStyle = {
 //       }
 //     ]
 //   }
+
+
+
+export const defaultStyle = {
+  layers:[
+     {
+        "id":"RAMI AT",
+        "type":"line",
+        "source":"topology.tmat",
+        "layout":[
+           {
+              "condition":"NETWORK_TYPE = 'H' && V_NOMINAL > 132",
+              "lineColor":[
+                 255,
+                 0,
+                 0,
+                 100
+              ],
+              "lineWidth":2
+           },
+           {
+              "condition":"NETWORK_TYPE = 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID = 'EHHVLSAC'",
+              "lineColor":[
+                 255,
+                 0,
+                 0,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID = 'EHHVLSUC'",
+              "lineColor":[
+                 255,
+                 0,
+                 0,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'H' && V_NOMINAL <= 132",
+              "lineColor":[
+                 255,
+                 0,
+                 0,
+                 100
+              ],
+              "lineWidth":2
+           },
+           {
+              "condition":"NETWORK_TYPE = 'H' && V_NOMINAL <= 132 && EDIT_TYPE_ID = 'EHVLSAC'",
+              "lineColor":[
+                 255,
+                 0,
+                 0,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'H' && V_NOMINAL <= 132 && EDIT_TYPE_ID = 'EHVLSUC'",
+              "lineColor":[
+                 255,
+                 0,
+                 0,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 4
+              ]
+           },
+           {
+              "condition":"true",
+              "lineColor":[
+                 255,
+                 0,
+                 0,
+                 100
+              ],
+              "lineWidth":8
+           }
+        ]
+     },
+     {
+        "id":"NODI MT 2 - CABINE",
+        "type":"symbol",
+        "source":"topology.2-m",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE = 'PA'",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/214-PTP-small.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE <> ('CU','UT')",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-secondaria-blk.svg",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE = 'CU'",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-secondaria-blk.svg",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE = 'UT'",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-secondaria-ut-blk-fill.svg",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODI BT 7 - DI CONSEGNA",
+        "type":"symbol",
+        "source":"topology.7-l",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 7",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/nodo-consegna-passivo-blk.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODI BT G",
+        "type":"symbol",
+        "source":"topology.g-l",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 'G' && NETWORK_TYPE = 'L'",
+              "image":"black point",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODI BT T",
+        "type":"symbol",
+        "source":"topology.t-l",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 'T' && NETWORK_TYPE = 'L'",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODI BT 6",
+        "type":"symbol",
+        "source":"topology.6-l",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 6 && SYMBOL_ID = 111",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/nodo-rigido-MT.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"LEGACY_NODE_TYPE = 6 && SYMBOL_ID = 176",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/square-green.svg",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"RAMI MT",
+        "type":"line",
+        "source":"topology.tmmt",
+        "layout":[
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":2
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":2
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 40",
+              "lineColor":[
+                 0,
+                 0,
+                 255,
+                 100
+              ],
+              "lineWidth":2
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":2
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":2
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'A' && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":2
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 40",
+              "lineColor":[
+                 0,
+                 0,
+                 255,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'B' && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 40",
+              "lineColor":[
+                 0,
+                 0,
+                 255,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'M' && LAYING_TYPE = 'C' && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"true",
+              "lineColor":[
+                 0,
+                 200,
+                 70,
+                 100
+              ],
+              "lineWidth":2,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           }
+        ]
+     },
+     {
+        "id":"CAVIDOTTO",
+        "type":"line",
+        "source":"topology.trc",
+        "layout":[
+           {
+              "condition":"true",
+              "lineColor":[
+                 250,
+                 128,
+                 114,
+                 100
+              ],
+              "dashArray":[
+                 10,
+                 4
+              ]
+           }
+        ]
+     },
+     {
+        "id":"SOSTEGNO MT - NODO COMPLESSO 3",
+        "type":"symbol",
+        "source":"topology.3-m",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 3",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/sezionatore-mt-blk-fill_S.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"SOSTEGNO MT - NODO COMPLESSO 4",
+        "type":"symbol",
+        "source":"topology.4-m",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 4",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/nodo-rigido-MT.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"SOSTEGNO MT - NODO COMPLESSO m",
+        "type":"symbol",
+        "source":"topology.-m",
+        "layout":[
+           {
+              "condition":"VOLTAGE_LEVEL = M",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/216-sezionatori-misti.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"RAMI BT",
+        "type":"line",
+        "source":"topology.tmbt",
+        "layout":[
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 40",
+              "lineColor":[
+                 0,
+                 176,
+                 80,
+                 100
+              ],
+              "lineWidth":1
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":1
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 1
+              ],
+              "lineWidth":1
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE = 'A' && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 40",
+              "lineColor":[
+                 0,
+                 176,
+                 80,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 40",
+              "lineColor":[
+                 0,
+                 176,
+                 80,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'B' && CONDUCTOR_SUPPORT = 'G' && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 40",
+              "lineColor":[
+                 0,
+                 176,
+                 80,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE = 'C' && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 40",
+              "lineColor":[
+                 0,
+                 176,
+                 80,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 4,
+                 1
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 38",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 39",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 40",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 41",
+              "lineColor":[
+                 112,
+                 48,
+                 160,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 42",
+              "lineColor":[
+                 165,
+                 42,
+                 42,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"NETWORK_TYPE = 'L' && LINE_SEGMENT_CLASS = 'P' && LINE_TYPE = 'C' && STATUS_ID = 43",
+              "lineColor":[
+                 255,
+                 255,
+                 0,
+                 100
+              ],
+              "lineWidth":1,
+              "dashArray":[
+                 10,
+                 4
+              ]
+           },
+           {
+              "condition":"true",
+              "lineColor":[
+                 0,
+                 0,
+                 0,
+                 100
+              ],
+              "lineWidth":1
+           }
+        ]
+     },
+     {
+        "id":"VIA/CIVICO",
+        "type":"symbol",
+        "source":"topology.stnum",
+        "layout":[
+           {
+              "condition":"true",
+              "image":"black point",
+              "label":"number street",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODI AT",
+        "type":"symbol",
+        "source":"topology.1-h",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 1 && BUILDING_TYPE <> 'SA'",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-primaria.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"LEGACY_NODE_TYPE = 1 && BUILDING_TYPE = 'SA'",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/cabina-primaria.svg",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODO MT G",
+        "type":"symbol",
+        "source":"topology.g-m",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 'G' && NETWORK_TYPE = 'M'",
+              "image":"black point",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODI MT T",
+        "type":"symbol",
+        "source":"topology.t-m",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 'T' && NETWORK_TYPE = 'L'",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODI BT 5 - SEZIONAMENTI",
+        "type":"symbol",
+        "source":"topology.5-l",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 5",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/sezionamento-bt-blk.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"NODI BT 9",
+        "type":"symbol",
+        "source":"topology.9-l",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 9",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/trafo-BT.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     },
+     {
+        "id":"MONTANTI",
+        "type":"symbol",
+        "source":"topology.8-l",
+        "layout":[
+           {
+              "condition":"LEGACY_NODE_TYPE = 8 && LEGACY_NODE_TYPE = '?'",
+              "image":"http://10.151.1.168/p3/app/img/map-markers/giunto.svg",
+              "imageWidth":25,
+              "imageHeight":25,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           },
+           {
+              "condition":"true",
+              "image":"",
+              "imageWidth":27,
+              "imageHeight":35,
+              "imageAnchorY":35,
+              "imageAnchorX":17
+           }
+        ]
+     }
+  ]
+} 

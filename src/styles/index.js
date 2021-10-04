@@ -9,16 +9,19 @@ import { defaultStyle } from './custom-style';
 export default class MapStyle {
 
     constructor(l){
-        if(!l) {
-            this.layers = defaultStyle.layers
-        } else {
-            if(!l.layers){
+        try {
+            if(!l) {
                 this.layers = defaultStyle.layers
             } else {
                 this.layers = l.layers
-
             }
+            
+        } catch (e){
+            this.layers = defaultStyle.layers
         }
+        
+        console.log("++++++++++++++++++++++++STYLES ARE HERE")
+        console.log(this.layers)
     }
 
     //LINE
@@ -220,6 +223,7 @@ export default class MapStyle {
 
 
     findLayerById(id, type){
+        debugger
         const layer = this.layers.filter( l => l.id === id && l.type === type);
         return layer === undefined ? null : layer[0];
     }

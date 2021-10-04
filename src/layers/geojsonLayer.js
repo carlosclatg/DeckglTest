@@ -27,6 +27,8 @@ import {PathStyleExtension} from '@deck.gl/extensions'
 export default function generateGeoJsonLayer(data, mapStyle, isNew){
 
     let selectedItems = null
+    console.log("THE LOCAL STYLES ARE ++++++++++++++++++++++++++++")
+    console.log(mapStyle)
     if(JSON.parse(localStorage.getItem("selectedItems"))){
       selectedItems = new Set(JSON.parse(localStorage.getItem("selectedItems")))
     }
@@ -56,6 +58,7 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
             points: {
                 type: IconLayer,
                 getIcon: d =>{ //sublayer props include d.__source.id
+                  debugger
                   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
                     return mapStyle.getIcon(d, data.id)
                   }
@@ -156,6 +159,8 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
           getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
           getLineColor: [JSON.parse(localStorage.getItem("selectedItems"))],
           getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
+          getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
+          getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
           id: [data.id]
         }
     });
