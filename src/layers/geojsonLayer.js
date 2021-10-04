@@ -70,17 +70,9 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                   }
                     return mapStyle.getIconSize(d)
                 },
-                // getColor: (d) => {
-                //   if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                //     return mapStyle.getSelectedColor(d);
-                //   }
-                //   return mapStyle.getColor(d);
-                // },
                 pickable: true,
                 updateTriggers: {
-                  getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
                   getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
-                  //getColor: [JSON.parse(localStorage.getItem("selectedItems"))],
                   id: [data.id]
                 },
             },
@@ -95,12 +87,6 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
                 dashJustified: true,
                 dashGapPickable: true,
                 extensions: [new PathStyleExtension({dash: true})],
-                updateTriggers: {
-                  getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
-                  getLineColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-                  getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-                  id: [data.id]
-                },
             },
             'line-strings': { //It is bad on documentation! https://deck.gl/docs/api-reference/layers/geojson-layer#sub-layers
               type: PathLayer,
@@ -114,12 +100,6 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
               dashJustified: false,
               dashGapPickable: true,
               extensions: [new PathStyleExtension({dash: true})],
-              updateTriggers: {
-                getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
-                getLineColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-                getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-                id: [data.id]
-              },
             }
         },
         getLineWidth: d => {
@@ -150,17 +130,13 @@ export default function generateGeoJsonLayer(data, mapStyle, isNew){
         },
         getFillColor: f => {
           
-          // if(selectedItems && f.properties.unique_id && selectedItems.has(f.properties.unique_id)){
-          //   return mapStyle.getPolygonFillColorSelected(f, data.id)
-          // }
+          if(selectedItems && f.properties.unique_id && selectedItems.has(f.properties.unique_id)){
+            return mapStyle.getPolygonFillColorSelected(f, data.id)
+          }
           return mapStyle.getPolygonFillColor(f, data.id);
         },
         updateTriggers: {
           getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
-          getLineColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-          getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-          getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
-          getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
           id: [data.id]
         }
     });

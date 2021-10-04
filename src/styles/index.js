@@ -214,12 +214,8 @@ export default class MapStyle {
             try{
                 let value = true
                 for(let cond of conditionArray){
-                    let abc = Parser.evaluate(cond, model)
-        
-                    value = value && abc
-                    
+                    value = value && Parser.evaluate(cond, model) 
                 }
-    
                 if(value) return layout
             } catch(err) { //case any condition is matched 2 lines above
     

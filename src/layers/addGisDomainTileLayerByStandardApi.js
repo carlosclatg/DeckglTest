@@ -55,14 +55,7 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
         points: {
             type: IconLayer,
             getIcon: d =>{ //sublayer props include d.__source.id
-              debugger
-              if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
-                const res = mapStyle.getIcon(d, data.id)
-                return res
-              }
-              debugger
-              const res = mapStyle.getIcon(d, data.id)
-              return res
+              return mapStyle.getIcon(d, data.id)
             },
             getSize: d => {
               if(selectedItems && selectedItems.has(d.__source.object.properties.unique_id)){
@@ -72,49 +65,23 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
             },
             pickable: true,
             updateTriggers: {
-              getIcon: [JSON.parse(localStorage.getItem("selectedItems"))],
               getSize: [JSON.parse(localStorage.getItem("selectedItems"))],
               id: [data]
             },
         },
         'polygons-stroke': {
             type: PathLayer,
-            getDashArray: d => {
-              if(d && d.__source && d.__source.object && d.__source.object.properties){
-                const a = mapStyle.getLineDashArrayForPolygon(d,data.id)
-                
-                return a
-              }
-              return [0,0] //line without any dashing, even if it is on true PathStyle
-            },
+            getDashArray: d => mapStyle.getLineDashArrayForPolygon(d,data.id),
             dashJustified: true,
             dashGapPickable: true,
             extensions: [new PathStyleExtension({dash: true})],
-            updateTriggers: {
-              getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
-              getLineColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-              getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-              id: [data.id]
-            },
         },
         'line-strings': { //It is bad on documentation! https://deck.gl/docs/api-reference/layers/geojson-layer#sub-layers
           type: PathLayer,
-          getDashArray: d => {
-            
-            if(d && d.__source && d.__source.object && d.__source.object.properties){
-              return mapStyle.getLineDashArray(d, data.id)
-            }
-            return [0,0] //line without any dashing, even if it is on true PathStyle
-          },
+          getDashArray: d => mapStyle.getLineDashArray(d, data.id),
           dashJustified: false,
           dashGapPickable: true,
-          extensions: [new PathStyleExtension({dash: true})],
-          updateTriggers: {
-            getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
-            getLineColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-            getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-            id: [data.id]
-          },
+          extensions: [new PathStyleExtension({dash: true})]
         }
     },
     getLineWidth: d => {
@@ -144,18 +111,11 @@ export default function addGisDomainTileLayerByStandardApi(data, mapStyle, remot
         return mapStyle.DEFAULT_LINE_COLOR
     },
     getFillColor: f => {
-      
-      if(selectedItems && f.properties.unique_id && selectedItems.has(f.properties.unique_id)){
-        return mapStyle.getPolygonFillColorSelected(f, data.id)
-      }
       return mapStyle.getPolygonFillColor(f, data.id);
     },
     updateTriggers: {
       getLineWidth: [JSON.parse(localStorage.getItem("selectedItems"))],
-      getLineColor: [JSON.parse(localStorage.getItem("selectedItems"))],
-      getFillColor: [JSON.parse(localStorage.getItem("selectedItems"))],
       id: [data.id],
-
     }
   });
 }
