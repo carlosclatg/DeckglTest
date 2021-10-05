@@ -62,7 +62,7 @@ const App = (props) =>{
       setMapStyle(new MapStyle(null)) //default style
     }
     const event = eventMapReadyBuilder();
-    ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
+    document.dispatchEvent(event)
     fromEvent(document, "topogisevt_add_layer").subscribe(event=>handleAddLayer(event)) //BE very careful... handleAddLayer is inmunatable after initial load. 
     fromEvent(document, "topogisevt_remove_layer").subscribe(event=>handleRemoveLayer(event))
     fromEvent(document, "topogisevt_center_on_object").subscribe(event=>handleCenterOnObject(event))
@@ -289,8 +289,7 @@ const App = (props) =>{
     );
   }
 
-
-  //THE URLS of the image must be switched
+  
   return (
     <div className="App" ref={myRef} style={{ height: props.height + "px", width: props.width + "px", position: 'relative' }}>
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
@@ -307,7 +306,8 @@ const App = (props) =>{
       <slot style={{...hostStyle, ...slotBottomLeft}} name="bottom-left" />
       <slot style={{...hostStyle, ...slotBottomRight}} name="bottom-right" />
       <DeckGL
-        mapStyle={defaultStyle}
+        style={{ width: '100%', height: '100%' }}
+        mapStyle={mapStyle}
         ref={deckRef}
         initialViewState={viewport}
         controller={true}
