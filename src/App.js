@@ -370,6 +370,7 @@ const App = (props) =>{
       <slot style={{...hostStyle, ...slotBottomLeft}} name="bottom-left" />
       <slot style={{...hostStyle, ...slotBottomRight}} name="bottom-right" />
       <DeckGL
+        style = {{width: '100%', height: '100%'}}
         mapStyle={mapStyle}
         ref={deckRef}
         initialViewState={viewport}
