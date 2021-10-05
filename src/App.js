@@ -68,7 +68,6 @@ const App = (props) =>{
           return initListeners();
         });
     } else {
-      
       setMapStyle(new MapStyle(geojsonstyles)) //default style
       return initListeners();
     }
@@ -81,7 +80,7 @@ const App = (props) =>{
     fromEvent(document, "topogisevt_center_on_object").subscribe(event => handleCenterOnObject(event));
     localStorage.removeItem("selectedItems");
     const event = eventMapReadyBuilder();
-    ReactDOM.findDOMNode(deckRef.current).dispatchEvent(event);
+    window.dispatchEvent(event);
     return () => {
       localStorage.removeItem("selectedItems");
       localStorage.removeItem("mapstyle")
