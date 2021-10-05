@@ -44,5 +44,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-rc.0"
+  },
+  "main": "./src/dist/App.js",
+	"targets": {
+		"main": {
+			"outputFormat": "esmodule"
+		}
+	}
 }

@@ -1,5 +1,7 @@
 import { BitmapLayer } from '@deck.gl/layers';
 import { TileLayer } from '@deck.gl/geo-layers';
+import GL from '@luma.gl/constants';
+
 
 const defaultProps = {
     baseWMSUrl: null,

@@ -1,8 +1,8 @@
 import DeckGL from '@deck.gl/react';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import reactToWebComponent from "react-to-webcomponent";
-import getSelectionLayer from './layers/selectionLayer'
+import getSelectionLayer from './layers/getSelectionLayer'
 import getTileMapLayer from './layers/tileMapLayer'
 import eventObjectSelectedBuilder from './events/eventObjectSelectedBuilder'
 import generateGeoJsonLayer from './layers/geojsonLayer'
@@ -19,9 +19,19 @@ import { fromEvent } from 'rxjs';
 import PropTypes from 'prop-types';
 import { defaultStyle } from './styles/custom-style';
 import { divInsideHost, divInsideTopRight, hostStyle, slotBottomLeft, slotBottomRight, slotTopLeft, topRight } from './css-styles';
+import { GeoJsonLayer } from '@deck.gl/layers';
+import {TileLayer} from '@deck.gl/geo-layers';
+import geojsonstyles from '../src/styles/geojsonstyles.json';
+
+
 
 //PROPS AND COMPONENT-
 const App = (props) =>{
+
+  const getProperty =(obj, key)=> {
+    var o = obj[key];
+    return(o);
+  }
 
   //MOCK DATA
   const MAXZOOM=23
@@ -30,48 +40,52 @@ const App = (props) =>{
 
   //STATE
   const [previousZoom, setPreviousZoom] = useState(parseInt(props.zoom))
-  const [viewport, setViewport] = useState({
-    width: 1,
-    height: 1,
-    latitude: props.center.lat,
-    longitude: props.center.lng,
-    zoom: parseInt(props.zoom),
-  })
+  const [viewport, setViewport] = useState({width: 1,height: 1,latitude: props.center.lat,longitude: props.center.lng,zoom: parseInt(props.zoom)})
   const [isdrawMode, setdrawMode] = useState(false)
-  const [mapStyle, setMapStyle] = useState(new MapStyle(null))
-  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(props.backgroud_tile_url, MINZOOM, MAXZOOM, defaultStyle)])
-  const [selectedItems, setSelectedItems] = useState([])
+  const [mapStyle, setMapStyle] = useState()
+  const [layerList, setLayerList] = useState(()=>[getTileMapLayer(getProperty(props,'background-tile-url'), MINZOOM, MAXZOOM, defaultStyle)])
 
   //REFS TO DOM
-  const myRef = useRef();
   const deckRef = useRef();
   const canvas = useRef();
 
   //HOOKS
   useEffect(()=>{
-    console.log("props")
     console.log(props)
-    if(props.multi_polygon_selector) console.log("true")
-    if(props.map_style){
-      fetch(props.map_style)
-        .then(d => d.ok && d.json().then(j => { setMapStyle(new MapStyle(j)) }))
+    console.log(getProperty(props, 'map-style'))
+    
+    if(getProperty(props, 'map-style')){
+      fetch(getProperty(props, 'map-style'))
+        .then(d => {
+          if(d.ok) return d.json()
+        })
+        .then(j => {
+           setMapStyle(new MapStyle(j)) 
+           return initListeners();
+        })
         .catch(e => {
-          setMapStyle(new MapStyle(null)) //default style
+          setMapStyle(new MapStyle(geojsonstyles)) //default style
+          return initListeners();
         });
     } else {
-      setMapStyle(new MapStyle(null)) //default style
+      setMapStyle(new MapStyle(geojsonstyles)) //default style
+      return initListeners();
     }
-    const event = eventMapReadyBuilder();
-    document.dispatchEvent(event)
-    fromEvent(document, "topogisevt_add_layer").subscribe(event=>handleAddLayer(event)) //BE very careful... handleAddLayer is inmunatable after initial load. 
-    fromEvent(document, "topogisevt_remove_layer").subscribe(event=>handleRemoveLayer(event))
-    fromEvent(document, "topogisevt_center_on_object").subscribe(event=>handleCenterOnObject(event))
   },[])
 
-  useEffect(()=>{
-  }, [layerList])
 
-
+  const initListeners =()=> {
+    fromEvent(document, "topogisevt_add_layer").subscribe(event => handleAddLayer(event)); //BE very careful... handleAddLayer is inmunatable after initial load. 
+    fromEvent(document, "topogisevt_remove_layer").subscribe(event => handleRemoveLayer(event));
+    fromEvent(document, "topogisevt_center_on_object").subscribe(event => handleCenterOnObject(event));
+    localStorage.removeItem("selectedItems");
+    const event = eventMapReadyBuilder();
+    window.dispatchEvent(event);
+    return () => {
+      localStorage.removeItem("selectedItems");
+      localStorage.removeItem("mapstyle")
+    };
+  }
   //zoom paramter changed
   useEffect(()=>{
     setViewport({
@@ -99,25 +113,25 @@ const App = (props) =>{
     if(Math.round(viewport.zoom) !== Math.round(previousZoom)){
       const { west, south, east, north } = viewportToExtension(viewport)
       const event = new CustomEvent("topogisevt_map_zoom_changed",  { bubbles: true, cancelable: true, composed: true, detail:{zoom: Math.round(viewport.zoom), west, south, east, north  }});
-      ReactDOM.findDOMNode(myRef.current).dispatchEvent(event)
+      ReactDOM.findDOMNode(deckRef.current).dispatchEvent(event)
     }
   }, [viewport])
 
 
   useEffect(()=>{
     if(isdrawMode){
-      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects, props.multi_polygon_selector)))
+      setLayerList((layerList) =>new Array(...layerList, getSelectionLayer(layerList, handleSelectedObjects,getProperty(props, 'multi-polygon-selector'))))
     } else {
-      setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="selection")))
+      setLayerList((layerList) =>new Array(...layerList.filter(e=>e.id!=="SelectionLayer")))
     }
   },[isdrawMode])
 
-
-  const onDeckClick = (info) => {
-    if(props.enable_select_object && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
-      let objectSelected = deckRef.current.pickObject({x: info.x, y: info.y, radius: 10 })
+  const onDeckClick = (info, event) => {
+    console.log(event)
+    if(getProperty(props, 'enable-select-object') && !isdrawMode){ //in case selectionPolygonMode is on, nothing should happen when clicking.
+      let objectSelected = deckRef.current.pickMultipleObjects({x: info.x, y: info.y, radius: 1 })
       if(objectSelected){
-        handleSelectedObjects(objectSelected)
+        handleSelectedObjects(objectSelected, event)
       }
     }
   }
@@ -127,7 +141,7 @@ const App = (props) =>{
       if(!deckRef.current.props.layers.some(e => e.id == detail)) return
       let layer = deckRef.current.props.layers.filter(e => e.id !== detail)
       if(isdrawMode){
-        setLayerList((layers) =>new Array(...layer.filter(e => e.id !== 'selection'),getSelectionLayer(layer, handleSelectedObjects, props.multi_polygon_selector))) //update selectable layers as well.
+        setLayerList((layers) =>new Array(...layer.filter(e => e.id !== 'SelectionLayer'),getSelectionLayer(layer, handleSelectedObjects, getProperty(props, 'multi-polygon-selector')))) //update selectable layers as well.
       } else {
         setLayerList((layers) =>new Array(...layer))
       }
@@ -135,25 +149,37 @@ const App = (props) =>{
   }
 
   const handleCenterOnObject = ({detail}) => {
+    console.log('The detail is ......')
+    console.log(detail)
     if(detail){
         let options = {}
-        if (props.remoteuser && props.remoteuser.trim().length) {
-            options = { headers: { 'REMOTE_USER': props.remoteuser } }
+        if (getProperty(props,'remote-user') && getProperty(props,'remote-user').trim().length) {
+            options = { headers: { 'REMOTE_USER': getProperty(props,'remote-user') } }
         }
-        fetch(detail, options)
+        return fetch(detail, options)
             .then((response) => {
-                response.json().then(json => {
-                    if(!gjv.isGeoJSONObject(json)) return
-                    const extent = getBoundingBox(json);
-                    const newviewport = new WebMercatorViewport(viewport);
-                    if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
-                      //Polygon not provided --> Nothing to do in the viewport
-                    } else {
-                      let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
-                      if(zoom < 0) zoom = Math.abs(zoom) +1
-                      setViewport({width: viewport.width,height: viewport.height,latitude,longitude,zoom})
-                    }
-                });
+              response.json()
+                .then(json => {
+                  if(!gjv.isGeoJSONObject(json)) return
+                  const extent = getBoundingBox(json);
+                  console.log("The dimensions of the map are when getting by Tag:")
+                  // console.log(document.getElementsByTagName('enel-gis-map')[0].clientWidth)
+                  // console.log(document.getElementsByTagName('enel-gis-map')[0].clientHeight)
+                  console.log("The dimensions of the map are when using refs:")
+                  console.log(deckRef.current.viewports[0].width)
+                  console.log(deckRef.current.viewports[0].height)
+                  const newviewport =  new WebMercatorViewport({
+                    width: deckRef.current.viewports[0].width ? deckRef.current.viewports[0].width: 500,
+                    height: deckRef.current.viewports[0].height ? deckRef.current.viewports[0].height: 500,
+                  });
+                  if(extent.xMin === extent.xMax === extent.yMax === extent.yMin === 0){
+                    //Polygon not provided --> Nothing to do in the viewport
+                  } else {
+                    let {latitude, longitude, zoom} = newviewport.fitBounds([[extent.xMin, extent.yMin], [extent.xMax, extent.yMax]])
+                    if(zoom < 0) zoom = Math.abs(zoom) +1
+                    setViewport(viewport => ({width: viewport.width, height: viewport.height,latitude,longitude,zoom}))
+                  }
+            });
             })
             .catch((err) => console.log('An error ocurred while fetching or transforming the layer from the URL'));
     }
@@ -161,23 +187,24 @@ const App = (props) =>{
 
   const handleAddLayer = ({detail})=> { 
     let newLayer = null
+    if(!deckRef.current.props.layers) return 
     if(deckRef.current.props.layers.some(e=>{ //reference to DOM!!!!!
       return e.id == detail.id
     })) return
-    
     //case layer geojson
+    debugger
     if(detail.type === GEOJSON_LAYER){
       if(detail.layer instanceof Object){
         if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing
           //Verify if unique_id is present or not, else generate.
-          newLayer = generateGeoJsonLayer(detail, mapStyle)
+          newLayer = generateGeoJsonLayer(detail,deckRef.current.props.mapStyle, true)
         } else return
       } else {
         if(detail.tiled){
-          newLayer = addGisDomainTileLayerByStandardApi(detail, mapStyle, props.remoteuser)
+          newLayer = addGisDomainTileLayerByStandardApi(detail, deckRef.current.props.mapStyle, getProperty(props,'remote-user'), true)
         } else {
           let extent = viewportToExtension(viewport)
-          return addGisDomainLayerByStandardApi(detail, extent,props.remoteuser, mapStyle).then(layer=>{
+          return addGisDomainLayerByStandardApi(detail, extent,getProperty(props,'remote-user'), deckRef.current.props.mapStyle).then(layer=>{
             if(layer) setLayerList((layerList)=>[...layerList, layer])
           })
         }
@@ -187,19 +214,15 @@ const App = (props) =>{
         console.log("WMS does not support layer object")
         return
       }
-      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remoteUser: props.remoteuser})
+      newLayer = new WMSTileLayer({id: detail.id, baseWMSUrl: detail.layer, remote_user: getProperty(props,'remote-user')})
     } else {
 
     }
-
     if(newLayer){
       //https://github.com/visgl/deck.gl/discussions/5593
       setLayerList((layerList)=>[...layerList, newLayer])
-      
     }
   }
-
-
 
   const zoomControl = (viewState) => {
     setPreviousZoom(viewport.zoom)
@@ -207,41 +230,59 @@ const App = (props) =>{
   }
 
   const toogleDrawingMode = () => {
-    setdrawMode(isdrawMode ? false : true)
+    setdrawMode(!isdrawMode)
   }
 
-  //Valorar si podemos enviar el polygono de seleccion.
-  const handleSelectedObjects = (selectedObjects) => {
-    console.log(selectedObjects)
+  const handleSelectedObjects = (selectedObjects, event = null) => {
     setdrawMode(false)
-    if(!selectedObjects) return //case nothing
+    if(!selectedObjects){
+      localStorage.removeItem("selectedItems")
+      console.log("removed elements")
+      return //case nothing
+    } 
     if(Array.isArray(selectedObjects) && !selectedObjects.length) return
     if(!selectedObjects instanceof Object && !Array.isArray(selectedObjects))return //safety type-check single or multiple selection
     if(selectedObjects instanceof Object) {
       if(!Array.isArray(selectedObjects)){
         selectedObjects = new Array(selectedObjects) //case single selection.
       }
-    }    
-    const detail = selectedObjects.map(sel => {
-      let obj = new Object();
-      obj.domain_code = sel.object.properties && sel.object.properties.domain || undefined
-      obj.space_code = sel.object.properties && sel.object.properties.space || undefined
-      obj.layer_id = sel.layer.id
-      obj.external_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined
-      obj.object = sel.object
-      obj.unique_id = sel.object && sel.object.properties && sel.object.properties.unique_id || undefined
+    }
+    let newSelectedItems =  []
+    if(event && event.srcEvent && event.srcEvent.ctrlKey){//add to the previous selected items
+      if(localStorage.getItem("selectedItems")){ 
+        newSelectedItems =  new Set([...new Set(JSON.parse(localStorage.getItem("selectedItems"))), ...selectedObjects.map(e => e.object.properties.unique_id)])
+      } else { //no one is previously selected
+        newSelectedItems =  new Set([...selectedObjects.map(e => e.object.properties.unique_id)])
+      }
+    } else { //only new elements
+      newSelectedItems =  new Set([...selectedObjects.map(e => e.object.properties.unique_id)])
+    }
+    
+    localStorage.removeItem("selectedItems") //remove all, add all + new ones.
+    localStorage.setItem("selectedItems", JSON.stringify([...newSelectedItems]))
+    const ev = eventObjectSelectedBuilder(buildSelectedObjects(selectedObjects))
+    ReactDOM.findDOMNode(deckRef.current).dispatchEvent(ev)
+    reinitLayer()
+  }
 
-      if(sel.coordinate){
+  const buildSelectedObjects =(selectedObjects)=> {
+    return selectedObjects.map(sel => {
+      let obj = new Object();
+      obj.domain_code = sel.object.properties && sel.object.properties.domain || undefined;
+      obj.space_code = sel.object.properties && sel.object.properties.space || undefined;
+      obj.layer_id = sel.layer.id;
+      obj.external_id = sel.object && sel.object.properties && sel.object.properties.internal_id || undefined;
+      obj.object = sel.object;
+      obj.unique_id = sel.object && sel.object.properties && sel.object.properties.unique_id || undefined; //will send even if it has been added manually
+
+      if (sel.coordinate) {
         obj.position = {
           lat: sel.coordinate[1] ? sel.coordinate[1] : null,
           lng: sel.coordinate[0] ? sel.coordinate[0] : null
-        }
+        };
       }
-      return obj
-    })
-    const ev = eventObjectSelectedBuilder(detail)
-    ReactDOM.findDOMNode(myRef.current).dispatchEvent(ev)
-    //if(!isdrawMode)setLayerList((layerList) => layerList) //re-initialize layers in order to get the selected items. 
+      return obj;
+    });
   }
 
   const zoomIn = () => {
@@ -267,38 +308,59 @@ const App = (props) =>{
     })
     setPreviousZoom(previousZoom)
   }
-  
 
+  const deleteSelectedItems = () => {
+    localStorage.removeItem('selectedItems')
+    reinitLayer(); 
+  }
+
+  const reinitLayer = () => {
+    const reinitLayerList = layerList.map(layer => {
+      if (layer instanceof GeoJsonLayer) {
+        return generateGeoJsonLayer(layer, mapStyle, false);
+      }
+      if (layer instanceof WMSTileLayer) {
+        return layer;
+      }
+      if (layer instanceof TileLayer && layer.id !== "main-map-tile-layer") {
+        return addGisDomainTileLayerByStandardApi(layer, mapStyle, getProperty(props,'remote-user'), false);
+      }
+      return layer;
+    });
+    setLayerList((layerList) => reinitLayerList);
+  }
+    
   const getTooltip = ({object}) => {
     
     return (
       object && !isdrawMode && {
         html: `\
         <div style="opacity: 0.5">
-    <div><b>INFO</b></div>
-    <div>id : ${object.properties.id}</div>
-    <div>domain : ${object.properties.domain}</div>
-    <div>space : ${object.properties.space}</div>
-    </div>
-    `,
-    style: {
-      background: 'rgba(0,0,0,0.7)',
-      color: 'white'
-    }
+        <div><b>INFO</b></div>
+        <div>code : ${object.properties.code}</div>
+        <div>description : ${object.properties.description}</div>
+        </div>
+        `,
+        style: {
+          background: 'rgba(0,0,0,0.7)',
+          color: 'white'
+        }
       }
     );
   }
 
-  
   return (
-    <div className="App" ref={myRef} style={{ height: props.height + "px", width: props.width + "px", position: 'relative' }}>
+    <Fragment>
       <slot name="top-left" style={{...hostStyle,...divInsideHost,...slotTopLeft}}></slot>
         <div style={{...divInsideHost, ...topRight}} id="top-right">
             <div style={divInsideTopRight} onClick={zoomIn}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_in-24px.svg" alt="Zoom in" /></div>
             <div style={divInsideTopRight} onClick={zoomOut}><img height="24" viewBox="0 0 24 24" width="24" src="https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/zoom_out-24px.svg" alt="Zoom out" /></div>
             <div style={divInsideTopRight}>{Math.round(viewport.zoom)}</div>
-            { props.enable_select_object ?
+            { getProperty(props,'enable-select-object') ?
+              <div>
               <div style={divInsideTopRight} onClick={toogleDrawingMode}><img height="24" viewBox="0 0 24 24" width="24" src={!isdrawMode? "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/selection.svg" : "https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/polygon.svg"} alt="Selection" /></div>
+              <div style={divInsideTopRight} onClick={deleteSelectedItems}><img height="24" viewBox="0 0 24 24" width="24" src={"https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/waste.svg"} alt="Delete" /></div>
+              </div>
               : 
               null
             }
@@ -318,7 +380,7 @@ const App = (props) =>{
         canvas={canvas}
         getTooltip={getTooltip}>
       </DeckGL>
-    </div>
+    </Fragment>
   );
 }
 
@@ -327,29 +389,30 @@ const App = (props) =>{
 
 export default App;
 
+
+
 App.defaultProps = {
-  backgroud_tile_url: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  width :  600,
-  height: 600,
+  'background-tile-url': "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
   center: {lat: 41.8788383, lng: 12.3594608},
   zoom: 7,
-  enable_select_object: true, 
-  map_style: null,
-  remoteuser: null,
-  multi_polygon_selector: false
+  'enable-select-object': true, 
+  'map-style': 'https://raw.githubusercontent.com/carlosclatg/DeckglTest/selectitems/src/styles/geojsonstyles.json',
+  'remote-user': null,
+  'multi-polygon-selector': false,
+  'tool-tip': null
 };
 
 App.propTypes = {
-  backgroud_tile_url: PropTypes.string,
-  width :  PropTypes.number,
-  height: PropTypes.number,
+  'background-tile-url': PropTypes.string,
   center: PropTypes.any,
   zoom: PropTypes.number, 
-  enable_select_object: PropTypes.bool,
-  map_style:   PropTypes.string, 
-  remoteuser:   PropTypes.string,
-  multi_polygon_selector: PropTypes.bool
+  'enable-select-object': PropTypes.bool,
+  'map-style':   PropTypes.string, 
+  'remote-user':   PropTypes.string,
+  'multi-polygon-selector': PropTypes.bool,
+  'tool-tip': PropTypes.string
 };
+
 
 const WebApp = reactToWebComponent(App, React, ReactDOM, {shadow: true});
 customElements.define("enel-gis-map", WebApp);
@@ -359,7 +422,7 @@ customElements.define("enel-gis-map", WebApp);
 /*Make the build:
 
 const WebApp = reactToWebComponent(App, React, ReactDOM);
-customElements.define("my-map", WebApp);
+customElements.define("enel-gis-map", WebApp);
 
 from the folder that contains App.js (the component itself):
 parcel build App.js

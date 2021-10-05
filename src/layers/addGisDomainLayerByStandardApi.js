@@ -19,7 +19,7 @@ export default function addGisDomainLayerByStandardApi(layer, extent, remoteUser
             return response.json()
                 .then(json => {
                     const jsonreponse = {id: layer.id, type: layer.type, layer: json}
-                    return generateGeoJsonLayer(jsonreponse, mapStyle)
+                    return generateGeoJsonLayer(jsonreponse, mapStyle, true)
                 });
         })
         .catch(() => { });
