@@ -99,7 +99,7 @@
          "source":"topology.2-m",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE == 'PA'",
+               "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE == 'PA'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/214-PTP-small.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -107,7 +107,7 @@
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE <> ('CU','UT')",
+               "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE != 'PA' && STATION_TYPE != ('CU','UT')",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-secondaria-blk.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -115,7 +115,7 @@
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE == 'CU'",
+               "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE != 'PA' && STATION_TYPE == 'CU'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-secondaria-blk.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -123,7 +123,7 @@
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE = 2 && BUILDING_TYPE <> 'PA' && STATION_TYPE == 'UT'",
+               "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE != 'PA' && STATION_TYPE == 'UT'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-secondaria-ut-blk-fill.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -146,7 +146,7 @@
          "source":"topology.7-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 7",
+               "condition":"LEGACY_NODE_TYPE == 7",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/nodo-consegna-passivo-blk.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -215,7 +215,7 @@
          "source":"topology.6-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 6 && SYMBOL_ID = 111",
+               "condition":"LEGACY_NODE_TYPE == 6 && SYMBOL_ID == 111",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/nodo-rigido-MT.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -223,7 +223,7 @@
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE = 6 && SYMBOL_ID = 176",
+               "condition":"LEGACY_NODE_TYPE == 6 && SYMBOL_ID == 176",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/square-green.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -246,7 +246,7 @@
          "source":"topology.tmmt",
          "layout":[
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID == 38",
                "lineColor":[
                   165,
                   42,
@@ -256,7 +256,7 @@
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID == 39",
                "lineColor":[
                   255,
                   255,
@@ -266,7 +266,7 @@
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID == 40",
                "lineColor":[
                   0,
                   0,
@@ -276,7 +276,7 @@
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID == 41",
                "lineColor":[
                   112,
                   48,
@@ -286,7 +286,7 @@
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID == 42",
                "lineColor":[
                   165,
                   42,
@@ -296,7 +296,7 @@
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'A' && STATUS_ID == 43",
                "lineColor":[
                   255,
                   255,
@@ -306,7 +306,7 @@
                "lineWidth":2
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID == 38",
                "lineColor":[
                   165,
                   42,
@@ -320,7 +320,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID == 39",
                "lineColor":[
                   255,
                   255,
@@ -334,7 +334,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID == 40",
                "lineColor":[
                   0,
                   0,
@@ -348,7 +348,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID == 41",
                "lineColor":[
                   112,
                   48,
@@ -362,7 +362,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID == 42",
                "lineColor":[
                   165,
                   42,
@@ -376,7 +376,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'B' && STATUS_ID == 43",
                "lineColor":[
                   255,
                   255,
@@ -390,7 +390,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID == 38",
                "lineColor":[
                   165,
                   42,
@@ -404,7 +404,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID == 39",
                "lineColor":[
                   255,
                   255,
@@ -418,7 +418,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID == 40",
                "lineColor":[
                   0,
                   0,
@@ -432,7 +432,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID == 41",
                "lineColor":[
                   112,
                   48,
@@ -446,7 +446,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID == 42",
                "lineColor":[
                   165,
                   42,
@@ -460,7 +460,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'M' && LAYING_TYPE == 'C' && STATUS_ID == 43",
                "lineColor":[
                   255,
                   255,
@@ -515,7 +515,7 @@
          "source":"topology.3-m",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 3",
+               "condition":"LEGACY_NODE_TYPE == 3",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/sezionatore-mt-blk-fill_S.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -538,7 +538,7 @@
          "source":"topology.4-m",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 4",
+               "condition":"LEGACY_NODE_TYPE == 4",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/nodo-rigido-MT.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -561,7 +561,7 @@
          "source":"topology.-m",
          "layout":[
             {
-               "condition":"VOLTAGE_LEVEL = M",
+               "condition":"VOLTAGE_LEVEL == M",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/216-sezionatori-misti.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -584,7 +584,7 @@
          "source":"topology.tmbt",
          "layout":[
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 38",
                "lineColor":[
                   165,
                   42,
@@ -594,7 +594,7 @@
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 39",
                "lineColor":[
                   255,
                   255,
@@ -604,7 +604,7 @@
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 40",
                "lineColor":[
                   0,
                   176,
@@ -614,7 +614,7 @@
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 41",
                "lineColor":[
                   112,
                   48,
@@ -624,7 +624,7 @@
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 42",
                "lineColor":[
                   165,
                   42,
@@ -634,7 +634,7 @@
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID <> 'P' && LINE_TYPE == 'A' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 43",
                "lineColor":[
                   255,
                   255,
@@ -644,7 +644,7 @@
                "lineWidth":1
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 38",
                "lineColor":[
                   165,
                   42,
@@ -658,7 +658,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 39",
                "lineColor":[
                   255,
                   255,
@@ -672,91 +672,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 40",
-               "lineColor":[
-                  0,
-                  176,
-                  80,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 41",
-               "lineColor":[
-                  112,
-                  48,
-                  160,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 42",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT <> 'G' && STATUS_ID = 43",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 38",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 39",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 40",
                "lineColor":[
                   0,
                   176,
@@ -770,7 +686,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 41",
                "lineColor":[
                   112,
                   48,
@@ -784,7 +700,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 42",
                "lineColor":[
                   165,
                   42,
@@ -798,7 +714,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 43",
                "lineColor":[
                   255,
                   255,
@@ -812,91 +728,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 38",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 39",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 40",
-               "lineColor":[
-                  0,
-                  176,
-                  80,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 41",
-               "lineColor":[
-                  112,
-                  48,
-                  160,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 42",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS <> 'P' && LINE_TYPE == 'C' && STATUS_ID = 43",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID == 38",
                "lineColor":[
                   165,
                   42,
@@ -910,7 +742,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID == 39",
                "lineColor":[
                   255,
                   255,
@@ -924,7 +756,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID == 40",
                "lineColor":[
                   0,
                   176,
@@ -938,7 +770,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 41",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID == 41",
                "lineColor":[
                   112,
                   48,
@@ -952,7 +784,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID == 42",
                "lineColor":[
                   165,
                   42,
@@ -966,7 +798,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE = ('A','B') && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT == 'G' && STATUS_ID == 43",
                "lineColor":[
                   255,
                   255,
@@ -980,7 +812,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 38",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'C' && STATUS_ID == 38",
                "lineColor":[
                   165,
                   42,
@@ -994,7 +826,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 39",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'C' && STATUS_ID == 39",
                "lineColor":[
                   255,
                   255,
@@ -1008,7 +840,21 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 40",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'C' && STATUS_ID == 40",
+               "lineColor":[
+                  0,
+                  176,
+                  80,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'C' && STATUS_ID == 41",
                "lineColor":[
                   112,
                   48,
@@ -1022,21 +868,7 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 41",
-               "lineColor":[
-                  112,
-                  48,
-                  160,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  10,
-                  4
-               ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 42",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'C' && STATUS_ID == 42",
                "lineColor":[
                   165,
                   42,
@@ -1050,7 +882,175 @@
                ]
             },
             {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID = 43",
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'C' && STATUS_ID == 43",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == ('A','B') && STATUS_ID == 38",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == ('A','B') && STATUS_ID == 39",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == ('A','B') && STATUS_ID == 40",
+               "lineColor":[
+                  0,
+                  176,
+                  80,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == ('A','B') && STATUS_ID == 41",
+               "lineColor":[
+                  112,
+                  48,
+                  160,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == ('A','B') && STATUS_ID == 42",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == ('A','B') && STATUS_ID == 43",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID == 38",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID == 39",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID == 40",
+               "lineColor":[
+                  112,
+                  48,
+                  160,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID == 41",
+               "lineColor":[
+                  112,
+                  48,
+                  160,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID == 42",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  10,
+                  4
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS == 'P' && LINE_TYPE == 'C' && STATUS_ID == 43",
                "lineColor":[
                   255,
                   255,
@@ -1097,7 +1097,7 @@
          "source":"topology.1-h",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 1 && BUILDING_TYPE <> 'SA'",
+               "condition":"LEGACY_NODE_TYPE == 1 && BUILDING_TYPE != 'SA'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-primaria.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -1105,7 +1105,7 @@
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE = 1 && BUILDING_TYPE == 'SA'",
+               "condition":"LEGACY_NODE_TYPE == 1 && BUILDING_TYPE == 'SA'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-primaria.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -1174,7 +1174,7 @@
          "source":"topology.5-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 5",
+               "condition":"LEGACY_NODE_TYPE == 5",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/sezionamento-bt-blk.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -1197,7 +1197,7 @@
          "source":"topology.9-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 9",
+               "condition":"LEGACY_NODE_TYPE == 9",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/trafo-BT.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -1220,7 +1220,7 @@
          "source":"topology.8-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE = 8 && LEGACY_NODE_TYPE == '?'",
+               "condition":"LEGACY_NODE_TYPE == 8 && LEGACY_NODE_TYPE == '?'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/giunto.svg",
                "imageWidth":25,
                "imageHeight":25,
