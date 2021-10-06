@@ -26,27 +26,58 @@
     -->
     <title>React App</title>
   </head>
+  <style>
+    .parent {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    };
+    button {
+      grid-column: 1 ;
+      background: green;
+    }
+  </style>
   <body>
-    <div id="abc">ABC<button id="geojson-point-line">ADD GEOJSON LAYER POINT + LINE</button></div> 
-    <div id="abc">ABC<button id="geojson-point">ADD GEOJSON POINT</button></div> 
-    <div id="abc">ABC<button id="geojson-point-remove-invented">REMOVE GEOJSON POINT NON EXISTING</button></div> 
-    <div id="abc">ABC<button id="geojson-point-remove-ok">REMOVE GEOJSON POINT </button></div> 
-    <div id="abc">ABC<button id="tiled-layer-add">ADD TILED LAYER</button></div> 
-    <div id="abc">ABC<button id="tiled-layer-remove-ok">REMOVE TILED LAYER </button></div> 
-    <div id="abc">ABC<button id="non-tiled-layer-add">ADD NON TILED LAYER</button></div> 
-    <div id="abc">ABC<button id="non-tiled-layer-remove-ok">REMOVE NON TILED LAYER </button></div> 
-    <div id="abc">ABC<button id="wms-button">WMS/button</div> 
-    <div id="abc">ABC<button id="wms-button2">WMS/button</div>
-    <div id="abc">ABC<button id="center-to-bcn">Center to BCN</div>
-    <div id="abc">ABC<button id="zoom-to-5">zoom-to-5</div>
-    <div id="abc">ABC<button id="zoom-to-4">zoom-to-4</div>
-    <div id="abc">ABC<button id="tiled-layer-add-tramos">tiled-layer-add-tramos</div> 
-    <div id="abc">ABC<button id="add-polygon-layer">add-polygon-layer</div>
-    <div id="abc">ABC<button id="center-on-object">center-on-object</div> 
-    <div id="abc">ABC<button id="center-on-object-bologna">Center Bologna</div> 
-    <div id="abc">ABC<button id="add-object-bologna">province add</div>    
-    <div id="abc">ABC<button id="another-layer">another layer</div>    
-    <div id="root"style="width: 100%; height: 78vh; position: absolute" ></div>
+    <div class="parent">
+      <div id="abc">ABC<button id="geojson-point-line">ADD GEOJSON LAYER POINT + LINE</button></div> 
+      <div id="abc">ABC<button id="geojson-point">ADD GEOJSON POINT</button></div> 
+      <div id="abc">ABC<button id="geojson-point-remove-invented">REMOVE GEOJSON POINT NON EXISTING</button></div> 
+      <div id="abc">ABC<button id="geojson-point-remove-ok">REMOVE GEOJSON POINT </button></div> 
+      <div id="abc">ABC<button id="tiled-layer-add">ADD TILED LAYER</button></div> 
+      <div id="abc">ABC<button id="tiled-layer-remove-ok">REMOVE TILED LAYER </button></div> 
+      <div id="abc">ABC<button id="non-tiled-layer-add">ADD NON TILED LAYER</button></div> 
+      <div id="abc">ABC<button id="non-tiled-layer-remove-ok">REMOVE NON TILED LAYER </button></div> 
+      <div id="abc">ABC<button id="wms-button">WMS/button</div> 
+      <div id="abc">ABC<button id="wms-button2">WMS/button</div>
+      <div id="abc">ABC<button id="center-to-bcn">Center to BCN</div>
+      <div id="abc">ABC<button id="zoom-to-5">zoom-to-5</div>
+      <div id="abc">ABC<button id="zoom-to-4">zoom-to-4</div>
+      <div id="abc">ABC<button id="tiled-layer-add-tramos">tiled-layer-add-tramos</div> 
+      <div id="abc">ABC<button id="add-polygon-layer">add-polygon-layer</div>
+      <div id="abc">ABC<button id="center-on-object">center-on-object</div> 
+      <div id="abc">ABC<button id="center-on-object-bologna">Center Bologna</div> 
+      <div id="abc">ABC<button id="add-object-bologna">province add</div>    
+      <div id="abc">ABC<button id="another-layer">another layer</div>    
+      
+      <div id="abc">ABC<button id="prove-rami-at">Prueba RAMI AT</button></div>
+      <div id="abc">ABC<button id="prove-nodi-mt-2">Prueba Nodi MT 2</button></div>
+      <div id="abc">ABC<button id="prove-nodi-bt-7">Prueba Nodi BT 7</button></div>
+      <div id="abc">ABC<button id="prove-nodi-bt-g">Prueba Nodi BT G</button></div>
+      <div id="abc">ABC<button id="prove-nodi-bt-t">Prueba Nodi BT T</button></div>
+      <div id="abc">ABC<button id="prove-nodi-bt-6">Prueba Nodi BT 6</button></div>
+      <div id="abc">ABC<button id="prove-rami-mt">Prueba Rami MT</button></div>
+      <div id="abc">ABC<button id="prove-cavidotto">Prueba Cavidotto</button></div>
+      <div id="abc">ABC<button id="prove-sostegno-mt-3">Prueba Sostegno MT 3</button></div>
+      <div id="abc">ABC<button id="prove-sostegno-mt-4">Prueba Sostegno MT 4</button></div>
+      <div id="abc">ABC<button id="prove-sostegno-mt-m">Prueba Sostegno MT M</button></div>
+      <div id="abc">ABC<button id="prove-rami-bt">Prueba Rami BT</button></div>
+      <div id="abc">ABC<button id="prove-civico">Prueba Via/Civico</button></div>
+      <div id="abc">ABC<button id="prove-nodi-at">Prueba Nodi AT</button></div>
+      <div id="abc">ABC<button id="prove-nodi-mt-g">Prueba Nodi MT G</button></div>
+      <div id="abc">ABC<button id="prove-nodi-mt-t">Prueba Nodi MT T</button></div>
+      <div id="abc">ABC<button id="prove-nodi-bt-5">Prueba Nodi BT 5</button></div>
+      <div id="abc">ABC<button id="prove-nodi-bt-9">Prueba Nodi BT 9</button></div>
+      <div id="abc">ABC<button id="prove-montanti">Prueba Montanti</button></div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -57,8 +88,9 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    
-    <enel-gis-map
+    <div>
+      <div id="root"style="width: 100%; height: 78vh; position: absolute" ></div>
+    <!-- <enel-gis-map
       id= "my-map"
       background-tile-url="https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
       style="width: 100%; height: 78vh; position: absolute"
@@ -68,8 +100,8 @@
       <div slot="top-left"><p style="color:red;">A red paragraph in top-left.</p></div>
       <button slot="bottom-left">Slot BL from outside</button>
       <div slot="bottom-right">Slot BR from outside</div>
-    </enel-gis-map> 
-    
+    </enel-gis-map>  -->
+  </div> 
   </body>
    <script src="../src/dist/App.js"></script>
   <script>
@@ -28715,7 +28747,2724 @@
   ]
 }
       }});
-      console.log("cazzi suoii")
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a18 = document.getElementById('prove-rami-at');
+    a18.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point1',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmat",
+                  "NETWORK_TYPE": "H",
+                  "V_NOMINAL": 132
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmat",
+                  "NETWORK_TYPE": "H",
+                  "V_NOMINAL": 132,
+                  "EDIT_TYPE_ID": "EHHVLSAC"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmat",
+                  "NETWORK_TYPE": "H",
+                  "V_NOMINAL": 132,
+                  "EDIT_TYPE_ID": "EHHVLSUC"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmat"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a19 = document.getElementById('prove-nodi-mt-2');
+    a19.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point2',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "2-m",
+                  "LEGACY_NODE_TYPE": 2,
+                  "BUILDING_TYPE": "PA"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "2-m",
+                  "LEGACY_NODE_TYPE": 2,
+                  "BUILDING_TYPE": "PA",
+                  "STATION_TYPE": ("CU","UT")
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "space": "2-m",
+                  "LEGACY_NODE_TYPE": 2,
+                  "BUILDING_TYPE": "PA",
+                  "STATION_TYPE": "CU"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "space": "2-m",
+                  "LEGACY_NODE_TYPE": 2,
+                  "BUILDING_TYPE": "PA",
+                  "STATION_TYPE": "UT"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "2-m"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a20 = document.getElementById('prove-nodi-bt-7');
+    a20.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point3',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "7-l",
+                  "LEGACY_NODE_TYPE": 7
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "7-l"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a21 = document.getElementById('prove-nodi-bt-g');
+    a21.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point4',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "g-l",
+                  "LEGACY_NODE_TYPE": "G",
+                  "NETWORK_TYPE": "L"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "g-l"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a22 = document.getElementById('prove-nodi-bt-t');
+    a22.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point5',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "t-l",
+                  "LEGACY_NODE_TYPE": "T",
+                  "NETWORK_TYPE": "L"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "t-l"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a23 = document.getElementById('prove-nodi-bt-6');
+    a23.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point6',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "6-l",
+                  "LEGACY_NODE_TYPE": 6,
+                  "SYMBOL_ID": 111
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "6-l",
+                  "LEGACY_NODE_TYPE": 6,
+                  "SYMBOL_ID": 176
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "6-l"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a24 = document.getElementById('prove-rami-mt');
+    a24.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point7',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "A",
+                  "STATUS_ID": 38
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "A",
+                  "STATUS_ID": 39
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "A",
+                  "STATUS_ID": 40
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "A",
+                  "STATUS_ID": 41
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "A",
+                  "STATUS_ID": 42
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "A",
+                  "STATUS_ID": 43
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "B",
+                  "STATUS_ID": 38
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "B",
+                  "STATUS_ID": 39
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "B",
+                  "STATUS_ID": 40
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "B",
+                  "STATUS_ID": 41
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "B",
+                  "STATUS_ID": 42
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "B",
+                  "STATUS_ID": 43
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "C",
+                  "STATUS_ID": 38
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "C",
+                  "STATUS_ID": 39
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "C",
+                  "STATUS_ID": 40
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "C",
+                  "STATUS_ID": 41
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "C",
+                  "STATUS_ID": 42
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                "domain": "topology",
+                  "space": "tmmt",
+                  "NETWORK_TYPE": "M",
+                  "LAYING_TYPE": "C",
+                  "STATUS_ID": 43
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmmt"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a25 = document.getElementById('prove-cavidotto');
+    a25.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point8',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "trc"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a26 = document.getElementById('prove-sostegno-mt-3');
+    a26.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-point9',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "3-m",
+                  "LEGACY_NODE_TYPE": 3
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "3-m"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a27 = document.getElementById('prove-sostegno-mt-4');
+    a27.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointa',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "4-m",
+                  "LEGACY_NODE_TYPE": 4
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "4-m"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a27 = document.getElementById('prove-sostegno-mt-m');
+    a27.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointb',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "-m",
+                  "VOLTAGE_LEVEL": "M"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "-m"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a28 = document.getElementById('prove-rami-bt');
+    a28.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointc',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS_ID": "P",
+                  "LINE_TYPE": "A",
+                  "STATUS_ID": 38
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS_ID": "P",
+                  "LINE_TYPE": "A",
+                  "STATUS_ID": 39
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS_ID": "P",
+                  "LINE_TYPE": "A",
+                  "STATUS_ID": 40
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS_ID": "P",
+                  "LINE_TYPE": "A",
+                  "STATUS_ID": 41
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS_ID": "P",
+                  "LINE_TYPE": "A",
+                  "STATUS_ID": 42
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS_ID": "P",
+                  "LINE_TYPE": "A",
+                  "STATUS_ID": 43
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "B",
+                  "CONDUCTOR_SUPPORT": "G",
+                  "STATUS_ID": 38
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "B",
+                  "CONDUCTOR_SUPPORT": "G",
+                  "STATUS_ID": 39
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "B",
+                  "CONDUCTOR_SUPPORT": "G",
+                  "STATUS_ID": 40
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "B",
+                  "CONDUCTOR_SUPPORT": "G",
+                  "STATUS_ID": 41
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "B",
+                  "CONDUCTOR_SUPPORT": "G",
+                  "STATUS_ID": 42
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "B",
+                  "CONDUCTOR_SUPPORT": "G",
+                  "STATUS_ID": 43
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "C",
+                  "STATUS_ID": 38
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "C",
+                  "STATUS_ID": 39
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "C",
+                  "STATUS_ID": 40
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "C",
+                  "STATUS_ID": 41
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "C",
+                  "STATUS_ID": 42
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": "C",
+                  "STATUS_ID": 43
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": ('A','B'),
+                  "STATUS_ID": 38
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": ('A','B'),
+                  "STATUS_ID": 39
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": ('A','B'),
+                  "STATUS_ID": 40
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": ('A','B'),
+                  "STATUS_ID": 41
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": ('A','B'),
+                  "STATUS_ID": 42
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt",
+                  "NETWORK_TYPE": "L",
+                  "LINE_SEGMENT_CLASS": "P",
+                  "LINE_TYPE": ('A','B'),
+                  "STATUS_ID": 43
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "tmbt"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    -12.65625,
+                    28.304380682962783
+                  ],
+                  [
+                    15.1171875,
+                    45.336701909968134
+                  ],
+                  [
+                    -10.546875,
+                    48.922499263758255
+                  ],
+                  [
+                    -16.171875,
+                    41.50857729743935
+                  ],
+                  [
+                    -16.171875,
+                    33.7243396617476
+                  ],
+                  [
+                    -29.53125,
+                    24.84656534821976
+                  ]
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a29 = document.getElementById('prove-civico');
+    a29.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointd',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "stnum"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a30 = document.getElementById('prove-nodi-at');
+    a30.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointe',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "1-h",
+                  "LEGACY_NODE_TYPE": 1,
+                  "BUILDING_TYPE": "SA"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "1-h"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a31 = document.getElementById('prove-nodi-mt-g');
+    a31.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointf',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "g-m",
+                  "LEGACY_NODE_TYPE": "G",
+                  "NETWORK_TYPE": "M"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "g-m"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a32 = document.getElementById('prove-nodi-mt-t');
+    a32.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointg',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "t-m",
+                  "LEGACY_NODE_TYPE": "T",
+                  "NETWORK_TYPE": "L"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "t-m"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a33 = document.getElementById('prove-nodi-bt-5');
+    a33.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointh',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "5-l",
+                  "LEGACY_NODE_TYPE": 5
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "5-l"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a34 = document.getElementById('prove-nodi-bt-9');
+    a34.onclick = () =>{
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointi',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "9-l",
+                  "LEGACY_NODE_TYPE": 9
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "9-l"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.799072265624998,
+                  41.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
+      document.dispatchEvent(event, true, false)
+    }
+
+    var a35 = document.getElementById('prove-montanti');
+    a35.onclick = () =>{
+      console.log('prove-montanti')
+      //ADDING ONE POINT GEOJSON
+      const event = new CustomEvent('topogisevt_add_layer', { detail: 
+        {
+          id: 'layer-geojson-pointj',
+          type: 'geojson',
+          layer: {
+            "type": "FeatureCollection",
+            "features": [
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "8-l",
+                  "LEGACY_NODE_TYPE": "8",
+                  "LEGACY_NODE_TYPE":'?'
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.00,
+                  42.775408403663285
+                ]
+              }
+              },
+              {
+            "type": "Feature",
+              "properties": {
+                  "domain": "topology",
+                  "space": "8-l"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  12.80,
+                  42.775408403663285
+                ]
+              }
+              }
+              ]
+          }
+      }});
       document.dispatchEvent(event, true, false)
     }
 
@@ -28723,7 +31472,7 @@
 
     document.addEventListener("topogisevt_map_object_selected", (data) => console.log(data.detail))
     document.addEventListener("topogisevt_map_zoom_changed", (data) => console.log(data.detail))
-    document.addEventListener("topogisevt_map_ready", d => console.log(d.detail))
+    document.addEventListener("topogisevt_map_ready", (d )=> {console.log('receiving map ready'); console.log(d.detail)})
   </script>
 </html>
 
