@@ -1,17 +1,4 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
- "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="900.000000pt" height="500.000000pt" viewBox="0 0 900.000000 500.000000"
- preserveAspectRatio="xMidYMid meet">
-
-<g transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-<path d="M4266 4045 c-345 -56 -617 -196 -867 -445 -227 -227 -361 -474 -431
--794 -19 -86 -22 -132 -22 -306 0 -174 3 -220 22 -306 69 -319 205 -568 431
--794 184 -184 356 -293 590 -374 189 -66 280 -80 511 -80 174 0 220 3 306 22
-320 70 567 204 794 431 230 231 362 474 432 795 19 86 22 132 22 306 0 174 -3
-220 -22 306 -45 207 -131 410 -243 576 -88 130 -285 326 -414 411 -176 116
--361 194 -564 238 -128 27 -417 35 -545 14z"/>
-</g>
-</svg>
+<svg height="50" width="50">
+  <circle cx="25" cy="25" r="20" stroke="black" stroke-width="1" fill="black" />
+  Sorry, your browser does not support inline SVG.  
+</svg> 
