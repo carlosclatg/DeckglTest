@@ -57,16 +57,11 @@ export default class MapStyle {
             return null;
         let layout = null;
         if(d && d.__source && d.__source.object ){
-            debugger
             layout = this.getLayout(id, d.__source.object.properties, 'line');
-            debugger
         }
         if (!layout && d && d.__source && d.__source.object && d.__source.object.properties.domain && d.__source.object.properties.space){
-            debugger
             layout = this.getLayout(`${d.__source.object.properties.domain}.${d.__source.object.properties.space}`, d.__source.object.properties, 'line');
-            debugger
         } 
-        debugger
         if(!layout || !layout.dashArray) return [0,0]
         return layout.dashArray
 
@@ -134,12 +129,12 @@ export default class MapStyle {
 
 
     //ICON
-    DEFAULT_IMAGE_PUSHPIN_SIZE = 36
-    DEFAULT_ICON_URL= 'https://raw.githubusercontent.com/carlosclatg/DeckglTest/master/src/icons/blackPoint.svg'
+    DEFAULT_IMAGE_PUSHPIN_SIZE = 30
+    DEFAULT_ICON_URL= 'https://github.com/carlosclatg/DeckglTest/blob/master/src/icons/blackPoint.png?raw=true'
     getIconSize =(d, id)=> {
         let layout = this.getStyleLayoutIcon(d)
-        if(!layout) return 36
-        return layout.iconSize || 36
+        if(!layout) return this.DEFAULT_IMAGE_PUSHPIN_SIZE
+        return layout.iconSize || this.DEFAULT_IMAGE_PUSHPIN_SIZE
     }
 
     // getColor = (d) => {
@@ -162,7 +157,7 @@ export default class MapStyle {
             width:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             height:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
-            anchorX:  this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            anchorX:  this.DEFAULT_IMAGE_PUSHPIN_SIZE/2,
             mask: false
         }
     }
@@ -173,8 +168,8 @@ export default class MapStyle {
         
         return {
             url: layout.image || this.DEFAULT_ICON_URL,
-            width: layout.imageWidth || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
-            height: layout.imageHeight || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            width: layout.imageWidth || 25,
+            height: layout.imageHeight || 25,
             anchorY: layout.imageAnchorY || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorX: layout.imageAnchorX || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             mask: false
@@ -214,8 +209,10 @@ export default class MapStyle {
             try{
                 let value = true
                 for(let cond of conditionArray){
+                    debugger
                     value = value && Parser.evaluate(cond, model) 
                 }
+                debugger
                 if(value) return layout
             } catch(err) { //case any condition is matched 2 lines above
     
@@ -235,6 +232,8 @@ export default class MapStyle {
         const layer = this.layers.filter( l => l.id === id && l.type === type);
         return layer === undefined ? null : layer[0];
     }
+
+
 
 
 }

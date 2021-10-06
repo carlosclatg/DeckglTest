@@ -195,7 +195,7 @@ const App = (props) =>{
       return e.id == detail.id
     })) return
     //case layer geojson
-    debugger
+
     if(detail.type === GEOJSON_LAYER){
       if(detail.layer instanceof Object){
         if(gjv.valid(detail.layer)){ //check valid geojson otherwise nothing

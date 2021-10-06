@@ -6,16 +6,6 @@
          "source":"topology.tmat",
          "layout":[
             {
-               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132",
-               "lineColor":[
-                  255,
-                  0,
-                  0,
-                  100
-               ],
-               "lineWidth":2
-            },
-            {
                "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132 && EDIT_TYPE_ID == 'EHHVLSAC'",
                "lineColor":[
                   0,
@@ -23,7 +13,7 @@
                   0,
                   255
                ],
-               "lineWidth":20,
+               "lineWidth":2,
                "dashArray":[
                   4,
                   1
@@ -42,16 +32,6 @@
                   4,
                   4
                ]
-            },
-            {
-               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL <= 132",
-               "lineColor":[
-                  255,
-                  0,
-                  0,
-                  100
-               ],
-               "lineWidth":2
             },
             {
                "condition":"NETWORK_TYPE == 'H' && V_NOMINAL <= 132 && EDIT_TYPE_ID == 'EHVLSAC'",
@@ -82,6 +62,26 @@
                ]
             },
             {
+               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL > 132",
+               "lineColor":[
+                  255,
+                  0,
+                  0,
+                  100
+               ],
+               "lineWidth":2
+            },
+            {
+               "condition":"NETWORK_TYPE == 'H' && V_NOMINAL <= 132",
+               "lineColor":[
+                  255,
+                  0,
+                  0,
+                  100
+               ],
+               "lineWidth":2
+            },
+            {
                "condition":"true",
                "lineColor":[
                   255,
@@ -107,7 +107,7 @@
                "imageAnchorX":17
             },
             {
-               "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE != 'PA' && STATION_TYPE != ('CU','UT')",
+               "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE != 'PA' && STATION_TYPE !='CU' && STATION_TYPE !='UT'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-secondaria-blk.svg",
                "imageWidth":27,
                "imageHeight":35,
@@ -155,7 +155,7 @@
             },
             {
                "condition":"true",
-               "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPVbmijZws9DQ1x8xnAB3jS8SgSefgY9_Agw&usqp=CAU",
+               "image":"",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
@@ -170,7 +170,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 'G' && NETWORK_TYPE == 'L'",
-               "image":"black point",
+               "image":"",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -194,7 +194,7 @@
             {
                "condition":"LEGACY_NODE_TYPE == 'T' && NETWORK_TYPE == 'L'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
-               "imageWidth":25,
+               "imageWidth":12,
                "imageHeight":25,
                "imageAnchorY":35,
                "imageAnchorX":17
@@ -203,7 +203,7 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
+               "imageHeight":27,
                "imageAnchorY":35,
                "imageAnchorX":17
             }
@@ -561,7 +561,7 @@
          "source":"topology.-m",
          "layout":[
             {
-               "condition":"VOLTAGE_LEVEL == M",
+               "condition":"VOLTAGE_LEVEL == 'M'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/216-sezionatori-misti.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -583,80 +583,6 @@
          "type":"line",
          "source":"topology.tmbt",
          "layout":[
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 38",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 39",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 40",
-               "lineColor":[
-                  0,
-                  176,
-                  80,
-                  100
-               ],
-               "lineWidth":1
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 41",
-               "lineColor":[
-                  112,
-                  48,
-                  160,
-                  100
-               ],
-               "lineWidth":1
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 42",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  1
-               ],
-               "lineWidth":1
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 43",
-               "lineColor":[
-                  255,
-                  255,
-                  0,
-                  100
-               ],
-               "lineWidth":1
-            },
-            {
-               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 38",
-               "lineColor":[
-                  165,
-                  42,
-                  42,
-                  100
-               ],
-               "lineWidth":1,
-               "dashArray":[
-                  4,
-                  1
-               ]
-            },
             {
                "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 39",
                "lineColor":[
@@ -811,6 +737,82 @@
                   1
                ]
             },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'B' && CONDUCTOR_SUPPORT != 'G' && STATUS_ID == 38",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1,
+               "dashArray":[
+                  4,
+                  1
+               ]
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 38",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  100
+               ],
+               "lineWidth":1
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 39",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 40",
+               "lineColor":[
+                  0,
+                  176,
+                  80,
+                  100
+               ],
+               "lineWidth":1
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 41",
+               "lineColor":[
+                  112,
+                  48,
+                  160,
+                  100
+               ],
+               "lineWidth":1
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 42",
+               "lineColor":[
+                  165,
+                  42,
+                  42,
+                  1
+               ],
+               "lineWidth":1
+            },
+            {
+               "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS_ID != 'P' && LINE_TYPE == 'A' && STATUS_ID == 43",
+               "lineColor":[
+                  255,
+                  255,
+                  0,
+                  100
+               ],
+               "lineWidth":1
+            },
+            
+
             {
                "condition":"NETWORK_TYPE == 'L' && LINE_SEGMENT_CLASS != 'P' && LINE_TYPE == 'C' && STATUS_ID == 38",
                "lineColor":[
@@ -1082,7 +1084,7 @@
          "layout":[
             {
                "condition":"true",
-               "image":"black point",
+               "image":"",
                "label":"number street",
                "imageWidth":27,
                "imageHeight":35,
@@ -1129,7 +1131,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 'G' && NETWORK_TYPE == 'M'",
-               "image":"black point",
+               "image":"",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -1153,7 +1155,7 @@
             {
                "condition":"LEGACY_NODE_TYPE == 'T' && NETWORK_TYPE == 'L'",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
-               "imageWidth":25,
+               "imageWidth":12,
                "imageHeight":25,
                "imageAnchorY":35,
                "imageAnchorX":17
@@ -1220,7 +1222,7 @@
          "source":"topology.8-l",
          "layout":[
             {
-               "condition":"LEGACY_NODE_TYPE == 8 && LEGACY_NODE_TYPE == '?'",
+               "condition":"LEGACY_NODE_TYPE == 8",
                "image":"http://localhost:8010/proxy/p3/app/img/map-markers/giunto.svg",
                "imageWidth":25,
                "imageHeight":25,
@@ -1230,10 +1232,10 @@
             {
                "condition":"true",
                "image":"",
-               "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
-               "imageAnchorX":17
+               "imageWidth":50,
+               "imageHeight":50,
+               "imageAnchorY":50,
+               "imageAnchorX":50
             }
          ]
       }
