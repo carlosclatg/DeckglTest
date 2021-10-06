@@ -60,7 +60,7 @@ const App = (props) =>{
           if(d.ok) return d.json()
         })
         .then(j => {
-           setMapStyle(new MapStyle(j)) 
+           setMapStyle(new MapStyle(geojsonstyles)) 
            return initListeners();
         })
         .catch(e => {
@@ -74,18 +74,19 @@ const App = (props) =>{
   },[])
 
 
+
   const initListeners =()=> {
     fromEvent(document, "topogisevt_add_layer").subscribe(event => handleAddLayer(event)); //BE very careful... handleAddLayer is inmunatable after initial load. 
     fromEvent(document, "topogisevt_remove_layer").subscribe(event => handleRemoveLayer(event));
     fromEvent(document, "topogisevt_center_on_object").subscribe(event => handleCenterOnObject(event));
     localStorage.removeItem("selectedItems");
     const event = eventMapReadyBuilder();
-    window.dispatchEvent(event);
+    document.dispatchEvent(event)
     return () => {
       localStorage.removeItem("selectedItems");
-      localStorage.removeItem("mapstyle")
     };
   }
+
   //zoom paramter changed
   useEffect(()=>{
     setViewport({
@@ -186,7 +187,9 @@ const App = (props) =>{
   }
 
   const handleAddLayer = ({detail})=> { 
+    console.log(detail)
     let newLayer = null
+    console.log(deckRef.current)
     if(!deckRef.current.props.layers) return 
     if(deckRef.current.props.layers.some(e=>{ //reference to DOM!!!!!
       return e.id == detail.id
@@ -377,7 +380,6 @@ const App = (props) =>{
         layers={layerList} 
         pickable={true}
         onClick={onDeckClick}
-        canvas={canvas}
         getTooltip={getTooltip}>
       </DeckGL>
     </Fragment>
