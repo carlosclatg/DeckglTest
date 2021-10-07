@@ -164,14 +164,14 @@ export default class MapStyle {
 
     getIcon =(d, id)=> {
         let layout = this.getStyleLayoutIcon(d, id)
-        if(!layout) layout = {}
+        if(!layout || !layout.image ||!layout.image.length) return this.getDefaultIcon(null)
         
         return {
             url: layout.image || this.DEFAULT_ICON_URL,
-            width: layout.imageWidth || 25,
-            height: layout.imageHeight || 25,
+            width: layout.imageWidth || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            height: layout.imageHeight || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
             anchorY: layout.imageAnchorY || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
-            anchorX: layout.imageAnchorX || this.DEFAULT_IMAGE_PUSHPIN_SIZE,
+            anchorX: layout.imageAnchorX || this.DEFAULT_IMAGE_PUSHPIN_SIZE/2,
             mask: false
         }
     }

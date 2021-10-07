@@ -100,7 +100,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE == 'PA'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/214-PTP-small.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/214-PTP-small.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -108,7 +108,7 @@
             },
             {
                "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE != 'PA' && STATION_TYPE !='CU' && STATION_TYPE !='UT'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-secondaria-blk.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/cabina-secondaria-blk.svg",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
@@ -116,7 +116,7 @@
             },
             {
                "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE != 'PA' && STATION_TYPE == 'CU'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-secondaria-blk.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/cabina-secondaria-blk.svg",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
@@ -124,7 +124,7 @@
             },
             {
                "condition":"LEGACY_NODE_TYPE == 2 && BUILDING_TYPE != 'PA' && STATION_TYPE == 'UT'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-secondaria-ut-blk-fill.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/cabina-secondaria-ut-blk-fill.svg",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
@@ -132,10 +132,10 @@
             },
             {
                "condition":"true",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-secondaria-ut-blk-fill.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/cabina-secondaria-ut-blk-fill.svg",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -147,7 +147,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 7",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/nodo-consegna-passivo-blk.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/nodo-consegna-passivo-blk.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -157,8 +157,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -180,8 +180,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -193,7 +193,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 'T' && NETWORK_TYPE == 'L'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
                "imageWidth":12,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -204,7 +204,7 @@
                "image":"",
                "imageWidth":27,
                "imageHeight":27,
-               "imageAnchorY":35,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -216,7 +216,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 6 && SYMBOL_ID == 111",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/nodo-rigido-MT.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/nodo-rigido-MT.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -224,7 +224,7 @@
             },
             {
                "condition":"LEGACY_NODE_TYPE == 6 && SYMBOL_ID == 176",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/square-green.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/square-green.svg",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
@@ -234,8 +234,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -516,7 +516,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 3",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/sezionatore-mt-blk-fill_S.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/sezionatore-mt-blk-fill_S.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -526,8 +526,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -539,7 +539,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 4",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/nodo-rigido-MT.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/nodo-rigido-MT.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -549,8 +549,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -562,7 +562,7 @@
          "layout":[
             {
                "condition":"VOLTAGE_LEVEL == 'M'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/216-sezionatori-misti.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/216-sezionatori-misti.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -572,8 +572,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -1087,8 +1087,8 @@
                "image":"",
                "label":"number street",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -1100,7 +1100,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 1 && BUILDING_TYPE != 'SA'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-primaria.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/cabina-primaria.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -1108,7 +1108,7 @@
             },
             {
                "condition":"LEGACY_NODE_TYPE == 1 && BUILDING_TYPE == 'SA'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cabina-primaria.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/cabina-primaria.svg",
                "imageWidth":27,
                "imageHeight":35,
                "imageAnchorY":35,
@@ -1118,8 +1118,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -1154,7 +1154,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 'T' && NETWORK_TYPE == 'L'",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/cambio-posa-mt-blk.svg",
                "imageWidth":12,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -1164,8 +1164,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -1177,7 +1177,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 5",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/sezionamento-bt-blk.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/sezionamento-bt-blk.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -1187,8 +1187,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -1200,7 +1200,7 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 9",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/trafo-BT.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/trafo-BT.svg",
                "imageWidth":25,
                "imageHeight":25,
                "imageAnchorY":35,
@@ -1210,8 +1210,8 @@
                "condition":"true",
                "image":"",
                "imageWidth":27,
-               "imageHeight":35,
-               "imageAnchorY":35,
+               "imageHeight":27,
+               "imageAnchorY":27,
                "imageAnchorX":17
             }
          ]
@@ -1223,19 +1223,19 @@
          "layout":[
             {
                "condition":"LEGACY_NODE_TYPE == 8",
-               "image":"http://localhost:8010/proxy/p3/app/img/map-markers/giunto.svg",
+               "image":"http://10.151.1.168/proxy/p3/app/img/map-markers/giunto.svg",
                "imageWidth":25,
                "imageHeight":25,
-               "imageAnchorY":35,
+               "imageAnchorY":25,
                "imageAnchorX":17
             },
             {
                "condition":"true",
                "image":"",
-               "imageWidth":50,
-               "imageHeight":50,
-               "imageAnchorY":50,
-               "imageAnchorX":50
+               "imageWidth":27,
+               "imageHeight":27,
+               "imageAnchorY":27,
+               "imageAnchorX":35
             }
          ]
       }
