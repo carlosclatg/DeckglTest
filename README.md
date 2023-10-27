@@ -1,6 +1,7 @@
-# Getting Started with Create React App
+# What is this project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project aims to create a web component to add layers either from json or from WMS services.
+
 
 ## Available Scripts
 
