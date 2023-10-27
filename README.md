@@ -1,6 +1,9 @@
 # What is this project
 
-This project aims to create a web component to add layers either from json or from WMS services.
+This project aims to create a web component that consists in the following functionalities:
+- Map component
+- Functionality of adding/removing json and wms layers by listening to events.
+- Zoom in/out
 
 
 ## Available Scripts
